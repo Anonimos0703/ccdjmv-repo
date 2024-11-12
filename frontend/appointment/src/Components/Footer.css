@@ -1,0 +1,12 @@
+/* Footer.css */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: darkblue;
+    color: white;
+}
+
+.contact-info p {
+    margin: 5px 0;
+}
