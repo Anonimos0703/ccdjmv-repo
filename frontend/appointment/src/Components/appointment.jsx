@@ -2,49 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'
 
 
-const Header = () => {
-  const styles = {
-    headerContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '1rem 2rem',
-      backgroundColor: '#f5f5f5',
-      borderBottom: '2px solid #e0e0e0'
-    },
-    title: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      color: '#333'
-    },
-    links: {
-      display: 'flex',
-      gap: '1.5rem'
-    },
-    link: {
-      textDecoration: 'none',
-      color: '#555',
-      fontSize: '1rem',
-      fontWeight: '500',
-      transition: 'color 0.2s ease',
-    }
-  };
 
-  return (
-    <header style={styles.headerContainer}>
-      <div>
-        <h2 style={styles.title}>Tails and Whiskers</h2>
-      </div>
-      <div style={styles.links}>
-        <h4><Link to="/" style={styles.link}>Home</Link></h4>
-        <h4><Link to="/products" style={styles.link}>Products</Link></h4>
-        <h4><Link to="/service" style={styles.link}>Service</Link></h4>
-        <h4><Link to="/about-us" style={styles.link}>About Us</Link></h4>
-        <h4><Link to="/login" style={styles.link}>Login</Link></h4>
-      </div>
-    </header>
-  );
-};
 
 
 const AppointmentForm = () => {
