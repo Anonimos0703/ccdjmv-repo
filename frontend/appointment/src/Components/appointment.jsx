@@ -80,7 +80,7 @@ const AppointmentForm = () => {
       transition: 'all 0.2s ease',
       marginTop: '1.5rem',
       boxShadow: '0 2px 4px rgba(124, 58, 237, 0.1)',
-      marginLeft: '40px'
+      marginLeft: '40px' 
     },
     dateInput: {
       width: '90%',
