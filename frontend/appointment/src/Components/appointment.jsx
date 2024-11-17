@@ -138,7 +138,7 @@ const AppointmentForm = () => {
             margin="dense"
             required
           >
-            <MenuItem value="None">None</MenuItem>
+            
             <MenuItem value="Grooming">Grooming</MenuItem>
           </TextField>
 
