@@ -8,16 +8,28 @@ const AppointmentForm = () => {
     contactNo: '',
     date: '',
     time: '',
-    price: '',
-    service: ''
+    grooming: {
+      price: '',
+      groomService: ''
+    }
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    if (name === 'price' || name === 'service') {
+      setFormData(prevState => ({
+        ...prevState,
+        grooming: {
+          ...prevState.grooming,
+          [name]: value
+        }
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -28,8 +40,8 @@ const AppointmentForm = () => {
       date: formData.date,
       email: formData.email,
       contactNo: formData.contactNo,
-      price: formData.price,
-      service: formData.service
+      price: formData.grooming.price,
+      service: formData.grooming.groomService,
     };
 
     try {
@@ -42,26 +54,24 @@ const AppointmentForm = () => {
       if (response.ok) {
         const result = await response.json();
         console.log('Appointment created:', result);
-        
-        // Show success alert
         alert('Booking successful! Your appointment has been created.');
 
         setFormData({
           customerId: '',
-          email: '',  
+          email: '',
           contactNo: '',
           date: '',
           time: '',
-          price: '',
-          service: ''
+          grooming: {
+            price: '',
+            groomService: '',
+          },
         });
       } else {
-        // Show error alert
         alert('Failed to create appointment: ' + response.statusText);
         console.error('Failed to create appointment:', response.statusText);
       }
     } catch (error) {
-      // Show error alert
       alert('Error: ' + error.message);
       console.error('Error:', error);
     }
@@ -70,7 +80,6 @@ const AppointmentForm = () => {
   return (
     <Container maxWidth="sm" sx={{ mt: 15, mb: 8 }}>
       <Box sx={{ p: 5, boxShadow: 3, borderRadius: 2, position: 'relative' }}>
-        
         <Typography variant="h5" component="h1" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
           Book an Appointment
         </Typography>
@@ -118,7 +127,7 @@ const AppointmentForm = () => {
             label="Price"
             select
             name="price"
-            value={formData.price}
+            value={formData.grooming.price}
             onChange={handleChange}
             fullWidth
             margin="dense"
@@ -132,13 +141,12 @@ const AppointmentForm = () => {
             label="Service"
             select
             name="service"
-            value={formData.service}
+            value={formData.grooming.groomservice}
             onChange={handleChange}
             fullWidth
             margin="dense"
             required
           >
-            
             <MenuItem value="Grooming">Grooming</MenuItem>
           </TextField>
 
