@@ -10,13 +10,13 @@ const AppointmentForm = () => {
     time: '',
     grooming: {
       price: '',
-      groomService: ''
+      groomService: ''  // Changed from service to groomService
     }
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'price' || name === 'service') {
+    if (name === 'price' || name === 'groomService') {  // Updated condition
       setFormData(prevState => ({
         ...prevState,
         grooming: {
@@ -41,7 +41,7 @@ const AppointmentForm = () => {
       email: formData.email,
       contactNo: formData.contactNo,
       price: formData.grooming.price,
-      service: formData.grooming.groomService,
+      groomService: formData.grooming.groomService,  // Updated to match backend
     };
 
     try {
@@ -64,7 +64,7 @@ const AppointmentForm = () => {
           time: '',
           grooming: {
             price: '',
-            groomService: '',
+            groomService: '',  // Updated here too
           },
         });
       } else {
@@ -138,10 +138,10 @@ const AppointmentForm = () => {
           </TextField>
 
           <TextField
-            label="Service"
+            label="Groom Service"
             select
-            name="service"
-            value={formData.grooming.groomservice}
+            name="groomService"  // Updated name
+            value={formData.grooming.groomService}  // Updated value path
             onChange={handleChange}
             fullWidth
             margin="dense"
