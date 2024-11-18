@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CardMedia from '@mui/material/CardMedia';
@@ -7,13 +8,13 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 
 import animationImage from '../assets/homeanimation.gif';
 import dog_food from '../assets/dog_food.jpg';
 import cat_food from '../assets/cat_food.jpg';
 import cat_treats from '../assets/cat_treats.png';
 import dog_treats from '../assets/dog_treats.jpg';
-import boarding from '../assets/boarding.jpg';
 import grooming from '../assets/grooming.png';
 
 const products = [
@@ -24,25 +25,37 @@ const products = [
 ];
 
 const services = [
-  { image: boarding, name: 'Pet Boarding' },
   { image: grooming, name: 'Pet Grooming' },
 ];
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  const handleBookNow = () => {
+    navigate('/appointments');
+  };
+
   return (
     <Box sx={{ 
-      backgroundColor: '#faf3d2',
+      backgroundColor: '#ffffff',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      width: '198vh',
+      width: '96vw',
       padding: '2rem',
     }}>
+
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 5 
+        marginBottom: 5,
+        marginTop: -4,
+        backgroundColor: '#f5f5dc',
+        padding: '2rem',
+        borderRadius: 2,
+        boxShadow: 3,
+        width: '100%',
       }}>
         <Box
           component="img"
@@ -56,32 +69,19 @@ const HomePage = () => {
             marginRight: 3 
           }}
         />
-        <Box
-          sx={{
-            backgroundColor: '#e0e0b1',
-            padding: 13,
-            borderRadius: 2,
-            boxShadow: 3,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-         <Typography variant="h4" sx={{ 
+        <Box>
+          <Typography variant="h4" sx={{ 
             fontWeight: 'bold', 
             fontFamily: 'Comic Sans MS', 
             color: '#333',
             fontSize: '3rem',
-            }}>
+          }}>
             Welcome Furry Friends!
-        </Typography>
+          </Typography>
         </Box>
       </Box>
 
-      <Box sx={{ 
-        width: '80%',
-        maxWidth: 800,
-        textAlign: 'center',
-      }}>
+      <Container maxWidth="lg">
         <Typography variant="h4" sx={{ 
           fontWeight: 'bold', 
           marginBottom: 3, 
@@ -166,11 +166,14 @@ const HomePage = () => {
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                     {service.name}
                   </Typography>
-                  <Button sx={{ 
-                    backgroundColor: '#ff9800', 
-                    color: 'black', 
-                    '&:hover': { backgroundColor: '#f57c00' } 
-                  }}>
+                  <Button
+                    sx={{
+                      backgroundColor: '#ff9800',
+                      color: 'black',
+                      '&:hover': { backgroundColor: '#f57c00' },
+                    }}
+                    onClick={handleBookNow}
+                  >
                     Book Now
                   </Button>
                 </CardContent>
@@ -178,7 +181,7 @@ const HomePage = () => {
             </Grid>
           ))}
         </Grid>
-      </Box>
+      </Container>
     </Box>
   );
 };
