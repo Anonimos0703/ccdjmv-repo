@@ -20,6 +20,7 @@ public class CartItemEntity {
 	private int quantity;
 	
 	@OneToOne
+	@JsonIgnore
 	private ProductEntity product; //to be continued
 	
 	@ManyToOne

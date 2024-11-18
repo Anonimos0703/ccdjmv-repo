@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function Header({ username, role }) {
   const navigate = useNavigate();
@@ -15,11 +15,11 @@ export default function Header({ username, role }) {
   const open = Boolean(anchorEl);
 
   const handleHomeClick = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleLoginClick = () => {
-    navigate('/auth');
+    navigate("/auth");
   };
 
   const handleMenuClick = (event) => {
@@ -36,10 +36,10 @@ export default function Header({ username, role }) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
     setAnchorEl(null);
-    navigate('/auth');
+    navigate("/auth");
   };
 
   return (
@@ -47,30 +47,35 @@ export default function Header({ username, role }) {
       <AppBar
         position="fixed"
         sx={{
-          width: '100%',
-          backgroundColor: '#FFFACD',
-          boxShadow: 'none',
-          borderRadius: '10px 10px 0 0',
+          width: "100%",
+          backgroundColor: "#FFFACD",
+          boxShadow: "none",
+          borderRadius: "10px 10px 0 0",
         }}
       >
         <Toolbar>
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, fontFamily: 'Arial', fontWeight: 'bold', color: 'black' }}
+            sx={{
+              flexGrow: 1,
+              fontFamily: "Arial",
+              fontWeight: "bold",
+              color: "black",
+            }}
           >
             Tails and Whiskers
           </Typography>
-          <Button sx={{ color: 'black' }} onClick={handleHomeClick}>
+          <Button sx={{ color: "black" }} onClick={handleHomeClick}>
             Home
           </Button>
-          <Button sx={{ color: 'black' }}>Products</Button>
-          <Button sx={{ color: 'black' }}>Service</Button>
-          <Button sx={{ color: 'black' }}>About Us</Button>
+          <Button sx={{ color: "black" }}>Products</Button>
+          <Button sx={{ color: "black" }}>Service</Button>
+          <Button sx={{ color: "black" }}>About Us</Button>
           {username ? (
             <>
               <Button
-                sx={{ color: 'black', fontWeight: 'bold' }}
+                sx={{ color: "black", fontWeight: "bold" }}
                 onClick={handleMenuClick}
               >
                 {username}
@@ -81,29 +86,31 @@ export default function Header({ username, role }) {
                 onClose={handleMenuClose}
                 PaperProps={{
                   style: {
-                    marginTop: '40px',
+                    marginTop: "40px",
                   },
                 }}
               >
-                {role === 'ADMIN' && (
-                  <MenuItem onClick={() => handleMenuOptionClick('/inventory')}>
+                {role === "ADMIN" && (
+                  <MenuItem onClick={() => handleMenuOptionClick("/inventory")}>
                     Inventory
                   </MenuItem>
                 )}
-                <MenuItem onClick={() => handleMenuOptionClick('/profile')}>
+                <MenuItem onClick={() => handleMenuOptionClick("/profile")}>
                   Profile
                 </MenuItem>
-                <MenuItem onClick={() => handleMenuOptionClick('/cart')}>
+                <MenuItem onClick={() => handleMenuOptionClick("/cart")}>
                   Cart
                 </MenuItem>
-                <MenuItem onClick={() => handleMenuOptionClick('/appointments')}>
+                <MenuItem
+                  onClick={() => handleMenuOptionClick("/appointments")}
+                >
                   Appointments
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
               </Menu>
             </>
           ) : (
-            <Button sx={{ color: 'black' }} onClick={handleLoginClick}>
+            <Button sx={{ color: "black" }} onClick={handleLoginClick}>
               Login
             </Button>
           )}

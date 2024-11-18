@@ -2,6 +2,8 @@ package com.ccdjmv.petshop.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,9 +20,10 @@ public class CartEntity {
 	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
 	private List<CartItemEntity> cartItem;
-	
+
 	@OneToOne
-	private CustomerEntity customer; //to be continued
+	@JsonIgnore
+	private CustomerEntity customer; //To be continued
 
 	public CartEntity() {
 		super();
