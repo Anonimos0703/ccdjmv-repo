@@ -5,6 +5,7 @@ import Header from './components/Header';
 import HomePage from './components/HomePage';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
+import Appointment from './components/Appointment';
 
 function Layout({ children, username, role }) {
   return (
@@ -46,6 +47,14 @@ function App() {
           <Layout username={username} role={role}>
             <Cart />
           </Layout>} />
+        <Route
+          path="/appointments"
+          element={
+            <Layout username={username} role={role}>
+              <Appointment />
+            </Layout>
+          }
+        />
       </Routes>
     </Router>
   );
