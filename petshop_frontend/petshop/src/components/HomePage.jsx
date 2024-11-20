@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CardMedia from '@mui/material/CardMedia';
@@ -14,7 +15,6 @@ import dog_food from '../assets/dog_food.jpg';
 import cat_food from '../assets/cat_food.jpg';
 import cat_treats from '../assets/cat_treats.png';
 import dog_treats from '../assets/dog_treats.jpg';
-import boarding from '../assets/boarding.jpg';
 import grooming from '../assets/grooming.png';
 
 const products = [
@@ -25,11 +25,17 @@ const products = [
 ];
 
 const services = [
-  { image: boarding, name: 'Pet Boarding' },
   { image: grooming, name: 'Pet Grooming' },
 ];
 
 const HomePage = () => {
+  const navigate = useNavigate(); // Declare navigate using useNavigate
+
+  // Handle the navigation when "Book Now" button is clicked
+  const handleBookNow = () => {
+    navigate('/appointments');
+  };
+
   return (
     <Box sx={{ 
       backgroundColor: '#ffffff',
@@ -161,11 +167,14 @@ const HomePage = () => {
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                     {service.name}
                   </Typography>
-                  <Button sx={{ 
-                    backgroundColor: '#ff9800', 
-                    color: 'black', 
-                    '&:hover': { backgroundColor: '#f57c00' } 
-                  }}>
+                  <Button
+                    sx={{
+                      backgroundColor: '#ff9800',
+                      color: 'black',
+                      '&:hover': { backgroundColor: '#f57c00' },
+                    }}
+                    onClick={handleBookNow} // Call the handleBookNow function on click
+                  >
                     Book Now
                   </Button>
                 </CardContent>
