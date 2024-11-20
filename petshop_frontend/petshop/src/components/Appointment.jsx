@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Container, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,17 @@ const Appointment = () => {
       groomService: '',
     },
   });
+
+  const navigate = useNavigate();
+
+  // Check for authentication
+  useEffect(() => {
+    const username = localStorage.getItem('username');
+    if (!username) {
+      alert('You need to log in to book an appointment.');
+      navigate('/auth');
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -209,7 +221,7 @@ const Appointment = () => {
         </form>
       </Container>
     </Box>
-  );    
+  );
 };
 
 export default Appointment;
