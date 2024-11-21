@@ -1,9 +1,16 @@
 package com.ccdjmv.petshop.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,6 +26,10 @@ public class ProductEntity {
 	private String productType;
 	private int quantity;
 	
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	@JsonManagedReference
+//	@JsonIgnore
+	private List<CartItemEntity> cartItem;
 	
 	public ProductEntity(int productID, String description, double productPrice, String productName, String productType,
 			int quantity) {
@@ -70,6 +81,14 @@ public class ProductEntity {
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public List<CartItemEntity> getCartItem() {
+		return cartItem;
+	}
+
+	public void setCartItem(List<CartItemEntity> cartItem) {
+		this.cartItem = cartItem;
 	}
 	
 	
