@@ -22,6 +22,10 @@ export default function Header({ username, role }) {
     navigate("/auth");
   };
 
+  const handleAboutUsClick = () => {
+    navigate('/aboutus');
+  };
+
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -69,9 +73,11 @@ export default function Header({ username, role }) {
           <Button sx={{ color: "black" }} onClick={handleHomeClick}>
             Home
           </Button>
-          <Button sx={{ color: "black" }}>Products</Button>
-          <Button sx={{ color: "black" }}>Service</Button>
-          <Button sx={{ color: "black" }}>About Us</Button>
+          <Button sx={{ color: 'black' }}>Products</Button>
+          {/*    */}
+          <Button sx={{ color: 'black' }} onClick={handleAboutUsClick}>
+            About Us
+          </Button>
           {username ? (
             <>
               <Button
@@ -101,9 +107,7 @@ export default function Header({ username, role }) {
                 <MenuItem onClick={() => handleMenuOptionClick("/cart")}>
                   Cart
                 </MenuItem>
-                <MenuItem
-                  onClick={() => handleMenuOptionClick("/appointments")}
-                >
+                <MenuItem onClick={() => handleMenuOptionClick('/appointmentslist')}>
                   Appointments
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
