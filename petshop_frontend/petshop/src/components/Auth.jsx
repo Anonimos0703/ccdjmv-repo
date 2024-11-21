@@ -37,12 +37,19 @@ function Auth({ setUsername, setRole }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      });      
 
-      const data = await response.json();
+      let data;
+      const text = await response.text(); // First, read the response as text
+
+      try {
+        data = JSON.parse(text); // Try parsing the response text as JSON
+      } catch (error) {
+        data = { message: text }; // If parsing fails, treat it as plain text
+      }
 
       if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
@@ -51,6 +58,7 @@ function Auth({ setUsername, setRole }) {
       if (!isSignUp) {
         setUsername(data.username);
         localStorage.setItem('username', data.username);
+        localStorage.setItem('id', data.id);
 
         if (data.role) {
           setRole(data.role); // Update state directly
@@ -216,7 +224,7 @@ function Auth({ setUsername, setRole }) {
           </Button>
 
           {message && (
-            <Typography variant="body2" color="error" sx={{ mt: 2, textAlign: 'center' }}>
+            <Typography variant="body2" sx={{ mt: 2, textAlign: 'center', color: 'green' }}>
               {message}
             </Typography>
           )}
