@@ -37,10 +37,10 @@ function Auth({ setUsername, setRole }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      });      
 
       let data;
       const text = await response.text(); // First, read the response as text
