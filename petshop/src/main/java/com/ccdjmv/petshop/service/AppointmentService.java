@@ -41,7 +41,7 @@ public class AppointmentService {
                 .orElseThrow(() -> new NoSuchElementException("Appointment with id " + appid + " not found"));
 
         // Update fields
-        existingAppointment.setCustomerId(appointment.getCustomerId());
+//        existingAppointment.setCustomerId(appointment.getCustomerId());
         existingAppointment.setEmail(appointment.getEmail());
         existingAppointment.setContactNo(appointment.getContactNo());
         existingAppointment.setDate(appointment.getDate());

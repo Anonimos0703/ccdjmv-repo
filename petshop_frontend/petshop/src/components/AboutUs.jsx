@@ -6,6 +6,9 @@ import dogcat from "../assets/dogcat.jpg";
 import kyrie from "../assets/kyrie.jpg";
 import jaredd from "../assets/jaredd.png";
 import charles from "../assets/charles.png";
+import hordista from "../assets/hordista.jpg";
+import cabigas from "../assets/cabigas.jpg";
+import getigan from "../assets/getigan.jpg";  
 
 const AboutUs = () => {
   return (
@@ -188,8 +191,8 @@ const AboutUs = () => {
           <Grid item xs={12} sm={6} md={4} textAlign="center">
             <Box sx={{ boxShadow: 3, padding: 2, textAlign: "center" }}>
               <Avatar
-                src={kyrie}
-                alt="Kyrie"
+                src={hordista}
+                alt="Hordista"
                 sx={{
                   width: 120,
                   height: 120,
@@ -213,8 +216,8 @@ const AboutUs = () => {
           <Grid item xs={12} sm={6} md={4} textAlign="center">
             <Box sx={{ boxShadow: 3, padding: 2, textAlign: "center" }}>
               <Avatar
-                src={kyrie}
-                alt="Kyrie"
+                src={cabigas}
+                alt="Cabigas"
                 sx={{
                   width: 120,
                   height: 120,
@@ -238,8 +241,8 @@ const AboutUs = () => {
           <Grid item xs={12} sm={6} md={4} textAlign="center">
             <Box sx={{ boxShadow: 3, padding: 2, textAlign: "center" }}>
               <Avatar
-                src={kyrie}
-                alt="Kyrie"
+                src={getigan}
+                alt="Getigan"
                 sx={{
                   width: 120,
                   height: 120,

@@ -2,6 +2,7 @@ package com.ccdjmv.petshop.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 
@@ -19,14 +20,15 @@ import jakarta.persistence.Table;
 public class GroomingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer groomingId;  // Changed from int to Integer
+    private Integer groomingId; 
     
-    private Integer price;  // Changed from int to Integer
+    private Integer price;  
     
 
-    private String groomService;  // Keep naming consistent (camelCase)
+    private String groomService;  
     
     @OneToMany(mappedBy = "grooming", cascade = CascadeType.ALL)
+    @JsonManagedReference("grooming-appointment")
     private List<AppointmentEntity> appointments;
 
     // Update constructor
@@ -65,11 +67,11 @@ public class GroomingEntity {
         this.groomService = groomService;
     }
 
-//    public List<AppointmentEntity> getAppointments() {  
-//        return appointments;
-//    }
-//
-//    public void setAppointments(List<AppointmentEntity> appointments) { 
-//        this.appointments = appointments;
-//    }
+    public List<AppointmentEntity> getAppointments() {  
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentEntity> appointments) { 
+        this.appointments = appointments;
+    }
 }

@@ -1,6 +1,9 @@
 package com.ccdjmv.petshop.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Table(name = "tblorder")
@@ -15,9 +18,16 @@ public class OrderEntity {
     private String paymentMethod;
     private Double totalPrice;
 
+   
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @JsonBackReference("customer-order")
     private CustomerEntity customer;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productid")
+    @JsonBackReference("product-order")
+    private ProductEntity product;
 
     public OrderEntity() {
         super();
@@ -62,12 +72,21 @@ public class OrderEntity {
         this.totalPrice = totalPrice;
     }
 
-    @JsonBackReference
+     
     public CustomerEntity getCustomer() {
         return customer;
     }
 
     public void setCustomer(CustomerEntity customer) {
         this.customer = customer;
+    }
+    
+     
+    public ProductEntity getProduct() {
+    	return product;
+    }
+    
+    public void setProduct(ProductEntity product) {
+    	this.product  = product;
     }
 }

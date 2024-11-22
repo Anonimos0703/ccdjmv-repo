@@ -1,16 +1,18 @@
 package com.ccdjmv.petshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
 
-@Table(name = "tblcustomer")
 @Entity
+@Table(name = "tblcustomer")
 public class CustomerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id")
+   
     private int customerId;
 
     private String firstName;
@@ -24,9 +26,26 @@ public class CustomerEntity {
     private int zip;
     private String password;
 
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonManagedReference("customer-order")
     private List<OrderEntity> order;
+    
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    @JsonBackReference("user-customer")
+    private UserEntity user;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonManagedReference("customer-appointments")
+    private List<AppointmentEntity>appointments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonManagedReference("customer-productreview")
+    private List<ProductReviewEntity> productreview;
+    
+    
     public CustomerEntity() {
         super();
     }
@@ -113,7 +132,7 @@ public class CustomerEntity {
         this.password = password;
     }
 
-    @JsonManagedReference
+     
     public List<OrderEntity> getOrder() {
         return order;
     }
@@ -121,4 +140,29 @@ public class CustomerEntity {
     public void setOrder(List<OrderEntity> order) {
         this.order = order;
     }
+    
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+    
+    public List<AppointmentEntity> getAppointment(){
+    	return appointments;
+    }
+    
+    public void setAppointment(List<AppointmentEntity> appointments) {
+    	this.appointments = appointments;
+    }
+    
+    public List<ProductReviewEntity> getProductReview(){
+    	return productreview;
+    }
+    
+    public void setProductReview(List<ProductReviewEntity>productreview) {
+    	this.productreview = productreview;
+    }
+     
 }

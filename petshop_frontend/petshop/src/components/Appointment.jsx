@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'sonner'
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +70,7 @@ const Appointment = () => {
       if (response.ok) {
         const result = await response.json();
         console.log('Appointment created:', result);
-        alert('Booking successful! Your appointment has been created.');
+        toast.success('Booking Successful!');
 
         setFormData({
           customerId: '',
@@ -83,7 +84,7 @@ const Appointment = () => {
           },
         });
       } else {
-        alert('Failed to create appointment: ' + response.statusText);
+        toast.error('Failed To Create Appointment');
         console.error('Failed to create appointment:', response.statusText);
       }
     } catch (error) {
@@ -104,6 +105,7 @@ const Appointment = () => {
         backgroundColor: '#f7f7f7',
       }}
     >
+      <Toaster richColors  />
       <Container
         maxWidth="sm"
         sx={{
