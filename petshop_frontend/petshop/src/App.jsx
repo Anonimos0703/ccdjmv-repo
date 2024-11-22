@@ -8,6 +8,7 @@ import Cart from './components/Cart';
 import Appointment from './components/Appointment';
 import AboutUs from './components/AboutUs';
 import Profile from './components/Profile';
+import Checkout from './components/Checkout';
 import { Navigate } from 'react-router-dom';
 
 
@@ -56,20 +57,19 @@ function App() {
         {/* <Route
           path="/appointments" */}
 
-     <Route
-  path="/appointments"
-  element={
-    localStorage.getItem('username') ? (
-      <Layout username={username} role={role}>
-        <Appointment />
-      </Layout>
-    ) : (
-      <Navigate to="/auth" />
-    )
-  }
-/>
-
-         <Route
+        <Route
+          path="/appointments"
+          element={
+            localStorage.getItem('username') ? (
+              <Layout username={username} role={role}>
+                <Appointment />
+              </Layout>
+            ) : (
+              <Navigate to="/auth" />
+            )
+          }
+        />
+        <Route
           path="/aboutus"
           element={
             <Layout username={username} role={role}>
@@ -77,11 +77,19 @@ function App() {
             </Layout>
           }
         />
-              <Route
+        <Route
           path="/profile"
           element={
             <Layout username={username} role={role}>
               <Profile/>
+            </Layout>
+          }
+        />
+        <Route
+          path='/Checkout'
+          element={
+            <Layout username={username} role={role}>
+              <Checkout/>
             </Layout>
           }
         />

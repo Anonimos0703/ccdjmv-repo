@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import CartItem from "./CartItem";
 import axios from "axios";
+import Checkout from "./Checkout";
+import { useNavigate } from "react-router-dom";
 
 // const products = [
 //   { image: dog_food.jpg, name: 'Dog Food', price: '₱200.00' },
@@ -37,6 +39,12 @@ function Cart() {
   useEffect(() => {
     getCartItems();
   }, []);
+
+  const navigate = useNavigate()
+
+  const handleCheckoutClick = () => {
+    navigate('/Checkout');
+  }
 
   return (
     <Box
@@ -130,6 +138,7 @@ function Cart() {
                 color="warning"
                 fullWidth
                 style={{ marginTop: "15px" }}
+                onClick={handleCheckoutClick}
               >
                 PROCEED TO CHECKOUT
               </Button>
