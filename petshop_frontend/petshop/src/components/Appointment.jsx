@@ -5,7 +5,7 @@ import { Toaster, toast } from 'sonner'
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
-    customerId: '',
+   
     email: '',
     contactNo: '',
     date: '',
@@ -18,7 +18,7 @@ const Appointment = () => {
 
   const navigate = useNavigate();
 
-  // Check for authentication
+
   useEffect(() => {
     const username = localStorage.getItem('username');
     if (!username) {
@@ -49,12 +49,14 @@ const Appointment = () => {
     e.preventDefault();
 
     const appointmentData = {
-      customerId: formData.customerId,
+      
       date: formData.date,
       email: formData.email,
       contactNo: formData.contactNo,
-      price: formData.grooming.price,
-      groomService: formData.grooming.groomService,
+      grooming: {
+        price: formData.grooming.price,
+        groomService: formData.grooming.groomService,
+      }
     };
 
     try {
@@ -69,11 +71,11 @@ const Appointment = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Appointment created:', result);
-        toast.success('Booking Successful!');
+        console.log('Appointment created:', result.appId);
+        toast.success('Booking Successful!'+ result.appId);
 
         setFormData({
-          customerId: '',
+         
           email: '',
           contactNo: '',
           date: '',
@@ -132,21 +134,17 @@ const Appointment = () => {
           </Typography>
         </Box>
         <form onSubmit={handleSubmit}>
-          {['customerId', 'email', 'contactNo'].map((field, index) => (
+          {['email', 'contactNo'].map((field, index) => (
             <TextField
               key={index}
               label={
-                field === 'customerId'
-                  ? 'Customer ID'
-                  : field === 'email'
+                field === 'email'
                   ? 'Email'
                   : 'Contact No.'
               }
               type={field === 'email' ? 'email' : 'text'}
               name={field}
-              placeholder={`Enter ${
-                field === 'customerId' ? 'Customer ID' : field
-              }`}
+              
               value={formData[field]}
               onChange={handleChange}
               fullWidth

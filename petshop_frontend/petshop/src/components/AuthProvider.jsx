@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('id', id);         // Store the user's ID
     localStorage.setItem('username', username);
     localStorage.setItem('role', role);
+    localStorage.setItem('email', email);
 };
 
 
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('username');
     localStorage.removeItem('role');
     localStorage.removeItem('id');
+    localStorage.removeItem('email');
   };
 
   return (

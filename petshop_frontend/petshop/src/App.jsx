@@ -10,6 +10,7 @@ import AboutUs from './components/AboutUs';
 import Profile from './components/Profile';
 import Checkout from './components/Checkout';
 import { Navigate } from 'react-router-dom';
+import UserAppointmentList from './components/UserAppointmentList';
 
 
 
@@ -90,6 +91,14 @@ function App() {
           element={
             <Layout username={username} role={role}>
               <Checkout/>
+            </Layout>
+          }
+        />
+        <Route
+          path="/appointmentslist"
+           element={
+            <Layout username={username} role={role}>
+              <UserAppointmentList />
             </Layout>
           }
         />
