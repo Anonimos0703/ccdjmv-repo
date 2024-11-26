@@ -55,7 +55,7 @@ public class AppointmentService {
         String msg;
 
         if (appointmentRepository.existsById(appid)) {
-            appointmentRepository.deleteById(appid); // Correctly delete the entity by ID
+            appointmentRepository.deleteById(appid); 
             msg = "Appointment record successfully deleted.";
         } else {
             msg = "Appointment with id " + appid + " not found.";

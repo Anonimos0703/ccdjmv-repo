@@ -42,7 +42,7 @@ public class AppointmentEntity {
     public AppointmentEntity() {
     }
     
-    public AppointmentEntity(Integer appId, String customerId, Date date, String email, String contactNo) {
+    public AppointmentEntity(Integer appId, Date date, String email, String contactNo) {
     	super();
         this.appId = appId;
 //        this.customerId = customerId;
