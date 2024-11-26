@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,4 +55,11 @@ public class AppointmentController {
     public String deleteCourse(@PathVariable int appid) {
         return appointmentService.deleteAppointment(appid);
     }
+    
+    @GetMapping("/getAppointmentsByUser/{email}")
+    public ResponseEntity<List<AppointmentEntity>> getAppointmentByUser(@PathVariable String email) {
+        List<AppointmentEntity> appointments = appointmentService.getAppointmentByUser(email);
+        return ResponseEntity.ok(appointments);
+    }
+
 }

@@ -11,6 +11,7 @@ const Profile = () => {
     const fetchUser = async () => {
       const id = localStorage.getItem('id');
       console.log('User ID from localStorage:', id);
+      
 
       if (!id) {
         console.error('User ID is missing in localStorage');
@@ -25,6 +26,7 @@ const Profile = () => {
       } catch (err) {
         console.error('Error fetching user:', err.response || err);
         setError(err.response?.data?.message || 'Error fetching user data.');
+        
       } finally {
         setLoading(false);
       }

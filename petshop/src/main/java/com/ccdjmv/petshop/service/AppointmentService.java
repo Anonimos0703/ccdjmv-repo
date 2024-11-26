@@ -63,4 +63,9 @@ public class AppointmentService {
 
         return msg;
     }
+    
+    public List<AppointmentEntity> getAppointmentByUser(String email) {
+        return appointmentRepository.findByEmail(email);
+    }
+
 }

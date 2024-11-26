@@ -57,11 +57,20 @@ function Auth({ setUsername, setRole }) {
 
       if (!isSignUp) {
         setUsername(data.username);
+        console.log('FULL LOGIN RESPONSE:', data);
+        console.log('Login response data:', data);
         localStorage.setItem('username', data.username);
         localStorage.setItem('id', data.id);
         localStorage.setItem('email', data.email);
         console.log('Saved email:', localStorage.getItem('email'));
+        console.log('Stored ID:', localStorage.getItem('id'));
          
+        // if (userId) {
+        //   localStorage.setItem('id', userId);
+        //   console.log('Stored ID:', localStorage.getItem('id'));
+        // } else {
+        //   console.error('No user ID found in login response');
+        // }
 
         if (data.role) {
           setRole(data.role); // Update state directly

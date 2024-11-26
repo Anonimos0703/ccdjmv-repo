@@ -38,7 +38,7 @@ public class CustomerEntity {
     private UserEntity user;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
-    @JsonManagedReference("customer-appointments")
+    @JsonManagedReference("customer-appointment")
     private List<AppointmentEntity>appointments;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)

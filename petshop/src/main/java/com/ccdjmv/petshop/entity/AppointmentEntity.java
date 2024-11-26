@@ -35,7 +35,7 @@ public class AppointmentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade  = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
-    @JsonBackReference("customer-appointments")
+    @JsonBackReference("customer-appointment")
     private CustomerEntity customer;
 
     
