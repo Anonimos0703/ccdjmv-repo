@@ -19,9 +19,9 @@ const GroomingAppointmentList = () => {
   useEffect(() => {
     const fetchGroomingAppointments = async () => {
       try {
-        console.log('Sending request to API: http://localhost:8080/api/appointment/cancel/${appId}');
+        console.log('Sending request to API: http://localhost:8080/api/grooming/getGrooming');
 
-        const response = await fetch('http://localhost:8080/api/appointment/cancel/${appId}');
+        const response = await fetch('http://localhost:8080/api/grooming/getGrooming');
         console.log('API response status:', response.status);
 
         if (!response.ok) {
@@ -56,7 +56,7 @@ const GroomingAppointmentList = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/appointment/cancel/${appId}`, {
+      const response = await fetch(`http://localhost:8080/api/appointments/cancel/${appId}`, {
         method: 'DELETE',
       });
 
