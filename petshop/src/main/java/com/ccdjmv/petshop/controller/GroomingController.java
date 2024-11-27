@@ -1,8 +1,10 @@
 package com.ccdjmv.petshop.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,15 +14,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ccdjmv.petshop.entity.AppointmentEntity;
 import com.ccdjmv.petshop.entity.GroomingEntity;
 import com.ccdjmv.petshop.service.GroomingService;
 
 @RestController
 @RequestMapping("/api/grooming")
+@CrossOrigin(origins = "http://localhost:5173")
 public class GroomingController {
 
-	 @Autowired
-	    private GroomingService gserv;
+	private final GroomingService gserv;
+
+    @Autowired
+    public GroomingController(GroomingService gserv) {
+        this.gserv = gserv;
+    }
 	 
 	 @GetMapping("/getGrooming")
 	    public List<GroomingEntity> getAllGrooming() {
@@ -41,4 +49,12 @@ public class GroomingController {
 	    public String deleteGrooming(@PathVariable int GroomingId) {
 	        return gserv.deleteGrooming(GroomingId);
 	    }
+	 
+	 @GetMapping("/getGrooming/{groomingId}")
+	 public GroomingEntity getGroomingWithAppointments(@PathVariable int GroomingId) {
+	     return gserv.getGroomingWithAppointments(GroomingId);
+	 }
+
+	
+
 }

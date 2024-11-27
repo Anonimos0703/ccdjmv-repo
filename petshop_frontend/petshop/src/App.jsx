@@ -17,6 +17,7 @@ import AdminDashboard from './components/AdminDashboard';  // Admin Dashboard co
 import AdminHeader from './components/AdminHeader'
 import AdminFooter from './components/AdminFooter'
 import { AdminAuthProvider } from './components/AdminAuthProvider';  // AdminAuthProvider
+import AdminAppointmentList from './components/AdminAppointmentList';  
 
 function Layout({ children, username, role }) {
   return (
@@ -128,6 +129,16 @@ function App() {
               <ProtectedAdminRoute>
                 <AdminLayout>
                   <AdminDashboard />
+                </AdminLayout>
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/appointments"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout>
+                  <AdminAppointmentList />
                 </AdminLayout>
               </ProtectedAdminRoute>
             }

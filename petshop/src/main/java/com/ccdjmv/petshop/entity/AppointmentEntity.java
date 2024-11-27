@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.LocalTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -27,8 +29,9 @@ public class AppointmentEntity {
     private Date date;
     private String email;       
     private String contactNo;    
+    private LocalTime time;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "grooming_id")
     @JsonBackReference("grooming-appointment")
     private GroomingEntity grooming;
@@ -42,15 +45,24 @@ public class AppointmentEntity {
     public AppointmentEntity() {
     }
     
-    public AppointmentEntity(Integer appId, Date date, String email, String contactNo) {
+    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time) {
     	super();
         this.appId = appId;
 //        this.customerId = customerId;
         this.date = date;
         this.email = email;
         this.contactNo = contactNo;
+        this.time = time;
     }
     
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
     // Getters and Setters
     public Integer getAppId() {
         return appId;

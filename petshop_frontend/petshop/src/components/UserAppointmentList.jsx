@@ -8,7 +8,7 @@ const UserAppointmentList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const fetchGroomingAppointments = async () => {
       try {
         const email = localStorage.getItem('email');
         console.log('Retrieved email from localStorage:', email);
@@ -17,15 +17,12 @@ const UserAppointmentList = () => {
           throw new Error('User not logged in or email not found.');
         }
 
-        // Encode the email to handle special characters
-        const encodedEmail = encodeURIComponent(email);
-        console.log(`Sending request to API: http://localhost:8080/api/appointments/getAppointmentsByUser/${encodedEmail}`);
+        console.log('Sending request to API: http://localhost:8080/api/grooming/getGrooming');
 
-        const response = await fetch(`http://localhost:8080/api/appointments/getAppointmentsByUser/${encodedEmail}`);
+        const response = await fetch('http://localhost:8080/api/grooming/getGrooming');
         console.log('API response status:', response.status);
 
         if (!response.ok) {
-          // Try to get more detailed error message from response
           let errorMessage;
           try {
             const errorData = await response.json();
@@ -37,10 +34,21 @@ const UserAppointmentList = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched appointments:', data);
-        setAppointments(data);
+        console.log('Fetched grooming appointments:', data);
+
+        // Process data to include grooming information in appointments
+        const filteredAppointments = data.flatMap((grooming) =>
+          grooming.appointments?.filter((appointment) => appointment.email === email).map((appointment) => ({
+            ...appointment,
+            groomingService: grooming.groomService,
+            groomingPrice: grooming.price,
+          })) || []
+        );
+
+        console.log('Filtered user appointments with grooming data:', filteredAppointments);
+        setAppointments(filteredAppointments);
       } catch (err) {
-        console.error('Error fetching appointments:', err);
+        console.error('Error fetching grooming appointments:', err);
         setError(err.message);
         toast.error(err.message);
       } finally {
@@ -48,7 +56,7 @@ const UserAppointmentList = () => {
       }
     };
 
-    fetchAppointments();
+    fetchGroomingAppointments();
   }, []);
 
   return (
@@ -89,31 +97,31 @@ const UserAppointmentList = () => {
           <Typography align="center">No appointments found.</Typography>
         ) : (
           <List>
-            {appointments.map((appointment) => (
+            {appointments.map((appointment, index) => (
               <ListItem
-                key={appointment.appId}
-                sx={{ 
-                  borderBottom: '1px solid #ddd', 
+                key={`${appointment.appId}-${index}`}
+                sx={{
+                  borderBottom: '1px solid #ddd',
                   padding: '1rem 0',
                   '&:last-child': {
-                    borderBottom: 'none'
-                  }
+                    borderBottom: 'none',
+                  },
                 }}
               >
                 <ListItemText
                   primary={
                     <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
-                      {`Date: ${appointment.date}, Time: ${appointment.time}`}
+                      {`Date: ${appointment.date}, Time: ${appointment.time || 'N/A'}`}
                     </Typography>
                   }
                   secondary={
                     <>
                       <Typography variant="body2">Email: {appointment.email}</Typography>
                       <Typography variant="body2">
-                        Service: {appointment.grooming?.groomService || 'N/A'}
+                        Service: {appointment.groomingService || 'N/A'}
                       </Typography>
                       <Typography variant="body2">
-                        Price: ₱{appointment.grooming?.price || 'N/A'}
+                        Price: ₱{appointment.groomingPrice || 'N/A'}
                       </Typography>
                     </>
                   }

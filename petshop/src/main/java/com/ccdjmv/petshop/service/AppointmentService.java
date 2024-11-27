@@ -64,8 +64,20 @@ public class AppointmentService {
         return msg;
     }
     
-    public List<AppointmentEntity> getAppointmentByUser(String email) {
-        return appointmentRepository.findByEmail(email);
-    }
+//    public List<AppointmentEntity> getAppointmentByUser(String email) {
+//        return appointmentRepository.findByEmail(email);
+//    }
 
+    public List<AppointmentEntity> findByEmail(String email) {
+        return appointmentRepository.findByEmailWithGrooming(email);
+    }
+    
+    public String cancelAppointment(int appId) {
+        if (appointmentRepository.existsById(appId)) {
+            appointmentRepository.deleteById(appId);
+            return "Appointment with ID " + appId + " canceled successfully.";
+        } else {
+            throw new IllegalArgumentException("Appointment with ID " + appId + " not found.");
+        }
+    }
 }

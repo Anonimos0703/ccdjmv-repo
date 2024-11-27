@@ -57,9 +57,21 @@ public class AppointmentController {
     }
     
     @GetMapping("/getAppointmentsByUser/{email}")
-    public ResponseEntity<List<AppointmentEntity>> getAppointmentByUser(@PathVariable String email) {
-        List<AppointmentEntity> appointments = appointmentService.getAppointmentByUser(email);
+    public ResponseEntity<List<AppointmentEntity>> getAppointmentsByUser(@PathVariable String email) {
+        List<AppointmentEntity> appointments = appointmentService.findByEmail(email);
         return ResponseEntity.ok(appointments);
     }
+    
+    @DeleteMapping("/cancel/{appId}")
+    public String cancelAppointment(@PathVariable int appId) {
+        return appointmentService.cancelAppointment(appId);
+    }
+    
+    
+//    @GetMapping("/getAppointmentsByUser/{email}")
+//    public ResponseEntity<List<AppointmentEntity>> getAppointmentByUser(@PathVariable String email) {
+//        List<AppointmentEntity> appointments = appointmentService.getAppointmentByUser(email);
+//        return ResponseEntity.ok(appointments);
+//    }
 
 }

@@ -5,18 +5,32 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ccdjmv.petshop.entity.AppointmentEntity;
 import com.ccdjmv.petshop.entity.GroomingEntity;
+import com.ccdjmv.petshop.repository.AppointmentRepository;
 import com.ccdjmv.petshop.repository.GroomingRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class GroomingService {
 
 	@Autowired
-	private GroomingRepository grev;
 	
-	public GroomingService() {
-		super();
-	}
+	
+	
+	 private final GroomingRepository grev;
+	    private final AppointmentRepository appointmentRepository;
+
+
+	    @Autowired
+	    public GroomingService(AppointmentRepository appointmentRepository,GroomingRepository grev) {
+	        this.appointmentRepository = appointmentRepository;
+	        this.grev = grev;
+	    }
+	 
+	
 	
 	//read
 	public List<GroomingEntity> getAllGrooming(){
@@ -52,4 +66,13 @@ public class GroomingService {
 
         return msg;
 	}
+	
+	public GroomingEntity getGroomingWithAppointments(int GroomingId) {
+	    return grev.findById(GroomingId)
+	            .orElseThrow(() -> new EntityNotFoundException("Grooming not found"));
+	}
+	
+	
+
+
 }

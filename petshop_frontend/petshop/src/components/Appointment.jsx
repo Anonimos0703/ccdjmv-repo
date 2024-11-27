@@ -52,6 +52,7 @@ const Appointment = () => {
       
       date: formData.date,
       email: formData.email,
+      time: formData.time,
       contactNo: formData.contactNo,
       grooming: {
         price: formData.grooming.price,
