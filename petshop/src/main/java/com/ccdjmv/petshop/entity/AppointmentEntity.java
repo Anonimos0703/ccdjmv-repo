@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 
@@ -25,11 +26,14 @@ public class AppointmentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer appId;
     
-//    private String customerId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private String email;       
     private String contactNo;    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime time;
+    
+    private boolean canceled = false; 
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "grooming_id")
@@ -45,10 +49,11 @@ public class AppointmentEntity {
     public AppointmentEntity() {
     }
     
-    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time) {
+    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time, boolean canceled) {
     	super();
         this.appId = appId;
 //        this.customerId = customerId;
+        this.canceled = canceled;
         this.date = date;
         this.email = email;
         this.contactNo = contactNo;
@@ -61,6 +66,14 @@ public class AppointmentEntity {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+    
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     // Getters and Setters
