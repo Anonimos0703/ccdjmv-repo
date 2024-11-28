@@ -8,9 +8,16 @@ import Cart from './components/Cart';
 import Appointment from './components/Appointment';
 import AboutUs from './components/AboutUs';
 import Profile from './components/Profile';
+import Checkout from './components/Checkout';
 import { Navigate } from 'react-router-dom';
-
-
+import UserAppointmentList from './components/UserAppointmentList';
+import AdminLogin from './components/AdminLogin';  // Admin login component
+import ProtectedAdminRoute from './components/ProtectedAdminRoute'; // Protected admin route
+import AdminDashboard from './components/AdminDashboard';  // Admin Dashboard component
+import AdminHeader from './components/AdminHeader'
+import AdminFooter from './components/AdminFooter'
+import { AdminAuthProvider } from './components/AdminAuthProvider';  // AdminAuthProvider
+import AdminAppointmentList from './components/AdminAppointmentList';  
 
 function Layout({ children, username, role }) {
   return (
@@ -20,6 +27,17 @@ function Layout({ children, username, role }) {
       <Footer />
     </>
   );
+}
+
+function AdminLayout({children,username,role}){
+  return(
+    <>
+  <AdminHeader username={username} role={role}/>
+  {children}
+  <AdminFooter />
+  </>
+  )
+   
 }
 
 function App() {
@@ -34,59 +52,101 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout username={username} role={role}>
-              <HomePage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/auth"
-          element={<Auth setUsername={setUsername} setRole={setRole} />}
-        />
-        <Route path="/cart" element={
-          <Layout username={username} role={role}>
-            <Cart />
-          </Layout>} />
-          
-        {/* <Route
-          path="/appointments" */}
+     
+      <Router>
+        <AdminAuthProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout username={username} role={role}>
+                <HomePage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/auth"
+            element={<Auth setUsername={setUsername} setRole={setRole} />}
+          />
+          <Route
+            path="/cart"
+            element={
+              <Layout username={username} role={role}>
+                <Cart />
+              </Layout>
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              localStorage.getItem('username') ? (
+                <Layout username={username} role={role}>
+                  <Appointment />
+                </Layout>
+              ) : (
+                <Navigate to="/auth" />
+              )
+            }
+          />
+          <Route
+            path="/aboutus"
+            element={
+              <Layout username={username} role={role}>
+                <AboutUs />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Layout username={username} role={role}>
+                <Profile />
+              </Layout>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <Layout username={username} role={role}>
+                <Checkout />
+              </Layout>
+            }
+          />
+          <Route
+            path="/appointmentslist"
+            element={
+              <Layout username={username} role={role}>
+                <UserAppointmentList />
+              </Layout>
+            }
+          />
 
-     <Route
-  path="/appointments"
-  element={
-    localStorage.getItem('username') ? (
-      <Layout username={username} role={role}>
-        <Appointment />
-      </Layout>
-    ) : (
-      <Navigate to="/auth" />
-    )
-  }
-/>
-
-         <Route
-          path="/aboutus"
-          element={
-            <Layout username={username} role={role}>
-              <AboutUs />
-            </Layout>
-          }
-        />
-              <Route
-          path="/profile"
-          element={
-            <Layout username={username} role={role}>
-              <Profile/>
-            </Layout>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/appointments"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout>
+                  <AdminAppointmentList />
+                </AdminLayout>
+              </ProtectedAdminRoute>
+            }
+          />
+        </Routes>
+        </AdminAuthProvider>
+      </Router>
+    
   );
 }
 

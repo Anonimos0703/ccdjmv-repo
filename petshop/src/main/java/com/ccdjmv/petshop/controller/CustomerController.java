@@ -1,5 +1,6 @@
 package com.ccdjmv.petshop.controller;
 
+import org.springframework.http.MediaType;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.ccdjmv.petshop.entity.CustomerEntity;
 import com.ccdjmv.petshop.service.CustomerService;
 
+
+
 @RestController
-@RequestMapping(method = RequestMethod.GET, path="/api/customer")
+@RequestMapping(path="/api/customer") 
 public class CustomerController {
 
     @Autowired
@@ -30,7 +34,7 @@ public class CustomerController {
     }
 
     //Create of CRUD
-    @PostMapping("/postCustomerRecord")
+    @PostMapping(value = "/postCustomerRecord", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CustomerEntity postCustomerRecord(@RequestBody CustomerEntity customer) {
         return cserv.postCustomerRecord(customer);
     }
@@ -42,8 +46,8 @@ public class CustomerController {
     }
 
     //Update of CRUD
-    @PutMapping("/putCustomerDetails")
-    public CustomerEntity putCustomerDetails(@RequestParam int id, @RequestBody CustomerEntity newCustomerDetails) {
+    @PutMapping("/putCustomerDetails/{id}")
+    public CustomerEntity putCustomerDetails(@PathVariable int id, @RequestBody CustomerEntity newCustomerDetails) {
         return cserv.putCustomerDetails(id, newCustomerDetails);
     }
 

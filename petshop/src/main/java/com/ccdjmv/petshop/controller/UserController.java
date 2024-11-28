@@ -1,11 +1,16 @@
 package com.ccdjmv.petshop.controller;
 
+import com.ccdjmv.petshop.entity.CustomerEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
+import com.ccdjmv.petshop.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,6 +21,8 @@ public class UserController {
 
     @Autowired	
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody UserEntity user) {
@@ -50,7 +57,48 @@ public class UserController {
         } else {
             return ResponseEntity.status(403).body(Map.of("message", "Role not recognized."));
         }
-        return ResponseEntity.ok(Map.of("message", message, "username", existingUser.get().getUsername(), "role", role));
+        return ResponseEntity.ok(Map.of(
+        	    "id", existingUser.get().getId().toString(), // Include user ID
+        	    "message", message,
+        	    "username", existingUser.get().getUsername(),
+        	    "role", role,
+        	    "email", existingUser.get().getEmail()
+        	));
+    }
+    
+    @GetMapping("/users")
+    public ResponseEntity<List<UserEntity>> getAllUsers() {
+        List<UserEntity> users = userService.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/users/{id}")
+    @CrossOrigin(origins = "http://localhost:5173")
+    public ResponseEntity<Map<String, String>> getUserProfile(@PathVariable String id) {
+        try {
+            Long userId = Long.parseLong(id);
+            Optional<UserEntity> userEntity = userRepository.findById(userId);
+
+            if (userEntity.isEmpty()) {
+                return ResponseEntity.status(404).body(Map.of("message", "User not found."));
+            }
+
+            UserEntity user = userEntity.get();
+            return ResponseEntity.ok(Map.of(
+                "username", user.getUsername(),
+                "firstName", user.getFirstName(),
+                "lastName", user.getLastName(),
+                "email", user.getEmail(),
+                "role", user.getRole()
+            ));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(400).body(Map.of("message", "Invalid user ID format."));
+        }
+    }
+    
+    @PostMapping("/postUser")
+    public UserEntity postUser(@RequestBody UserEntity user) {
+        return userService.postUser(user);
     }
 
 }

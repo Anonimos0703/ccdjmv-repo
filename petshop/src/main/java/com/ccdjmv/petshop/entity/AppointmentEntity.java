@@ -2,13 +2,18 @@ package com.ccdjmv.petshop.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.LocalTime;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 
@@ -20,28 +25,44 @@ public class AppointmentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer appId;
     
-    private String customerId;
+//    private String customerId;
     private Date date;
     private String email;       
     private String contactNo;    
+    private LocalTime time;
     
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "grooming")
-	
-	private GroomingEntity grooming;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "grooming_id")
+    @JsonBackReference("grooming-appointment")
+    private GroomingEntity grooming;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade  = CascadeType.ALL)
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference("customer-appointment")
+    private CustomerEntity customer;
+
     
     public AppointmentEntity() {
     }
     
-    public AppointmentEntity(Integer appId, String customerId, Date date, String email, String contactNo) {
+    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time) {
     	super();
         this.appId = appId;
-        this.customerId = customerId;
+//        this.customerId = customerId;
         this.date = date;
         this.email = email;
         this.contactNo = contactNo;
+        this.time = time;
     }
     
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
     // Getters and Setters
     public Integer getAppId() {
         return appId;
@@ -51,13 +72,13 @@ public class AppointmentEntity {
         this.appId = appId;
     }
     
-    public String getCustomerId() {
-        return customerId;
-    }
-    
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
+//    public String getCustomerId() {
+//        return customerId;
+//    }
+//    
+//    public void setCustomerId(String customerId) {
+//        this.customerId = customerId;
+//    }
     
     public Date getDate() {
         return date;
@@ -89,5 +110,13 @@ public class AppointmentEntity {
     
     public void setGrooming(GroomingEntity grooming) {
     	this.grooming = grooming;
+    }
+    
+    public CustomerEntity getCustomer() {
+    	return customer;
+    }
+    
+    public void setCustomer(CustomerEntity customer) {
+    	this.customer = customer;
     }
 }

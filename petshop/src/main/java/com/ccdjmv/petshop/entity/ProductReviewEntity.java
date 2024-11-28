@@ -1,9 +1,15 @@
 package com.ccdjmv.petshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,6 +20,17 @@ public class ProductReviewEntity {
     private int ReviewID;
     
     private int ratings;
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "productid")
+    @JsonBackReference("product-productreview")
+    private ProductEntity product;
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id")
+    @JsonBackReference("customer-productreview")
+    private CustomerEntity customer;
+    
     public ProductReviewEntity() {
     	
     }
@@ -38,6 +55,22 @@ public class ProductReviewEntity {
 
     public void setRatings(int ratings) {
         this.ratings = ratings;
+    }
+    
+    public ProductEntity getProduct() {
+    	return product;
+    }
+    
+    public void setProduct(ProductEntity product) {
+    	this.product  = product;
+    }
+    
+    public CustomerEntity getCustomer() {
+    	return customer;
+    }
+    
+    public void setCustomer(CustomerEntity customer) {
+    	this.customer = customer;
     }
 
 }    

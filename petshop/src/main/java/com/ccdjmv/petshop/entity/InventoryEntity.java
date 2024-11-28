@@ -3,6 +3,8 @@ package com.ccdjmv.petshop.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class InventoryEntity {
 
@@ -10,10 +12,26 @@ public class InventoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inventoryId;
 
-    @Column(nullable = false)
+    
     private LocalDate dateAdded;
     
-    public Long getInventoryId() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productid")
+    @JsonBackReference("product-inventory")
+    private ProductEntity product;
+    
+ 
+
+    public InventoryEntity(LocalDate dateAdded) {
+		super();
+		this.dateAdded = dateAdded;
+	}
+    
+    public InventoryEntity() {
+    	
+    }
+
+	public Long getInventoryId() {
         return inventoryId;
     }
 
@@ -27,5 +45,13 @@ public class InventoryEntity {
 
     public void setDateAdded(LocalDate dateAdded) {
         this.dateAdded = dateAdded;
+    }
+    
+    public ProductEntity getProduct() {
+    	return product;
+    }
+    
+    public void setProduct(ProductEntity product) {
+    	this.product  = product;
     }
 }

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'sonner'
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
-    customerId: '',
+   
     email: '',
     contactNo: '',
     date: '',
@@ -17,7 +18,7 @@ const Appointment = () => {
 
   const navigate = useNavigate();
 
-  // Check for authentication
+
   useEffect(() => {
     const username = localStorage.getItem('username');
     if (!username) {
@@ -48,12 +49,15 @@ const Appointment = () => {
     e.preventDefault();
 
     const appointmentData = {
-      customerId: formData.customerId,
+      
       date: formData.date,
       email: formData.email,
+      time: formData.time,
       contactNo: formData.contactNo,
-      price: formData.grooming.price,
-      groomService: formData.grooming.groomService,
+      grooming: {
+        price: formData.grooming.price,
+        groomService: formData.grooming.groomService,
+      }
     };
 
     try {
@@ -68,11 +72,11 @@ const Appointment = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Appointment created:', result);
-        alert('Booking successful! Your appointment has been created.');
+        console.log('Appointment created:', result.appId);
+        toast.success('Booking Successful!'+ result.appId);
 
         setFormData({
-          customerId: '',
+         
           email: '',
           contactNo: '',
           date: '',
@@ -83,7 +87,7 @@ const Appointment = () => {
           },
         });
       } else {
-        alert('Failed to create appointment: ' + response.statusText);
+        toast.error('Failed To Create Appointment');
         console.error('Failed to create appointment:', response.statusText);
       }
     } catch (error) {
@@ -104,6 +108,7 @@ const Appointment = () => {
         backgroundColor: '#f7f7f7',
       }}
     >
+      <Toaster richColors  />
       <Container
         maxWidth="sm"
         sx={{
@@ -130,21 +135,17 @@ const Appointment = () => {
           </Typography>
         </Box>
         <form onSubmit={handleSubmit}>
-          {['customerId', 'email', 'contactNo'].map((field, index) => (
+          {['email', 'contactNo'].map((field, index) => (
             <TextField
               key={index}
               label={
-                field === 'customerId'
-                  ? 'Customer ID'
-                  : field === 'email'
+                field === 'email'
                   ? 'Email'
                   : 'Contact No.'
               }
               type={field === 'email' ? 'email' : 'text'}
               name={field}
-              placeholder={`Enter ${
-                field === 'customerId' ? 'Customer ID' : field
-              }`}
+              
               value={formData[field]}
               onChange={handleChange}
               fullWidth

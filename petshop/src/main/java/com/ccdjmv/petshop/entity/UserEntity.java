@@ -1,6 +1,12 @@
 package com.ccdjmv.petshop.entity;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -30,6 +36,11 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private String role;
 
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference("user-customer")
+    private List<CustomerEntity> customer;
+    
     public UserEntity() {}
 
     public UserEntity(String username, String firstName, String lastName, String email, String password, String role) {
@@ -95,5 +106,13 @@ public class UserEntity {
 
     public void setRole(String role) {
         this.role = role;
+    }
+    
+    public List<CustomerEntity> getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(List<CustomerEntity> customer) {
+        this.customer = customer;
     }
 }

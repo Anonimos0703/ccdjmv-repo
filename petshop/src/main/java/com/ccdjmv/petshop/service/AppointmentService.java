@@ -41,7 +41,7 @@ public class AppointmentService {
                 .orElseThrow(() -> new NoSuchElementException("Appointment with id " + appid + " not found"));
 
         // Update fields
-        existingAppointment.setCustomerId(appointment.getCustomerId());
+//        existingAppointment.setCustomerId(appointment.getCustomerId());
         existingAppointment.setEmail(appointment.getEmail());
         existingAppointment.setContactNo(appointment.getContactNo());
         existingAppointment.setDate(appointment.getDate());
@@ -55,12 +55,29 @@ public class AppointmentService {
         String msg;
 
         if (appointmentRepository.existsById(appid)) {
-            appointmentRepository.deleteById(appid); // Correctly delete the entity by ID
+            appointmentRepository.deleteById(appid); 
             msg = "Appointment record successfully deleted.";
         } else {
             msg = "Appointment with id " + appid + " not found.";
         }
 
         return msg;
+    }
+    
+//    public List<AppointmentEntity> getAppointmentByUser(String email) {
+//        return appointmentRepository.findByEmail(email);
+//    }
+
+    public List<AppointmentEntity> findByEmail(String email) {
+        return appointmentRepository.findByEmailWithGrooming(email);
+    }
+    
+    public String cancelAppointment(int appId) {
+        if (appointmentRepository.existsById(appId)) {
+            appointmentRepository.deleteById(appId);
+            return "Appointment with ID " + appId + " canceled successfully.";
+        } else {
+            throw new IllegalArgumentException("Appointment with ID " + appId + " not found.");
+        }
     }
 }

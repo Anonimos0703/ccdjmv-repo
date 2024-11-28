@@ -43,12 +43,12 @@ function Auth({ setUsername, setRole }) {
       });      
 
       let data;
-      const text = await response.text(); // First, read the response as text
+      const text = await response.text(); 
 
       try {
-        data = JSON.parse(text); // Try parsing the response text as JSON
+        data = JSON.parse(text); 
       } catch (error) {
-        data = { message: text }; // If parsing fails, treat it as plain text
+        data = { message: text }; 
       }
 
       if (!response.ok) {
@@ -57,17 +57,30 @@ function Auth({ setUsername, setRole }) {
 
       if (!isSignUp) {
         setUsername(data.username);
+        console.log('FULL LOGIN RESPONSE:', data);
+        console.log('Login response data:', data);
         localStorage.setItem('username', data.username);
         localStorage.setItem('id', data.id);
+        localStorage.setItem('email', data.email);
+        console.log('Saved email:', localStorage.getItem('email'));
+        console.log('Stored ID:', localStorage.getItem('id'));
+         
+        // if (userId) {
+        //   localStorage.setItem('id', userId);
+        //   console.log('Stored ID:', localStorage.getItem('id'));
+        // } else {
+        //   console.error('No user ID found in login response');
+        // }
 
         if (data.role) {
           setRole(data.role); // Update state directly
           localStorage.setItem('role', data.role);
         }
-
+        localStorage.setItem('email', data.email);
         navigate('/');
       } else {
         setMessage(data.message || 'Registration successful! Please log in.');
+        localStorage.setItem('email', data.email);
       }
     } catch (error) {
       setMessage(error.message);
