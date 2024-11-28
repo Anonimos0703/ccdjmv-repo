@@ -13,15 +13,6 @@ public class PetshopApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PetshopApplication.class, args);
 		System.out.println("PETSHOP: Connection Successful.");
-//		try {
-//            SpringApplication.run(PetshopApplication.class, args);
-//            System.out.println("PETSHOP: Connection Successful.");
-//        } catch (Exception e) {
-//            System.err.println("PETSHOP: " + e.getMessage());
-//            e.printStackTrace(); // Prints the full stack trace for debugging
-//            System.err.println("PETSHOP: An error occurred.");
-//            System.exit(1); // Exits the application with a failure status
-//        }
 	}
 	
 	@Bean

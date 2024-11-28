@@ -1,6 +1,5 @@
 package com.ccdjmv.petshop.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -20,9 +19,8 @@ public class CartItemEntity {
 	
 	private int quantity;
 	
-	@ManyToOne
-	@JoinColumn(name = "ProductID")
-	@JsonBackReference
+	@OneToOne
+	@JsonIgnore
 	private ProductEntity product; //to be continued
 	
 	@ManyToOne
