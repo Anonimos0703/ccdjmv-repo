@@ -61,13 +61,13 @@ export default function AdminHeader() {
           <Button sx={{ color: "black" }} onClick={() => navigate("/admin/dashboard")}>
             Dashboard
           </Button>
-          <Button sx={{ color: "black" }} onClick={() => navigate("/inventory")}>
+          <Button sx={{ color: "black" }} onClick={() => navigate("/admin/inventory")}>
             Inventory
           </Button>
           <Button sx={{ color: "black" }} onClick={() => navigate("/admin/appointments")}>
             Appointments
           </Button>
-          <Button
+          <Button     
             sx={{ color: "black" }}
             onClick={handleMenuClick}
           >

@@ -22,6 +22,10 @@ export default function Header({ username, role }) {
     navigate("/auth");
   };
 
+  const handleProductsClick = () => {
+    navigate("/products");
+  };
+
   const handleAboutUsClick = () => {
     navigate('/aboutus');
   };
@@ -73,8 +77,9 @@ export default function Header({ username, role }) {
           <Button sx={{ color: "black" }} onClick={handleHomeClick}>
             Home
           </Button>
-          <Button sx={{ color: 'black' }}>Products</Button>
-          {/*    */}
+          <Button sx={{ color: 'black' }} onClick={handleProductsClick}>
+            Products
+            </Button>
           <Button sx={{ color: 'black' }} onClick={handleAboutUsClick}>
             About Us
           </Button>

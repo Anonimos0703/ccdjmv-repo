@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/inventories")
 public class InventoryController {
@@ -28,7 +29,7 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryService.getInventoryById(id));
     }
 
-    @PostMapping
+    @PostMapping("/postInventory")
     public ResponseEntity<InventoryEntity> createInventory(@RequestBody InventoryEntity inventory) {
         return ResponseEntity.status(HttpStatus.CREATED).body(inventoryService.createInventory(inventory));
     }

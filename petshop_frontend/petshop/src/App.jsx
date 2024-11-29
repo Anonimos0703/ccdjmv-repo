@@ -11,13 +11,15 @@ import Profile from './components/Profile';
 import Checkout from './components/Checkout';
 import { Navigate } from 'react-router-dom';
 import UserAppointmentList from './components/UserAppointmentList';
-import AdminLogin from './components/AdminLogin';  // Admin login component
-import ProtectedAdminRoute from './components/ProtectedAdminRoute'; // Protected admin route
-import AdminDashboard from './components/AdminDashboard';  // Admin Dashboard component
+import AdminLogin from './components/AdminLogin';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import AdminDashboard from './components/AdminDashboard';
 import AdminHeader from './components/AdminHeader'
 import AdminFooter from './components/AdminFooter'
-import { AdminAuthProvider } from './components/AdminAuthProvider';  // AdminAuthProvider
+import { AdminAuthProvider } from './components/AdminAuthProvider';
 import AdminAppointmentList from './components/AdminAppointmentList';  
+import Inventory from './components/Inventory';
+import Products from './components/Products'
 
 function Layout({ children, username, role }) {
   return (
@@ -120,6 +122,14 @@ function App() {
               </Layout>
             }
           />
+          <Route
+            path="/products"
+            element={
+              <Layout username={username} role={role}>
+                <Products />
+              </Layout>
+            }
+          />  
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -143,6 +153,16 @@ function App() {
               </ProtectedAdminRoute>
             }
           />
+          <Route
+              path="/admin/inventory"
+              element={
+                <ProtectedAdminRoute>
+                  <AdminLayout>
+                    <Inventory />
+                  </AdminLayout>
+                </ProtectedAdminRoute>
+              }
+            />
         </Routes>
         </AdminAuthProvider>
       </Router>
