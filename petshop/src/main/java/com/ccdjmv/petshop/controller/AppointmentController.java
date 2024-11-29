@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.http.ResponseEntity;
@@ -62,16 +63,27 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
     
-    @DeleteMapping("/cancel/{appId}")
-    public String cancelAppointment(@PathVariable int appId) {
-        return appointmentService.cancelAppointment(appId);
+    @PutMapping("/cancel/{appid}")
+    public ResponseEntity<String> cancelAppointment(@PathVariable int appid) {
+        // Find the appointment by appid
+        AppointmentEntity appointment = appointmentService.getAppointmentById(appid); // Ensure this method exists in your service
+
+        if (appointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Appointment not found.");
+        }
+
+        // Update the canceled flag to true
+        appointment.setCanceled(true);
+
+        // Save the updated appointment to the database
+        String response = appointmentService.updateAppointment(appointment); // Ensure you have a method to update the appointment
+
+        if (response.equals("Appointment successfully updated.")) {
+            return ResponseEntity.ok("Appointment successfully canceled.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel appointment.");
+        }
     }
-    
-    
-//    @GetMapping("/getAppointmentsByUser/{email}")
-//    public ResponseEntity<List<AppointmentEntity>> getAppointmentByUser(@PathVariable String email) {
-//        List<AppointmentEntity> appointments = appointmentService.getAppointmentByUser(email);
-//        return ResponseEntity.ok(appointments);
-//    }
+
 
 }

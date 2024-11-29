@@ -48,18 +48,25 @@ const Appointment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const loggedInEmail = localStorage.getItem('email'); 
+
+    if (formData.email !== loggedInEmail) {
+      toast.error("You can only book an appointment using your registered email.");
+      return; 
+    }
+  
+    
     const appointmentData = {
-      
       date: formData.date,
       email: formData.email,
-      time: formData.time,
+      time: formData.time, 
       contactNo: formData.contactNo,
       grooming: {
         price: formData.grooming.price,
         groomService: formData.grooming.groomService,
-      }
+      },
     };
-
+  
     try {
       const response = await fetch(
         'http://localhost:8080/api/appointments/postAppointment',
@@ -69,14 +76,13 @@ const Appointment = () => {
           body: JSON.stringify(appointmentData),
         }
       );
-
+  
       if (response.ok) {
         const result = await response.json();
         console.log('Appointment created:', result.appId);
-        toast.success('Booking Successful!'+ result.appId);
-
+        toast.success('Booking Successful! Appointment ID: ' + result.appId);
+  
         setFormData({
-         
           email: '',
           contactNo: '',
           date: '',
@@ -87,7 +93,7 @@ const Appointment = () => {
           },
         });
       } else {
-        toast.error('Failed To Create Appointment');
+        toast.error('Failed to Create Appointment');
         console.error('Failed to create appointment:', response.statusText);
       }
     } catch (error) {
@@ -95,7 +101,7 @@ const Appointment = () => {
       console.error('Error:', error);
     }
   };
-
+  
   return (
     <Box
       sx={{
@@ -166,17 +172,18 @@ const Appointment = () => {
             required
           />
 
-          <TextField
-            label="Time"
-            type="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            fullWidth
-            margin="dense"
-            InputLabelProps={{ shrink: true }}
-            required
-          />
+<TextField
+  label="Time"
+  type="time"
+  name="time"
+  value={formData.time}
+  onChange={handleChange}
+  fullWidth
+  margin="dense"
+  InputLabelProps={{ shrink: true }}
+  required
+/>
+
 
           <TextField
             label="Price"

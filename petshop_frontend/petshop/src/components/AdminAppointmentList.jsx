@@ -57,7 +57,7 @@ const GroomingAppointmentList = () => {
 
     try {
       const response = await fetch(`http://localhost:8080/api/appointments/cancel/${appId}`, {
-        method: 'DELETE',
+        method: 'PUT',
       });
 
       if (!response.ok) {
@@ -120,47 +120,52 @@ const GroomingAppointmentList = () => {
           <Typography align="center">No grooming appointments found.</Typography>
         ) : (
           <List>
-            {groomingAppointments.map((grooming) =>
-              grooming.appointments?.map((appointment) => (
-                <ListItem
-                  key={appointment.appId} // Use appId as a unique key
-                  sx={{
-                    borderBottom: '1px solid #ddd',
-                    padding: '1rem 0',
-                    '&:last-child': {
-                      borderBottom: 'none',
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
-                        {`Date: ${appointment.date}, Time: ${appointment.time}`}
-                      </Typography>
-                    }
-                    secondary={
-                      <>
-                        <Typography variant="body2">Email: {appointment.email}</Typography>
-                        <Typography variant="body2">
-                          Service: {grooming.groomService}
-                        </Typography>
-                        <Typography variant="body2">
-                          Price: ₱{grooming.price || 'N/A'}
-                        </Typography>
-                      </>
-                    }
-                  />
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleCancelAppointment(appointment.appId)}
-                  >
-                    Cancel
-                  </Button>
-                </ListItem>
-              ))
-            )}
-          </List>
+  {groomingAppointments.map((grooming) =>
+    grooming.appointments?.map((appointment) => (
+      <ListItem
+        key={appointment.appId}
+        sx={{
+          borderBottom: '1px solid #ddd',
+          padding: '1rem 0',
+          '&:last-child': {
+            borderBottom: 'none',
+          },
+        }}
+      >
+        <ListItemText
+          primary={
+            <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+              {`Date: ${appointment.date}, Time: ${appointment.time}`}
+            </Typography>
+          }
+          secondary={
+            <>
+              <Typography variant="body2">Email: {appointment.email}</Typography>
+              <Typography variant="body2">Contact: {appointment.contactNo}</Typography>
+              {/* Additional grooming service details can be here */}
+            </>
+          }
+        />
+        
+        {/* Conditionally render cancellation message if the appointment is canceled */}
+        {appointment.canceled && (
+          <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>
+            This appointment has been canceled by the admin.
+          </Typography>
+        )}
+        
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => handleCancelAppointment(appointment.appId)}
+        >
+          Cancel
+        </Button>
+      </ListItem>
+    ))
+  )}
+</List>
+
         )}
       </Container>
     </Box>
