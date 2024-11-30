@@ -35,11 +35,6 @@ public class AppointmentEntity {
     
     private boolean canceled = false; 
     
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "grooming_id")
-    @JsonBackReference("grooming-appointment")
-    private GroomingEntity grooming;
-    
     public AppointmentEntity() {
     }
     
@@ -103,11 +98,4 @@ public class AppointmentEntity {
         this.contactNo = contactNo;
     }
     
-    public GroomingEntity getGrooming() {
-    	return grooming;
-    }
-    
-    public void setGrooming(GroomingEntity grooming) {
-    	this.grooming = grooming;
-    }
 }
