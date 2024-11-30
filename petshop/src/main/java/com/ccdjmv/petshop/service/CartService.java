@@ -37,7 +37,7 @@ public class CartService {
 	            new NoSuchElementException("Cart " + cart_id + " not found"));
 
 	        // If ID found, set new values
-	        cart.setCustomer(newCartDetails.getCustomer()); //NOT DONE, EDIT THIS
+//	        cart.setUser(newCartDetails.getUser()); //NOT DONE, EDIT THIS
 
 	        // Save the updated cart
 	        return crepo.save(cart);

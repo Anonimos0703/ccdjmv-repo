@@ -35,11 +35,6 @@ public class UserEntity {
 
     @Column(name = "role", nullable = false)
     private String role;
-
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference("user-customer")
-    private List<CustomerEntity> customer;
     
     public UserEntity() {}
 
@@ -108,11 +103,4 @@ public class UserEntity {
         this.role = role;
     }
     
-    public List<CustomerEntity> getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(List<CustomerEntity> customer) {
-        this.customer = customer;
-    }
 }

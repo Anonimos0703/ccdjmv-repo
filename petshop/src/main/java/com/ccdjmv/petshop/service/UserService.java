@@ -3,7 +3,6 @@ package com.ccdjmv.petshop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ccdjmv.petshop.entity.CustomerEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
 

@@ -39,12 +39,6 @@ public class AppointmentEntity {
     @JoinColumn(name = "grooming_id")
     @JsonBackReference("grooming-appointment")
     private GroomingEntity grooming;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade  = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    @JsonBackReference("customer-appointment")
-    private CustomerEntity customer;
-
     
     public AppointmentEntity() {
     }
@@ -84,15 +78,7 @@ public class AppointmentEntity {
     public void setAppId(Integer appId) {
         this.appId = appId;
     }
-    
-//    public String getCustomerId() {
-//        return customerId;
-//    }
-//    
-//    public void setCustomerId(String customerId) {
-//        this.customerId = customerId;
-//    }
-    
+      
     public Date getDate() {
         return date;
     }
@@ -123,13 +109,5 @@ public class AppointmentEntity {
     
     public void setGrooming(GroomingEntity grooming) {
     	this.grooming = grooming;
-    }
-    
-    public CustomerEntity getCustomer() {
-    	return customer;
-    }
-    
-    public void setCustomer(CustomerEntity customer) {
-    	this.customer = customer;
     }
 }
