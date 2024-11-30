@@ -23,40 +23,34 @@ import com.ccdjmv.petshop.service.CartItemService;
 public class CartItemController {
 	
 	@Autowired
-	CartItemService ciserv;
+	CartItemService cartItemServ;
 	
 	@GetMapping("/test")
     public String test() {
         return "Test endpoint is working!";
     }
 	
-	//Create CartItem without Instructor
+	//Create CartItem 
 	@PostMapping("/postCartItem")
 	public CartItemEntity postCartItem(@RequestBody CartItemEntity cartItem) {
-		return ciserv.postCartItem(cartItem);
-	}
-	
-	//Create of CRUD
-	@PostMapping("/postCartItemRecord")
-	public CartItemEntity postCartItemRecord(@RequestBody CartItemEntity cartItem) {
-		return ciserv.postCartItemRecord(cartItem);
+		return cartItemServ.postCartItem(cartItem);
 	}
 		
 	//Read of CRUD
 	@GetMapping("/getAllCartItems")
 	public List<CartItemEntity> getAllCartItems(){
-		return ciserv.getAllCartItems();
+		return cartItemServ.getAllCartItems();
 	}
 	
 	//Update of CRUD
 	@PutMapping("/putCartItemDetails")
-	public CartItemEntity putCartItemDetails(@RequestParam int cartItem_id, @RequestBody CartItemEntity newCartItemDetails) {
-		return ciserv.putCartItemDetails(cartItem_id, newCartItemDetails);
+	public CartItemEntity putCartItemDetails(@RequestParam int cartItemId, @RequestBody CartItemEntity newCartItemDetails) {
+		return cartItemServ.putCartItemDetails(cartItemId, newCartItemDetails);
 	}
 	
 	//Delete of CRUD
-	@DeleteMapping("/deleteCartItemDetails/{id}")
-	public String deleteCartItem(@PathVariable int id) {
-		return ciserv.deleteCartItem(id);
+	@DeleteMapping("/deleteCartItem/{cartItemId}")
+	public String deleteCartItem(@PathVariable int cartItemId) {
+		return cartItemServ.deleteCartItem(cartItemId);
 	}
 }

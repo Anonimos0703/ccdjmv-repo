@@ -29,7 +29,7 @@ public class CartEntity {
 	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
 	@JsonManagedReference("cart-cartItem")
-	private List<CartItemEntity> cartItem;
+	private List<CartItemEntity> cartItems;
 
 	public CartEntity() {
 		super();
@@ -39,7 +39,7 @@ public class CartEntity {
 	public CartEntity(Long cartId, List<CartItemEntity> cartItem, UserEntity user) {
 		super();
 		this.cartId = cartId;
-		this.cartItem = cartItem;
+		this.cartItems = cartItem;
 		this.user = user;
 	}
 
@@ -59,12 +59,12 @@ public class CartEntity {
 		this.user = user;
 	}
 
-	public List<CartItemEntity> getCartItem() {
-		return cartItem;
+	public List<CartItemEntity> getCartItems() {
+		return cartItems;
 	}
 
-	public void setCartItem(List<CartItemEntity> cartItem) {
-		this.cartItem = cartItem;
+	public void setCartItems(List<CartItemEntity> cartItems) {
+		this.cartItems = cartItems;
 	}
 
 	

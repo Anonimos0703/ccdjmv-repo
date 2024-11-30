@@ -29,15 +29,16 @@ public class CartService {
 		return cartRepo.findAll();
 	}
 	
-	//Update of CRUD
-	public CartEntity putCartDetails(Long cart_id, CartEntity newCartDetails) {
+	//Update of CRUD 
+	//This function may have no use
+	public CartEntity putCartDetails(Long cartId, CartEntity newCartDetails) {
 	    try {
 	        // Search for the cart by ID
-	        CartEntity cart = cartRepo.findById(cart_id).orElseThrow(() -> 
-	            new NoSuchElementException("Cart " + cart_id + " not found"));
+	        CartEntity cart = cartRepo.findById(cartId).orElseThrow(() -> 
+	            new NoSuchElementException("Cart " + cartId + " not found"));
 
 	        // If ID found, set new values
-//	        cart.setUser(newCartDetails.getUser()); //NOT DONE, EDIT THIS
+	        //new values here
 
 	        // Save the updated cart
 	        return cartRepo.save(cart);
@@ -48,13 +49,13 @@ public class CartService {
 	}
 	
 	//Delete of CRUD
-	public String deleteCart(Long id) {
+	public String deleteCart(Long cartId) {
 		String msg = "";
-		if (cartRepo.findById(id).isPresent()) {
-			cartRepo.deleteById(id);
+		if (cartRepo.findById(cartId).isPresent()) {
+			cartRepo.deleteById(cartId);
 			msg = "Cart Successfully deleted";
 		}else {
-			msg = id + " NOT found";
+			msg = cartId + " NOT found";
 		}
 		return msg;
 	}

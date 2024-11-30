@@ -9,15 +9,11 @@ import org.springframework.stereotype.Service;
 import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.CartItemEntity;
 import com.ccdjmv.petshop.repository.CartItemRepository;
-import com.ccdjmv.petshop.repository.CartRepository;
 
 @Service
 public class CartItemService {
 	@Autowired
 	CartItemRepository cartItemRepo;
-	
-	@Autowired
-	CartRepository cartRepo;
 
 	public CartItemService() {
 		super();
@@ -35,6 +31,7 @@ public class CartItemService {
 		return cartItemRepo.findAll();
 	}
 	
+	//Update of CRUD
 	public CartItemEntity putCartItemDetails(int cartItemId, CartItemEntity newCartItemDetails) {
 	    try {
 	        // Search for the cartItem by ID
@@ -42,7 +39,7 @@ public class CartItemService {
 	            new NoSuchElementException("CartItem " + cartItemId + " not found"));
 
 	        // If ID found, set new values
-	        cartItem.setQuantity(newCartItemDetails.getQuantity()); //KUWANG
+	        cartItem.setQuantity(newCartItemDetails.getQuantity());
 
 	        // Save the updated cartItem
 	        return cartItemRepo.save(cartItem);
@@ -52,15 +49,14 @@ public class CartItemService {
 	    }
 	}
 
-
 	//Delete of CRUD
-	public String deleteCartItem(int id) {
+	public String deleteCartItem(int cartItemId) {
 		String msg = "";
-		if (cartItemRepo.findById(id).isPresent()) {
-			cartItemRepo.deleteById(id);
+		if (cartItemRepo.findById(cartItemId).isPresent()) {
+			cartItemRepo.deleteById(cartItemId);
 			msg = "CartItem Successfully deleted";
 		}else {
-			msg = id + " NOT found";
+			msg = cartItemId + " NOT found";
 		}
 		return msg;
 	}

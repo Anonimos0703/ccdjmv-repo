@@ -42,14 +42,15 @@ public class CartController {
 	}
 	
 	//Update of CRUD
+	//This function may have no use
 	@PutMapping("/putCartDetails")
-	public CartEntity putCartDetails(@RequestParam Long cart_id, @RequestBody CartEntity newCartDetails) {
-		return cartServ.putCartDetails(cart_id, newCartDetails);
+	public CartEntity putCartDetails(@RequestParam Long cartId, @RequestBody CartEntity newCartDetails) {
+		return cartServ.putCartDetails(cartId, newCartDetails);
 	}
 	
 	//Delete of CRUD
-	@DeleteMapping("/deleteCartDetails/{id}")
-	public String deleteCart(@PathVariable Long id) {
-		return cartServ.deleteCart(id);
+	@DeleteMapping("/deleteCartDetails/{cartId}")
+	public String deleteCart(@PathVariable Long cartId) {
+		return cartServ.deleteCart(cartId);
 	}
 }
