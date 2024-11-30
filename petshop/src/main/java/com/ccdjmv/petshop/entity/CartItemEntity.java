@@ -1,5 +1,6 @@
 package com.ccdjmv.petshop.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -15,17 +16,15 @@ public class CartItemEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int cartItem_id;
+	private int cartItemId;
 	
 	private int quantity;
 	
-	@OneToOne
-	@JsonIgnore
-	private ProductEntity product; //to be continued
+	//@ManyToOne with productEntity here
 	
 	@ManyToOne
 	@JoinColumn(name = "cart_id")
-	@JsonIgnore
+	@JsonBackReference("cart-cartItem")
 	private CartEntity cart;
 
 	public CartItemEntity() {
@@ -33,20 +32,19 @@ public class CartItemEntity {
 		// TODO Auto-generated constructor stub
 	}
 
-	public CartItemEntity(int cartItem_id, int quantity, ProductEntity product, CartEntity cart) {
+	public CartItemEntity(int cartItemId, int quantity, CartEntity cart) {
 		super();
-		this.cartItem_id = cartItem_id;
+		this.cartItemId = cartItemId;
 		this.quantity = quantity;
-		this.product = product;
 		this.cart = cart;
 	}
 
-	public int getCartItem_id() {
-		return cartItem_id;
+	public int getCartItemId() {
+		return cartItemId;
 	}
 
-	public void setCartItem_id(int cartItem_id) {
-		this.cartItem_id = cartItem_id;
+	public void setCartItemId(int cartItemId) {
+		this.cartItemId = cartItemId;
 	}
 
 	public int getQuantity() {
@@ -57,14 +55,6 @@ public class CartItemEntity {
 		this.quantity = quantity;
 	}
 
-	public ProductEntity getProduct() {
-		return product;
-	}
-
-	public void setProduct(ProductEntity product) {
-		this.product = product;
-	}
-
 	public CartEntity getCart() {
 		return cart;
 	}
@@ -72,5 +62,6 @@ public class CartItemEntity {
 	public void setCart(CartEntity cart) {
 		this.cart = cart;
 	}
+
 	
 }

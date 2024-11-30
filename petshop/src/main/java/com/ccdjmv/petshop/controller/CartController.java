@@ -43,7 +43,7 @@ public class CartController {
 	
 	//Update of CRUD
 	@PutMapping("/putCartDetails")
-	public CartEntity putCartDetails(@RequestParam int cart_id, @RequestBody CartEntity newCartDetails) {
+	public CartEntity putCartDetails(@RequestParam Long cart_id, @RequestBody CartEntity newCartDetails) {
 		return cartServ.putCartDetails(cart_id, newCartDetails);
 	}
 	

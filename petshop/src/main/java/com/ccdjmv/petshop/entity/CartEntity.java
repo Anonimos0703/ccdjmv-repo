@@ -2,7 +2,9 @@ package com.ccdjmv.petshop.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -19,13 +21,15 @@ public class CartEntity {
 	@Id
 	private Long cartId; //UserEntity PK is also cart PK
 	
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-	private List<CartItemEntity> cartItem;
-	
 	@OneToOne
 	@MapsId //For CartEntity to use same PK as user
 	@JoinColumn(name = "user_id")
+	@JsonBackReference("user-cart")
 	private UserEntity user;
+	
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+	@JsonManagedReference("cart-cartItem")
+	private List<CartItemEntity> cartItem;
 
 	public CartEntity() {
 		super();
@@ -47,6 +51,14 @@ public class CartEntity {
 		this.cartId = cartId;
 	}
 
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
 	public List<CartItemEntity> getCartItem() {
 		return cartItem;
 	}
@@ -55,12 +67,5 @@ public class CartEntity {
 		this.cartItem = cartItem;
 	}
 
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
 	
 }

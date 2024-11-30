@@ -14,51 +14,38 @@ import com.ccdjmv.petshop.repository.CartRepository;
 @Service
 public class CartItemService {
 	@Autowired
-	CartItemRepository cirepo;
+	CartItemRepository cartItemRepo;
 	
 	@Autowired
-	CartRepository crepo;
+	CartRepository cartRepo;
 
 	public CartItemService() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	//Create cartItem Record without cart
-		public CartItemEntity postCartItem(CartItemEntity cartItem) {
-		return cirepo.save(cartItem);
-	}
-	
 	//Create of CRUD
-	//Create CartItem Record with Cart assigned
-	public CartItemEntity postCartItemRecord(CartItemEntity cartItem) {
-		
-		// Fetch the Cart entity by ID from the CartItemEntity
-		CartEntity cart = crepo.findById(cartItem.getCart().getCart_id()).orElseThrow(() -> 
-		new NoSuchElementException("Cart with ID " + cartItem.getCart().getCart_id() + " not found"));
-    
-		// Assign the cart to the cartItem
-		cartItem.setCart(cart);
-    
-		return cirepo.save(cartItem);
+	//Create cartItem Record 
+		public CartItemEntity postCartItem(CartItemEntity cartItem) {
+		return cartItemRepo.save(cartItem);
 	}
 	
 	//Read of CRUD 
 	public List<CartItemEntity> getAllCartItems(){
-		return cirepo.findAll();
+		return cartItemRepo.findAll();
 	}
 	
-	public CartItemEntity putCartItemDetails(int cartItem_id, CartItemEntity newCartItemDetails) {
+	public CartItemEntity putCartItemDetails(int cartItemId, CartItemEntity newCartItemDetails) {
 	    try {
 	        // Search for the cartItem by ID
-	        CartItemEntity cartItem = cirepo.findById(cartItem_id).orElseThrow(() -> 
-	            new NoSuchElementException("CartItem " + cartItem_id + " not found"));
+	        CartItemEntity cartItem = cartItemRepo.findById(cartItemId).orElseThrow(() -> 
+	            new NoSuchElementException("CartItem " + cartItemId + " not found"));
 
 	        // If ID found, set new values
 	        cartItem.setQuantity(newCartItemDetails.getQuantity()); //KUWANG
 
 	        // Save the updated cartItem
-	        return cirepo.save(cartItem);
+	        return cartItemRepo.save(cartItem);
 	    } catch (NoSuchElementException nex) {
 	        throw nex; // Re-throw the exception
 	        
@@ -69,8 +56,8 @@ public class CartItemService {
 	//Delete of CRUD
 	public String deleteCartItem(int id) {
 		String msg = "";
-		if (cirepo.findById(id).isPresent()) {
-			cirepo.deleteById(id);
+		if (cartItemRepo.findById(id).isPresent()) {
+			cartItemRepo.deleteById(id);
 			msg = "CartItem Successfully deleted";
 		}else {
 			msg = id + " NOT found";
