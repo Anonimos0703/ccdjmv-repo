@@ -12,7 +12,7 @@ import com.ccdjmv.petshop.repository.CartRepository;
 @Service
 public class CartService {
 	@Autowired
-	CartRepository crepo;
+	CartRepository cartRepo;
 
 	public CartService() {
 		super();
@@ -21,26 +21,26 @@ public class CartService {
 	
 	//Create of CRUD
 	public CartEntity postCartRecord(CartEntity cart) {
-		return crepo.save(cart);
+		return cartRepo.save(cart);
 	}
 	
 	//Read of CRUD 
 	public List<CartEntity>getAllCarts(){
-		return crepo.findAll();
+		return cartRepo.findAll();
 	}
 	
 	//Update of CRUD
-	public CartEntity putCartDetails(int cart_id, CartEntity newCartDetails) {
+	public CartEntity putCartDetails(Long cart_id, CartEntity newCartDetails) {
 	    try {
 	        // Search for the cart by ID
-	        CartEntity cart = crepo.findById(cart_id).orElseThrow(() -> 
+	        CartEntity cart = cartRepo.findById(cart_id).orElseThrow(() -> 
 	            new NoSuchElementException("Cart " + cart_id + " not found"));
 
 	        // If ID found, set new values
 //	        cart.setUser(newCartDetails.getUser()); //NOT DONE, EDIT THIS
 
 	        // Save the updated cart
-	        return crepo.save(cart);
+	        return cartRepo.save(cart);
 	    } catch (NoSuchElementException nex) {
 	        throw nex; // Re-throw the exception
 	        
@@ -48,10 +48,10 @@ public class CartService {
 	}
 	
 	//Delete of CRUD
-	public String deleteCart(int id) {
+	public String deleteCart(Long id) {
 		String msg = "";
-		if (crepo.findById(id).isPresent()) {
-			crepo.deleteById(id);
+		if (cartRepo.findById(id).isPresent()) {
+			cartRepo.deleteById(id);
 			msg = "Cart Successfully deleted";
 		}else {
 			msg = id + " NOT found";

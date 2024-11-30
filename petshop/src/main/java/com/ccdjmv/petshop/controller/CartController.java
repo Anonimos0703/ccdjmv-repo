@@ -49,7 +49,7 @@ public class CartController {
 	
 	//Delete of CRUD
 	@DeleteMapping("/deleteCartDetails/{id}")
-	public String deleteCart(@PathVariable int id) {
+	public String deleteCart(@PathVariable Long id) {
 		return cartServ.deleteCart(id);
 	}
 }
