@@ -30,10 +30,6 @@ public class ProductEntity {
 	@JsonManagedReference("product-order")
     private List<OrderEntity> order;
 	
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "product", cascade = CascadeType.ALL)
-	@JsonManagedReference("product-inventory")
-	private List<InventoryEntity> inventory;
-	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product",cascade = CascadeType.ALL)
 	@JsonManagedReference("product-productreview")
 	private List<ProductReviewEntity> productreview;
@@ -97,14 +93,6 @@ public class ProductEntity {
 
 	    public void setOrder(List<OrderEntity> order) {
 	        this.order = order;
-	    }
-	
-	    public List<InventoryEntity> getInventory(){
-	    	return inventory;
-	    }
-	    
-	    public void setInventory(List<InventoryEntity> inventory) {
-	    	this.inventory = inventory;
 	    }
 
 	    public List<ProductReviewEntity> getProductReview(){
