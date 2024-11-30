@@ -81,9 +81,13 @@ public class AppointmentService {
 //        return appointmentRepository.findByEmail(email);
 //    }
 
-    public List<AppointmentEntity> findByEmail(String email) {
-        return appointmentRepository.findByEmailWithGrooming(email);
-    }
+//    public List<AppointmentEntity> findByEmail(String email) {
+//        return appointmentRepository.findByEmailWithGrooming(email);
+//    }
     
+    
+    public List<AppointmentEntity> getAppointmentsByUserEmail(String email) {
+        return appointmentRepository.findByUserEmail(email);
+    }
     
 }

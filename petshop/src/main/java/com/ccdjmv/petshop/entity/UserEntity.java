@@ -36,6 +36,11 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private String role;
     
+    @OneToMany
+    @JsonManagedReference
+    private List<AppointmentEntity> appointment;
+    
+    
     public UserEntity() {}
 
     public UserEntity(String username, String firstName, String lastName, String email, String password, String role) {
@@ -103,4 +108,11 @@ public class UserEntity {
         this.role = role;
     }
     
+    public List<AppointmentEntity> getAppointment(){
+    	return appointment;
+    }
+    
+    public void setAppointment(List<AppointmentEntity> appointment) {
+    	this.appointment = appointment;
+    }
 }

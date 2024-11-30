@@ -34,11 +34,20 @@ public class AppointmentEntity {
     private LocalTime time;
     
     private boolean canceled = false; 
+    private String groomService;
+    private String paymentMethod;
+    private int price;
+    
+    @ManyToOne
+    @JoinColumn(name = "id")
+    @JsonBackReference
+    private UserEntity user;
     
     public AppointmentEntity() {
     }
     
-    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time, boolean canceled) {
+    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time, 
+    		boolean canceled, String groomService, String paymentMethod, int price ) {
     	super();
         this.appId = appId;
 //        this.customerId = customerId;
@@ -47,8 +56,31 @@ public class AppointmentEntity {
         this.email = email;
         this.contactNo = contactNo;
         this.time = time;
+        this.groomService = groomService;
+        this.paymentMethod = paymentMethod;
+        this.price = price;
     }
     
+    public int getPrice() {
+    	return price;
+    }
+    public void setPrice(int price) {
+    	this.price = price;
+    }
+    public String getPaymentMethod() {
+    	return paymentMethod;
+    }
+    
+    public void setPaymentMethod(String paymentMethod) {
+    	this.paymentMethod = paymentMethod;
+    }
+    public String getGroomService() {
+    	return groomService;
+    }
+    
+    public void setGrommService(String groomService) {
+    	this.groomService = groomService;
+    }
     public LocalTime getTime() {
         return time;
     }
@@ -96,6 +128,14 @@ public class AppointmentEntity {
     
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
+    }
+    
+    public UserEntity getUser() {
+    	return user;
+    }
+    
+    public void setUser(UserEntity user) {
+    	this.user = user;
     }
     
 }

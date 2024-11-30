@@ -11,17 +11,17 @@ import {
 } from '@mui/material';
 import { Toaster, toast } from 'sonner';
 
-const GroomingAppointmentList = () => {
-  const [groomingAppointments, setGroomingAppointments] = useState([]);
+const AppointmentList = () => {
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchGroomingAppointments = async () => {
+    const fetchAppointments = async () => {
       try {
-        console.log('Sending request to API: http://localhost:8080/api/grooming/getGrooming');
+        console.log('Sending request to API: http://localhost:8080/api/appointments/getAppointment');
 
-        const response = await fetch('http://localhost:8080/api/grooming/getGrooming');
+        const response = await fetch('http://localhost:8080/api/appointments/getAppointment');
         console.log('API response status:', response.status);
 
         if (!response.ok) {
@@ -36,10 +36,10 @@ const GroomingAppointmentList = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched grooming appointments:', data);
-        setGroomingAppointments(data);
+        console.log('Fetched appointments:', data);
+        setAppointments(data);
       } catch (err) {
-        console.error('Error fetching grooming appointments:', err);
+        console.error('Error fetching appointments:', err);
         setError(err.message);
         toast.error(err.message);
       } finally {
@@ -47,7 +47,7 @@ const GroomingAppointmentList = () => {
       }
     };
 
-    fetchGroomingAppointments();
+    fetchAppointments();
   }, []);
 
   const handleCancelAppointment = async (appId) => {
@@ -67,15 +67,8 @@ const GroomingAppointmentList = () => {
 
       toast.success('Appointment canceled successfully.');
 
-      // Update the local state to reflect the change
-      setGroomingAppointments((prev) =>
-        prev.map((grooming) => ({
-          ...grooming,
-          appointments: grooming.appointments.filter(
-            (appointment) => appointment.appId !== appId
-          ),
-        }))
-      );
+      // Update the local state to remove the canceled appointment
+      setAppointments(prev => prev.filter(appointment => appointment.appId !== appId));
     } catch (err) {
       console.error('Error canceling appointment:', err);
       toast.error(err.message);
@@ -105,7 +98,7 @@ const GroomingAppointmentList = () => {
         }}
       >
         <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: '#333' }}>
-          Grooming Appointments
+          My Appointments
         </Typography>
 
         {loading ? (
@@ -116,60 +109,58 @@ const GroomingAppointmentList = () => {
           <Typography color="error" align="center">
             {error}
           </Typography>
-        ) : groomingAppointments.length === 0 ? (
-          <Typography align="center">No grooming appointments found.</Typography>
+        ) : appointments.length === 0 ? (
+          <Typography align="center">No appointments found.</Typography>
         ) : (
           <List>
-  {groomingAppointments.map((grooming) =>
-    grooming.appointments?.map((appointment) => (
-      <ListItem
-        key={appointment.appId}
-        sx={{
-          borderBottom: '1px solid #ddd',
-          padding: '1rem 0',
-          '&:last-child': {
-            borderBottom: 'none',
-          },
-        }}
-      >
-        <ListItemText
-          primary={
-            <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
-              {`Date: ${appointment.date}, Time: ${appointment.time}`}
-            </Typography>
-          }
-          secondary={
-            <>
-              <Typography variant="body2">Email: {appointment.email}</Typography>
-              <Typography variant="body2">Contact: {appointment.contactNo}</Typography>
-              {/* Additional grooming service details can be here */}
-            </>
-          }
-        />
-        
-        {/* Conditionally render cancellation message if the appointment is canceled */}
-        {appointment.canceled && (
-          <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>
-            This appointment has been canceled by the admin.
-          </Typography>
-        )}
-        
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => handleCancelAppointment(appointment.appId)}
-        >
-          Cancel
-        </Button>
-      </ListItem>
-    ))
-  )}
-</List>
-
+            {appointments.map((appointment) => (
+              <ListItem
+                key={appointment.appId}
+                sx={{
+                  borderBottom: '1px solid #ddd',
+                  padding: '1rem 0',
+                  '&:last-child': {
+                    borderBottom: 'none',
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+                      {`Date: ${appointment.date}, Time: ${appointment.time}`}
+                    </Typography>
+                  }
+                  secondary={
+                    <>
+                      <Typography variant="body2">Email: {appointment.email}</Typography>
+                      <Typography variant="body2">Contact: {appointment.contactNo}</Typography>
+                      <Typography variant="body2">Service: {appointment.groomService}</Typography>
+                      <Typography variant="body2">Price: ₱{appointment.price}</Typography>
+                      <Typography variant="body2">Payment Method: {appointment.paymentMethod}</Typography>
+                    </>
+                  }
+                />
+                
+                {appointment.canceled && (
+                  <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>
+                    This appointment has been canceled.
+                  </Typography>
+                )}
+                
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleCancelAppointment(appointment.appId)}
+                >
+                  Cancel
+                </Button>
+              </ListItem>
+            ))}
+          </List>
         )}
       </Container>
     </Box>
   );
 };
 
-export default GroomingAppointmentList;
+export default AppointmentList;

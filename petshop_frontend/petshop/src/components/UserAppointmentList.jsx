@@ -8,28 +8,22 @@ const UserAppointmentList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchGroomingAppointments = async () => {
+    const fetchAppointments = async () => {
       try {
         const email = localStorage.getItem('email');
         if (!email) {
           throw new Error('User not logged in or email not found.');
         }
 
-        const response = await fetch('http://localhost:8080/api/grooming/getGrooming');
+        const response = await fetch(`http://localhost:8080/api/appointments/byUserEmail/${email}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch grooming appointments');
+          throw new Error('Failed to fetch appointments');
         }
 
         const data = await response.json();
-
-        // Filter appointments for this user
-        const filteredAppointments = data.flatMap((grooming) =>
-          grooming.appointments?.filter((appointment) => appointment.email === email) || []
-        );
-
-        setAppointments(filteredAppointments);
+        setAppointments(data);
       } catch (err) {
-        console.error('Error fetching grooming appointments:', err);
+        console.error('Error fetching appointments:', err);
         setError(err.message);
         toast.error(err.message);
       } finally {
@@ -37,7 +31,7 @@ const UserAppointmentList = () => {
       }
     };
 
-    fetchGroomingAppointments();
+    fetchAppointments();
   }, []);
 
   return (
@@ -78,40 +72,42 @@ const UserAppointmentList = () => {
           <Typography align="center">No appointments found.</Typography>
         ) : (
           <List>
-  {appointments.map((appointment) => (
-    <ListItem
-      key={appointment.appId}
-      sx={{
-        borderBottom: '1px solid #ddd',
-        padding: '1rem 0',
-        '&:last-child': {
-          borderBottom: 'none',
-        },
-      }}
-    >
-      <ListItemText
-        primary={
-          <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
-            {`Date: ${appointment.date}, Time: ${appointment.time}`}
-          </Typography>
-        }
-        secondary={
-          <>
-            <Typography variant="body2">Email: {appointment.email}</Typography>
-            <Typography variant="body2">Contact: {appointment.contactNo}</Typography>
-          </>
-        }
-      />
-      {/* Conditionally display the cancellation message below the appointment */}
-      {appointment.canceled && (
-        <Typography color="error" sx={{ fontStyle: 'italic', mt: 1 }}>
-          This appointment has been canceled by the admin.
-        </Typography>
-      )}
-    </ListItem>
-  ))}
-</List>
-
+            {appointments.map((appointment) => (
+              <ListItem
+                key={appointment.appId}
+                sx={{
+                  borderBottom: '1px solid #ddd',
+                  padding: '1rem 0',
+                  '&:last-child': {
+                    borderBottom: 'none',
+                  },
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+                      {`Date: ${appointment.date}, Time: ${appointment.time}`}
+                    </Typography>
+                  }
+                  secondary={
+                    <>
+                      <Typography variant="body2">Email: {appointment.email}</Typography>
+                      <Typography variant="body2">Contact: {appointment.contactNo}</Typography>
+                      <Typography variant="body2">Service: {appointment.groomService}</Typography>
+                      <Typography variant="body2">price: {appointment.price}</Typography>
+                      <Typography variant="body2">Payment Method: {appointment.paymentMethod}</Typography>
+                    </>
+                  }
+                />
+                {/* Conditionally display the cancellation message below the appointment */}
+                {appointment.canceled && (
+                  <Typography color="error" sx={{ fontStyle: 'italic', mt: 1 }}>
+                    This appointment has been canceled by the admin.
+                  </Typography>
+                )}
+              </ListItem>
+            ))}
+          </List>
         )}
       </Container>
     </Box>

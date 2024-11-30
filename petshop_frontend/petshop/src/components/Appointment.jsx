@@ -5,19 +5,19 @@ import { Toaster, toast } from 'sonner'
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
-   
     email: '',
     contactNo: '',
     date: '',
     time: '',
-    grooming: {
-      price: '',
-      groomService: '',
-    },
+    price: '',
+    groomService: '',
+    paymentMethod: '',    
+    user: {
+      id: parseInt(localStorage.getItem('id'), 10)  // Ensure user ID is set from localStorage
+    }
   });
 
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const username = localStorage.getItem('username');
@@ -29,44 +29,37 @@ const Appointment = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'price' || name === 'groomService') {
-      setFormData((prevState) => ({
-        ...prevState,
-        grooming: {
-          ...prevState.grooming,
-          [name]: value,
-        },
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const loggedInEmail = localStorage.getItem('email'); 
-
+  
     if (formData.email !== loggedInEmail) {
       toast.error("You can only book an appointment using your registered email.");
       return; 
     }
   
-    
+    // Prepare appointment data with nested user object
     const appointmentData = {
-      date: formData.date,
       email: formData.email,
-      time: formData.time, 
       contactNo: formData.contactNo,
-      grooming: {
-        price: formData.grooming.price,
-        groomService: formData.grooming.groomService,
-      },
+      date: formData.date,
+      time: formData.time,
+      price: formData.price,
+      groomService: formData.groomService,
+      paymentMethod: formData.paymentMethod,
+      user: {
+        id: formData.user.id
+      }
     };
   
+    console.log('Appointment Data:', appointmentData);
     try {
       const response = await fetch(
         'http://localhost:8080/api/appointments/postAppointment',
@@ -82,15 +75,18 @@ const Appointment = () => {
         console.log('Appointment created:', result.appId);
         toast.success('Booking Successful! Appointment ID: ' + result.appId);
   
+        // Reset form, keeping user ID
         setFormData({
           email: '',
           contactNo: '',
           date: '',
           time: '',
-          grooming: {
-            price: '',
-            groomService: '',
-          },
+          price: '',
+          groomService: '',
+          paymentMethod: '',
+          user: {
+            id: formData.user.id
+          }
         });
       } else {
         toast.error('Failed to Create Appointment');
@@ -151,7 +147,6 @@ const Appointment = () => {
               }
               type={field === 'email' ? 'email' : 'text'}
               name={field}
-              
               value={formData[field]}
               onChange={handleChange}
               fullWidth
@@ -172,24 +167,23 @@ const Appointment = () => {
             required
           />
 
-<TextField
-  label="Time"
-  type="time"
-  name="time"
-  value={formData.time}
-  onChange={handleChange}
-  fullWidth
-  margin="dense"
-  InputLabelProps={{ shrink: true }}
-  required
-/>
-
+          <TextField
+            label="Time"
+            type="time"
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
+            fullWidth
+            margin="dense"
+            InputLabelProps={{ shrink: true }}
+            required
+          />
 
           <TextField
             label="Price"
             select
             name="price"
-            value={formData.grooming.price}
+            value={formData.price}
             onChange={handleChange}
             fullWidth
             margin="dense"
@@ -203,13 +197,26 @@ const Appointment = () => {
             label="Groom Service"
             select
             name="groomService"
-            value={formData.grooming.groomService}
+            value={formData.groomService}
             onChange={handleChange}
             fullWidth
             margin="dense"
             required
           >
             <MenuItem value="Basic Grooming">Grooming</MenuItem>
+          </TextField>
+
+          <TextField
+            label="Payment Method"
+            select
+            name="paymentMethod"
+            value={formData.paymentMethod}
+            onChange={handleChange}
+            fullWidth
+            margin="dense"
+            required
+          >
+            <MenuItem value="Counter">Over The Counter</MenuItem>
           </TextField>
 
           <Button
