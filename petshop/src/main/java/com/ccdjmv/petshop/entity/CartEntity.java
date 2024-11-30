@@ -9,35 +9,42 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class CartEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int cart_id;
+	private Long cartId; //UserEntity PK is also cart PK
 	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
 	private List<CartItemEntity> cartItem;
+	
+	@OneToOne
+	@MapsId //For CartEntity to use same PK as user
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
 
 	public CartEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CartEntity(int cart_id, List<CartItemEntity> cartItems) {
+	public CartEntity(Long cartId, List<CartItemEntity> cartItem, UserEntity user) {
 		super();
-		this.cart_id = cart_id;
-		this.cartItem = cartItems;
+		this.cartId = cartId;
+		this.cartItem = cartItem;
+		this.user = user;
 	}
 
-	public int getCart_id() {
-		return cart_id;
+	public Long getCartId() {
+		return cartId;
 	}
 
-	public void setCart_id(int cart_id) {
-		this.cart_id = cart_id;
+	public void setCartId(Long cartId) {
+		this.cartId = cartId;
 	}
 
 	public List<CartItemEntity> getCartItem() {
@@ -46,6 +53,14 @@ public class CartEntity {
 
 	public void setCartItem(List<CartItemEntity> cartItem) {
 		this.cartItem = cartItem;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
 	}
 	
 }

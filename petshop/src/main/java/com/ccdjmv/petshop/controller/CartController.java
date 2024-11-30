@@ -22,7 +22,7 @@ import com.ccdjmv.petshop.service.CartService;
 public class CartController {
 	
 	@Autowired
-	CartService cserv;
+	CartService cartServ;
 	
 	@GetMapping("/test")
     public String test() {
@@ -32,24 +32,24 @@ public class CartController {
 	//Create of CRUD
 	@PostMapping("/postCartRecord")
 	public CartEntity postCartRecord(@RequestBody CartEntity cart) {
-		return cserv.postCartRecord(cart);
+		return cartServ.postCartRecord(cart);
 	}
 		
 	//Read of CRUD
 	@GetMapping("/getAllCarts")
 	public List<CartEntity> getAllCarts(){
-		return cserv.getAllCarts();
+		return cartServ.getAllCarts();
 	}
 	
 	//Update of CRUD
 	@PutMapping("/putCartDetails")
 	public CartEntity putCartDetails(@RequestParam int cart_id, @RequestBody CartEntity newCartDetails) {
-		return cserv.putCartDetails(cart_id, newCartDetails);
+		return cartServ.putCartDetails(cart_id, newCartDetails);
 	}
 	
 	//Delete of CRUD
 	@DeleteMapping("/deleteCartDetails/{id}")
 	public String deleteCart(@PathVariable int id) {
-		return cserv.deleteCart(id);
+		return cartServ.deleteCart(id);
 	}
 }

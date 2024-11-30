@@ -40,6 +40,8 @@ public class UserEntity {
     @JsonManagedReference
     private List<AppointmentEntity> appointment;
     
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private CartEntity cart;
     
     public UserEntity() {}
 
@@ -115,4 +117,14 @@ public class UserEntity {
     public void setAppointment(List<AppointmentEntity> appointment) {
     	this.appointment = appointment;
     }
+
+	public CartEntity getCart() {
+		return cart;
+	}
+
+	public void setCart(CartEntity cart) {
+		this.cart = cart;
+	}
+    
+    
 }
