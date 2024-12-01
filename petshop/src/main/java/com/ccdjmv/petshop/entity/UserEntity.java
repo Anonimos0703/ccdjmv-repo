@@ -36,6 +36,9 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private String role;
     
+    @Column(columnDefinition = "LONGTEXT")
+    private String profileImage;
+    
     @OneToMany
     @JsonManagedReference
     private List<AppointmentEntity> appointment;
@@ -46,15 +49,24 @@ public class UserEntity {
     
     public UserEntity() {}
 
-    public UserEntity(String username, String firstName, String lastName, String email, String password, String role) {
+    public UserEntity(String username, String firstName, String lastName, String email, String password,
+    		String role, String profileImage) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.profileImage = profileImage;
     }
-
+    
+    
+    public String getProfileImage() {
+    	return profileImage;
+    }
+    public void setProfileImage(String profileImage) {
+    	this.profileImage = profileImage;
+    }
     public Long getId() {
         return id;
     }
@@ -126,6 +138,8 @@ public class UserEntity {
 	public void setCart(CartEntity cart) {
 		this.cart = cart;
 	}
+
+	
     
     
 }

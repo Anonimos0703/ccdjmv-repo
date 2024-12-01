@@ -9,14 +9,13 @@ export const AuthProvider = ({ children }) => {
     return username ? { username, role } : null;
   });
 
-  const login = (id, username, role) => {
+  const login = (id, username, role, email) => {
     setUser({ username, role });
     localStorage.setItem('id', id);
     localStorage.setItem('username', username);
     localStorage.setItem('role', role);
-    localStorage.setItem('email', email);
-};
-
+    localStorage.setItem('email', email);  // Added email to localStorage
+  };
 
   const logout = () => {
     setUser(null);

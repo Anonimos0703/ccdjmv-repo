@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -7,12 +7,37 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import defaultProfileImage from "../assets/default_profile.png";
 
-export default function Header({ username, role }) {
+export default function Header({ username, role, userId }) {
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    if (userId) {
+      // Fetch profile image from the backend using userId
+      fetchProfileImage(userId);
+    }
+  }, [userId]);
+
+  const fetchProfileImage = async (id) => {
+    try {
+      const response = await fetch(`https://localhost:8080/auth/users/${id}/profile-image`);
+      if (response.ok) {
+        const profileImageUrl = await response.text();
+        setProfileImage(profileImageUrl || defaultProfileImage); // Fallback to default if empty
+      } else {
+        setProfileImage(defaultProfileImage); // Use default if the request fails
+      }
+    } catch (error) {
+      console.error("Error fetching profile image:", error);
+      setProfileImage(defaultProfileImage); // Fallback to default on error
+    }
+  };
 
   const handleHomeClick = () => {
     navigate("/");
@@ -27,7 +52,7 @@ export default function Header({ username, role }) {
   };
 
   const handleAboutUsClick = () => {
-    navigate('/aboutus');
+    navigate("/aboutus");
   };
 
   const handleMenuClick = (event) => {
@@ -46,6 +71,7 @@ export default function Header({ username, role }) {
   const handleLogout = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("role");
+    localStorage.removeItem("profileImage");
     setAnchorEl(null);
     navigate("/auth");
   };
@@ -77,20 +103,25 @@ export default function Header({ username, role }) {
           <Button sx={{ color: "black" }} onClick={handleHomeClick}>
             Home
           </Button>
-          <Button sx={{ color: 'black' }} onClick={handleProductsClick}>
+          <Button sx={{ color: "black" }} onClick={handleProductsClick}>
             Products
-            </Button>
-          <Button sx={{ color: 'black' }} onClick={handleAboutUsClick}>
+          </Button>
+          <Button sx={{ color: "black" }} onClick={handleAboutUsClick}>
             About Us
           </Button>
           {username ? (
             <>
-              <Button
-                sx={{ color: "black", fontWeight: "bold" }}
+              <Avatar
+                src={profileImage}
+                alt={username}
+                sx={{
+                  cursor: "pointer",
+                  width: 40,
+                  height: 40,
+                  border: "2px solid black",
+                }}
                 onClick={handleMenuClick}
-              >
-                {username}
-              </Button>
+              />
               <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -112,7 +143,7 @@ export default function Header({ username, role }) {
                 <MenuItem onClick={() => handleMenuOptionClick("/cart")}>
                   Cart
                 </MenuItem>
-                <MenuItem onClick={() => handleMenuOptionClick('/appointmentslist')}>
+                <MenuItem onClick={() => handleMenuOptionClick("/appointmentslist")}>
                   Appointments
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
