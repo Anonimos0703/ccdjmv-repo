@@ -3,6 +3,7 @@ package com.ccdjmv.petshop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
 
@@ -52,6 +53,11 @@ public class UserService {
     }
     
     public UserEntity postUser(UserEntity user) {
+    	if(user.getCart() == null) {
+    		CartEntity cart = new CartEntity();
+    		cart.setUser(user);
+    		user.setCart(cart);
+    	}
         return userRepository.save(user);
     }
 }

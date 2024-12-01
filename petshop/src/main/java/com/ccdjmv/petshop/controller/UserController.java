@@ -1,5 +1,6 @@
 package com.ccdjmv.petshop.controller;
 
+import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
 import com.ccdjmv.petshop.service.UserService;
@@ -32,6 +33,12 @@ public class UserController {
 
         if (user.getRole() == null || user.getRole().isEmpty()) {
             user.setRole("CUSTOMER");
+        }
+        
+        if (user.getCart() == null) {
+        	CartEntity cart = new CartEntity();
+        	cart.setUser(user);
+        	user.setCart(cart);
         }
 
         userRepository.save(user);
