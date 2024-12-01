@@ -11,53 +11,43 @@ import com.ccdjmv.petshop.repository.ProductRepository;
 
 @Service
 public class ProductService {
-	@Autowired
-	
-	ProductRepository prepo;
-	
-	public ProductService() {
-		super();
-	}
-	
-	
-
-	public ProductEntity postProductRecord(ProductEntity product) {
-		// TODO Auto-generated method stub
-		return prepo.save(product);
-	}
-
-	public List<ProductEntity> getAllProduct() {
-		// TODO Auto-generated method stub
-		return prepo.findAll();
-	}
-
-	public ProductEntity updateProduct(int id, ProductEntity productRecord) {
-		
-		ProductEntity existingProduct = prepo.findById(id)
-				.orElseThrow(() -> new NoSuchElementException ("Product with id "+id+" not found."));
-		
-		existingProduct.setProductName(productRecord.getProductName());
-		existingProduct.setProductPrice(productRecord.getProductPrice());
-		existingProduct.setDescription(productRecord.getDescription());
-		existingProduct.setProductType(productRecord.getProductType());
-		existingProduct.setQuantity(productRecord.getQuantity());
-			
-		
-		return prepo.save(existingProduct);
-	}
-
-	public String deleteProduct(int id) {
-		  String msg;
-
-	        if (prepo.existsById(id)) {
-	            prepo.deleteById(id); // Correctly delete the entity by ID
-	            msg = "Product record successfully deleted.";
-	        } else {
-	            msg = "Product with id " + id + " not found.";
-	        }
-
-	        return msg;
-	    }
-	}
-
-
+    @Autowired
+    
+    ProductRepository prepo;
+    
+    public ProductEntity postProductRecord(ProductEntity product) {
+        return prepo.save(product);
+    }
+    
+    public List<ProductEntity> getAllProduct() {
+        return prepo.findAll();
+    }
+    
+    public ProductEntity updateProduct(int id, ProductEntity productRecord) {
+        ProductEntity existingProduct = prepo.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Product with id " + id + " not found."));
+        
+        existingProduct.setProductName(productRecord.getProductName());
+        existingProduct.setProductPrice(productRecord.getProductPrice());
+        existingProduct.setDescription(productRecord.getDescription());
+        existingProduct.setProductType(productRecord.getProductType());
+        existingProduct.setQuantity(productRecord.getQuantity());
+        
+        if (productRecord.getProductImage() != null) {
+            existingProduct.setProductImage(productRecord.getProductImage());
+        }
+        
+        return prepo.save(existingProduct);
+    }
+    
+    public String deleteProduct(int id) {
+        String msg;
+        if (prepo.existsById(id)) {
+            prepo.deleteById(id);
+            msg = "Product record successfully deleted.";
+        } else {
+            msg = "Product with id " + id + " not found.";
+        }
+        return msg;
+    }
+}

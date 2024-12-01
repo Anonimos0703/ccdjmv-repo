@@ -1,54 +1,46 @@
 package com.ccdjmv.petshop.entity;
 
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="tblproduct")
 public class ProductEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int ProductID;
-	
-	private String description;
-	private double productPrice;
-	private String productName;
-	private String productType;
-	private int quantity;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	@JsonManagedReference("product-order")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int ProductID;
+    
+    private String description;
+    private double productPrice;
+    private String productName;
+    private String productType;
+    private int quantity;
+    
+    @Column(columnDefinition = "LONGTEXT")
+    private String productImage;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference("product-order")
     private List<OrderEntity> order;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product",cascade = CascadeType.ALL)
-	@JsonManagedReference("product-productreview")
-	private List<ProductReviewEntity> productreview;
-	
-	
-	public ProductEntity(int productID, String description, double productPrice, String productName, String productType,
-			int quantity) {
-		super();
-		ProductID = productID;
-		this.description = description;
-		this.productPrice = productPrice;
-		this.productName = productName;
-		this.productType = productType;
-		this.quantity = quantity;
-	}
-	
-	public ProductEntity() {
-		
-	}
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference("product-productreview")
+    private List<ProductReviewEntity> productreview;
+    
+    // Constructors
+    public ProductEntity() {}
+    
+    public ProductEntity(int productID, String description, double productPrice, 
+                         String productName, String productType, int quantity, String productImage) {
+        this.ProductID = productID;
+        this.description = description;
+        this.productPrice = productPrice;
+        this.productName = productName;
+        this.productType = productType;
+        this.quantity = quantity;
+        this.productImage = productImage;
+    }
 	
 	public int getProductID() {
 		return ProductID;
@@ -102,5 +94,12 @@ public class ProductEntity {
 	    public void setProductReview(List<ProductReviewEntity>productreview) {
 	    	this.productreview = productreview;
 	    }
-
+	    
+	    public String getProductImage() {
+	        return productImage;
+	    }
+	    
+	    public void setProductImage(String productImage) {
+	        this.productImage = productImage;
+	    }
 }
