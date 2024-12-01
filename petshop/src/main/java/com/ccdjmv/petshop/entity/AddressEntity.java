@@ -2,6 +2,8 @@ package com.ccdjmv.petshop.entity;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,10 +42,29 @@ public class AddressEntity {
 
     // Many-to-One relationship with UserEntity
     @ManyToOne
+    @JsonBackReference("user-address")
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user; // User that owns this address
+    
+    public AddressEntity() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-    // Getter and Setter methods for Address fields
+	public AddressEntity(Integer addressId, String region, String province, String city, String barangay,
+			String postalCode, String buildingHouseNo, UserEntity user) {
+		super();
+		this.addressId = addressId;
+		this.region = region;
+		this.province = province;
+		this.city = city;
+		this.barangay = barangay;
+		this.postalCode = postalCode;
+		this.buildingHouseNo = buildingHouseNo;
+		this.user = user;
+	}
+
+	// Getter and Setter methods for Address fields
     public Integer getAddressId() {
         return addressId;
     }

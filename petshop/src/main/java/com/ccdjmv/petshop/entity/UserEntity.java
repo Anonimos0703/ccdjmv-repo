@@ -42,9 +42,6 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private String role;
     
-    @Column(columnDefinition = "LONGTEXT")
-    private String profileImage;
-    
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference("user-cart")
     private CartEntity cart;
@@ -60,7 +57,7 @@ public class UserEntity {
 	}
 
 	public UserEntity(Long id, String username, String firstName, String lastName, String email, String password,
-			String role, CartEntity cart, List<AddressEntity> addresses, String profileImage) {
+			String role, CartEntity cart, List<AddressEntity> addresses) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -71,14 +68,6 @@ public class UserEntity {
 		this.role = role;
 		this.cart = cart;
 		this.addresses = addresses;
-		this.profileImage = profileImage;
-	}
-	
-	public String getProfileImage() {
-		return profileImage;
-	}
-	public void setProfileImage(String profileImage) {
-		this.profileImage = profileImage;
 	}
 
 	public Long getId() {

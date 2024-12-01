@@ -48,8 +48,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public String deleteUser(Long userId) {
+        String msg = "";
+		if (userRepository.findById(userId).isPresent()) {
+			userRepository.deleteById(userId);;
+			msg = "User Successfully deleted";
+		}else {
+			msg = userId + " NOT found";
+		}
+		return msg;
     }
     
     public UserEntity postUser(UserEntity user) {
@@ -60,4 +67,5 @@ public class UserService {
     	}
         return userRepository.save(user);
     }
+    
 }
