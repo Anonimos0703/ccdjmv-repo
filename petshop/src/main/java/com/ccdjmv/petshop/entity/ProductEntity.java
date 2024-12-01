@@ -28,6 +28,10 @@ public class ProductEntity {
     @JsonManagedReference("product-productreview")
     private List<ProductReviewEntity> productreview;
     
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference("product-cartItem")
+    private List<CartItemEntity> cartItems;
+    
     // Constructors
     public ProductEntity() {}
     

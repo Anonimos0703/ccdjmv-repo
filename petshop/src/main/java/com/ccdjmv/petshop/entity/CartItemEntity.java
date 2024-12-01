@@ -21,6 +21,10 @@ public class CartItemEntity {
 	private int quantity;
 	
 	//@ManyToOne with productEntity here
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	@JsonBackReference("product-cartItem")
+	private ProductEntity product;
 	
 	@ManyToOne
 	@JoinColumn(name = "cart_id")
