@@ -14,9 +14,7 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "tblappointments")
@@ -25,42 +23,75 @@ public class AppointmentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer appId;
     
-//    private String customerId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private String email;       
     private String contactNo;    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime time;
     
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "grooming_id")
-    @JsonBackReference("grooming-appointment")
-    private GroomingEntity grooming;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade  = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    @JsonBackReference("customer-appointment")
-    private CustomerEntity customer;
-
+    private boolean canceled = false; 
+    private String groomService;
+    private String paymentMethod;
+    private int price;
+    
+    @ManyToOne
+    @JoinColumn(name = "id")
+    @JsonBackReference
+    private UserEntity user;
     
     public AppointmentEntity() {
     }
     
-    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time) {
+    public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time, 
+    		boolean canceled, String groomService, String paymentMethod, int price ) {
     	super();
         this.appId = appId;
 //        this.customerId = customerId;
+        this.canceled = canceled;
         this.date = date;
         this.email = email;
         this.contactNo = contactNo;
         this.time = time;
+        this.groomService = groomService;
+        this.paymentMethod = paymentMethod;
+        this.price = price;
     }
     
+    public int getPrice() {
+    	return price;
+    }
+    public void setPrice(int price) {
+    	this.price = price;
+    }
+    public String getPaymentMethod() {
+    	return paymentMethod;
+    }
+    
+    public void setPaymentMethod(String paymentMethod) {
+    	this.paymentMethod = paymentMethod;
+    }
+    public String getGroomService() {
+    	return groomService;
+    }
+    
+    public void setGrommService(String groomService) {
+    	this.groomService = groomService;
+    }
     public LocalTime getTime() {
         return time;
     }
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+    
+    public boolean isCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     // Getters and Setters
@@ -71,15 +102,7 @@ public class AppointmentEntity {
     public void setAppId(Integer appId) {
         this.appId = appId;
     }
-    
-//    public String getCustomerId() {
-//        return customerId;
-//    }
-//    
-//    public void setCustomerId(String customerId) {
-//        this.customerId = customerId;
-//    }
-    
+      
     public Date getDate() {
         return date;
     }
@@ -104,19 +127,12 @@ public class AppointmentEntity {
         this.contactNo = contactNo;
     }
     
-    public GroomingEntity getGrooming() {
-    	return grooming;
+    public UserEntity getUser() {
+    	return user;
     }
     
-    public void setGrooming(GroomingEntity grooming) {
-    	this.grooming = grooming;
+    public void setUser(UserEntity user) {
+    	this.user = user;
     }
     
-    public CustomerEntity getCustomer() {
-    	return customer;
-    }
-    
-    public void setCustomer(CustomerEntity customer) {
-    	this.customer = customer;
-    }
 }

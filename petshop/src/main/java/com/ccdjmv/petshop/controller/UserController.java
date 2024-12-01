@@ -1,6 +1,5 @@
 package com.ccdjmv.petshop.controller;
 
-import com.ccdjmv.petshop.entity.CustomerEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
 import com.ccdjmv.petshop.service.UserService;

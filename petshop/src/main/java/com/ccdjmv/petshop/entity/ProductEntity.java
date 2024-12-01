@@ -17,17 +17,12 @@ public class ProductEntity {
     private String productType;
     private int quantity;
     
-    // Add column definition to support large base64 strings
     @Column(columnDefinition = "LONGTEXT")
     private String productImage;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference("product-order")
     private List<OrderEntity> order;
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference("product-inventory")
-    private List<InventoryEntity> inventory;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference("product-productreview")
@@ -91,14 +86,6 @@ public class ProductEntity {
 	    public void setOrder(List<OrderEntity> order) {
 	        this.order = order;
 	    }
-	
-	    public List<InventoryEntity> getInventory(){
-	    	return inventory;
-	    }
-	    
-	    public void setInventory(List<InventoryEntity> inventory) {
-	    	this.inventory = inventory;
-	    }
 
 	    public List<ProductReviewEntity> getProductReview(){
 	    	return productreview;
@@ -115,6 +102,4 @@ public class ProductEntity {
 	    public void setProductImage(String productImage) {
 	        this.productImage = productImage;
 	    }
-
-
 }

@@ -1,6 +1,6 @@
 package com.ccdjmv.petshop.controller;
 
-import java.util.List;
+import java.util.List;	
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,8 +39,10 @@ public class ProductController {
 		return pserv.updateProduct(id,productRecord);
 	}
 	
+	
 	@DeleteMapping("/deleteProduct/{id}")
 	public String deleteProduct(@PathVariable int id) {
 		return pserv.deleteProduct(id);
 	}
+
 }

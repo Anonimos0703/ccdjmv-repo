@@ -2,18 +2,20 @@ package com.ccdjmv.petshop.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.ccdjmv.petshop.entity.ProductEntity;
 import com.ccdjmv.petshop.repository.ProductRepository;
 
 @Service
 public class ProductService {
     @Autowired
+    
     ProductRepository prepo;
     
     public ProductEntity postProductRecord(ProductEntity product) {
-        // Ensure product image is saved
         return prepo.save(product);
     }
     
@@ -31,7 +33,6 @@ public class ProductService {
         existingProduct.setProductType(productRecord.getProductType());
         existingProduct.setQuantity(productRecord.getQuantity());
         
-        // Add image update handling
         if (productRecord.getProductImage() != null) {
             existingProduct.setProductImage(productRecord.getProductImage());
         }

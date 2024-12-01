@@ -27,7 +27,6 @@ const Inventory = () => {
   const [products, setProducts] = useState([]);
   const [inventories, setInventories] = useState([]);
   const [openProductDialog, setOpenProductDialog] = useState(false);
-  const [openInventoryDialog, setOpenInventoryDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
@@ -41,17 +40,8 @@ const Inventory = () => {
     productImage: null,
   });
 
-  const [newInventory, setNewInventory] = useState({
-    inventoryId: "",
-    dateAdded: "",
-    product: {
-      productId: "",
-    },
-  });
-
   useEffect(() => {
     fetchProducts();
-    fetchInventories();
   }, []);
 
   const fetchProducts = async () => {
@@ -70,21 +60,6 @@ const Inventory = () => {
       }
     } catch (error) {
       console.error("Error fetching products:", error);
-    }
-  };
-
-  const fetchInventories = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/inventories");
-      console.log("Fetched inventories:", response.data);
-
-      if (Array.isArray(response.data)) {
-        setInventories(response.data);
-      } else {
-        setInventories([]);
-      }
-    } catch (error) {
-      console.error("Error fetching inventories:", error.message || error);
     }
   };
 
@@ -167,36 +142,6 @@ const Inventory = () => {
       console.error("Error updating product:", error.response || error.message);
     }
   };
-
-  const handleCreateInventory = async () => {
-    try {
-      const inventoryData = {
-        dateAdded: new Date(newInventory.dateAdded).toISOString().split("T")[0],
-        product: { productId: newInventory.productId },
-      };
-
-      console.log("Creating inventory with data:", inventoryData);
-
-      const response = await axios.post(
-        "http://localhost:8080/api/inventories/postInventory",
-        inventoryData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      if (response.status === 201) {
-        console.log("Inventory added successfully:", response.data);
-        fetchInventories();
-        resetInventoryForm();
-        setOpenInventoryDialog(false);
-      } else {
-        console.error("Failed to add inventory:", response.data);
-      }
-    } catch (error) {
-      console.error("Error creating inventory:", error.response?.data || error.message);
-    }
-  };
   
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
@@ -232,14 +177,6 @@ const Inventory = () => {
     });
   };
 
-  const resetInventoryForm = () => {
-    setNewInventory({
-      inventoryId: "",
-      dateAdded: "",
-      productId: "",
-    });
-  };
-
   const openDeleteConfirmationDialog = (product) => {
     setProductToDelete(product);
     setOpenDeleteConfirmDialog(true);
@@ -258,13 +195,6 @@ const Inventory = () => {
           onClick={() => setOpenProductDialog(true)}
         >
           Create New Product
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setOpenInventoryDialog(true)}
-        >
-          Add Inventory
         </Button>
       </Box>
 
@@ -530,38 +460,6 @@ const Inventory = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* Inventory Table */}
-      <Typography variant="h5" gutterBottom>
-        Inventory Records
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Inventory ID</TableCell>
-              <TableCell>Date Added</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {inventories.length > 0 ? (
-              inventories.map((inventory) => (
-                <TableRow key={inventory.inventoryId}>
-                  <TableCell>{inventory.inventoryId}</TableCell>
-                  <TableCell>{inventory.dateAdded}</TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={3} align="center">
-                  No inventory records available.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
 
       {/* Delete Confirmation Dialog */}
       <Dialog

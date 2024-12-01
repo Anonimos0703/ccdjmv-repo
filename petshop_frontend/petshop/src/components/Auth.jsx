@@ -32,25 +32,56 @@ const BackgroundBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  '&::before, &::after': {
+  '&::before, &::after, .bg-paw-1, .bg-paw-2, .bg-paw-3, .bg-paw-4': {
     content: '""',
     position: 'absolute',
     backgroundImage: `url(${paw1})`,
-    backgroundSize: '50px 50px',
+    backgroundSize: '60px 60px', // Increased size
     backgroundRepeat: 'no-repeat',
-    zIndex: 1
+    zIndex: 1,
+    opacity: 0.4 // Increased opacity
   },
   '&::before': {
-    top: '10%',
-    left: '5%',
-    width: '100px',
-    height: '100px'
+    top: '5%',
+    left: '3%',
+    transform: 'rotate(15deg)',
+    width: '60px',
+    height: '60px'
   },
   '&::after': {
-    bottom: '20%',
-    right: '10%',
-    width: '80px',
-    height: '80px'
+    bottom: '10%',
+    right: '5%',
+    transform: 'rotate(-25deg)',
+    width: '60px',
+    height: '60px'
+  },
+  '.bg-paw-1': {
+    top: '20%',
+    left: '10%',
+    transform: 'rotate(45deg)',
+    width: '60px',
+    height: '60px'
+  },
+  '.bg-paw-2': {
+    bottom: '30%',
+    left: '15%',
+    transform: 'rotate(-10deg)',
+    width: '60px',
+    height: '60px'
+  },
+  '.bg-paw-3': {
+    top: '40%',
+    right: '8%',
+    transform: 'rotate(35deg)',
+    width: '60px',
+    height: '60px'
+  },
+  '.bg-paw-4': {
+    bottom: '15%',
+    right: '20%',
+    transform: 'rotate(-45deg)',
+    width: '60px',
+    height: '60px'
   }
 }));
 
@@ -63,46 +94,63 @@ const PetPatternBackground = styled(Box)(({ theme }) => ({
   zIndex: 0,
   background: 'linear-gradient(135deg, #f8f8e6, #fcfcfc)',
   overflow: 'hidden',
-  '&::before, &::after, .twirly, .pawprint': {
+  '&::before, &::after, .twirly-1, .twirly-2, .twirly-3': {
     content: '""',
     position: 'absolute',
     backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
     opacity: 0.2,
   },
   '&::before': {
     backgroundImage: `url(${twirlylines})`,
-    top: '10%',
-    left: '5%',
-    transform: 'rotate(10deg) scale(1.5)',
+    top: '35%',
+    left: '2%',
+    width: '250px',
+    height: '250px',
+    transform: 'rotate(10deg)'
   },
   '&::after': {
     backgroundImage: `url(${twirlylines2})`,
-    bottom: '15%',
-    right: '5%',
-    transform: 'rotate(-15deg) scale(1.3)',
+    bottom: '5%',
+    right: '2%',
+    width: '300px',
+    height: '300px',
+    transform: 'rotate(-15deg)'
   },
-  '.twirly': {
+  '.twirly-1': {
     backgroundImage: `url(${twirlylines})`,
-    top: '30%',
-    right: '20%',
-    transform: 'rotate(5deg) scale(1.1)',
+    top: '25%',
+    left: '15%',
+    width: '200px',
+    height: '200px',
+    transform: 'rotate(-5deg)'
   },
-  '.pawprint': {
-    backgroundImage: `url(${paw1})`,
-    width: '60px',
-    height: '60px',
-    bottom: '20%',
+  '.twirly-2': {
+    backgroundImage: `url(${twirlylines2})`,
+    bottom: '25%',
     left: '10%',
-    opacity: 0.5,
+    width: '230px',
+    height: '230px',
+    transform: 'rotate(20deg)'
   },
-}));  
+  '.twirly-3': {
+    backgroundImage: `url(${twirlylines})`,
+    top: '50%',
+    right: '15%',
+    width: '250px',
+    height: '250px',
+    transform: 'rotate(5deg)'
+  }
+}));
 
 // JSX Usage Example:
 <>
-  <PetPatternBackground>
-    <div className="paw-print paw1" />
-    <div className="paw-print paw2" />
-  </PetPatternBackground>
+    <PetPatternBackground>
+      <div className="pawprint" />
+      <div className="pawprint2" />
+      <div className="pawprint3" />
+      <div className="twirly" />
+    </PetPatternBackground>
   {/* Other components */}
 </>
 
@@ -203,32 +251,106 @@ function Auth({ setUsername, setRole }) {
   if (isLoadingPage) {
     return (
       <BackgroundBox>
-        <Container maxWidth="sm" sx={{ textAlign: 'center', color: '#2C3E50' }}>
-          <CircularProgress size={80} sx={{ color: '#E67E22' }} />
-          <Typography variant="h5" sx={{ mt: 3 }}>
-            Logging you in...
-          </Typography>
-          <motion.img 
-            src={animation} 
-            alt="Loading Animation" 
-            style={{ 
-              width: '100%',
-              maxWidth: '400px',
-              objectFit: 'contain',
-              marginTop: 20
+        <PetPatternBackground />
+        <Container 
+          maxWidth="sm" 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            height: '100vh', 
+            textAlign: 'center', 
+            position: 'relative', 
+            zIndex: 10 
+          }}
+        >
+          <div 
+            style={{
+              display: 'flex',
+              gap: '20px', // Add spacing between the animations
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          />
+          >
+            {/* Render three animations */}
+            <img 
+              src={animation} 
+              alt="Loading 1" 
+              style={{ 
+                width: '150px', 
+                height: '150px', 
+                objectFit: 'contain', 
+                background: 'none', 
+                border: 'none', 
+                margin: 0, 
+                padding: 0
+              }} 
+            />
+            <img 
+              src={animation} 
+              alt="Loading 2" 
+              style={{ 
+                width: '150px', 
+                height: '150px', 
+                objectFit: 'contain', 
+                background: 'none', 
+                border: 'none', 
+                margin: 0, 
+                padding: 0
+              }} 
+            />
+            <img 
+              src={animation} 
+              alt="Loading 3" 
+              style={{ 
+                width: '150px', 
+                height: '150px', 
+                objectFit: 'contain', 
+                background: 'none', 
+                border: 'none', 
+                margin: 0, 
+                padding: 0
+              }} 
+            />
+          </div>
+          <Typography 
+            variant="h5" 
+            sx={{ 
+              color: '#2C3E50', 
+              fontWeight: 600,
+              mb: 2
+            }}
+          >
+            Preparing Your Pet Care Experience
+          </Typography>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: '#7F8C8D', 
+              maxWidth: 400,
+              mx: 'auto'
+            }}
+          >
+            We're setting up everything to ensure the best care for your furry friends.
+          </Typography>
         </Container>
       </BackgroundBox>
     );
-  }
-
+  }  
+  
   return (
     <BackgroundBox>
+      <BackgroundBox>
+        <div className="bg-paw-1" />
+        <div className="bg-paw-2" />
+        <div className="bg-paw-3" />
+        <div className="bg-paw-4" />
+      </BackgroundBox>
       <PetPatternBackground />
+      <div className="twirly-1" />
+        <div className="twirly-2" />
+        <div className="twirly-3" />
       <Container maxWidth="lg">
         <Paper 
           elevation={12} 

@@ -17,12 +17,6 @@ public class OrderEntity {
     private String orderDate;
     private String paymentMethod;
     private Double totalPrice;
-
-   
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    @JsonBackReference("customer-order")
-    private CustomerEntity customer;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productid")
@@ -71,16 +65,6 @@ public class OrderEntity {
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
-
-     
-    public CustomerEntity getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(CustomerEntity customer) {
-        this.customer = customer;
-    }
-    
      
     public ProductEntity getProduct() {
     	return product;

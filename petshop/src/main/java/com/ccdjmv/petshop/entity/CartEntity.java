@@ -21,20 +21,15 @@ public class CartEntity {
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
 	private List<CartItemEntity> cartItem;
 
-	@OneToOne
-	@JsonIgnore
-	private CustomerEntity customer; //To be continued
-
 	public CartEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CartEntity(int cart_id, List<CartItemEntity> cartItems, CustomerEntity customer) {
+	public CartEntity(int cart_id, List<CartItemEntity> cartItems) {
 		super();
 		this.cart_id = cart_id;
 		this.cartItem = cartItems;
-		this.customer = customer;
 	}
 
 	public int getCart_id() {
@@ -52,14 +47,5 @@ public class CartEntity {
 	public void setCartItem(List<CartItemEntity> cartItem) {
 		this.cartItem = cartItem;
 	}
-
-	public CustomerEntity getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(CustomerEntity customer) {
-		this.customer = customer;
-	}
-	
 	
 }

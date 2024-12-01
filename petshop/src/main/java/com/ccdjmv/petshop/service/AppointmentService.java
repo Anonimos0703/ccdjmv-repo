@@ -3,6 +3,7 @@ package com.ccdjmv.petshop.service;
 import java.util.List;
 //import java.util.Optional;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,32 +53,41 @@ public class AppointmentService {
 
    //delete
     public String deleteAppointment(int appid) {
-        String msg;
-
-        if (appointmentRepository.existsById(appid)) {
-            appointmentRepository.deleteById(appid); 
-            msg = "Appointment record successfully deleted.";
-        } else {
-            msg = "Appointment with id " + appid + " not found.";
+    	 Optional<AppointmentEntity> appointment = appointmentRepository.findById(appid);
+    	    
+    	    if (appointment.isPresent()) {
+    	        appointmentRepository.delete(appointment.get());
+    	        return "Appointment successfully canceled.";
+    	    } else {
+    	        return "Appointment with ID " + appid + " not found.";
+    	    }
+    }
+    
+    //put
+    public String updateAppointment(AppointmentEntity appointment) {
+        try {
+            appointmentRepository.save(appointment); // Save the updated appointment to the database
+            return "Appointment successfully updated.";
+        } catch (Exception e) {
+            return "Error updating appointment: " + e.getMessage();
         }
-
-        return msg;
+    }
+    
+    public AppointmentEntity getAppointmentById(int appid) {
+        return appointmentRepository.findById(appid).orElse(null); // Find the appointment by ID
     }
     
 //    public List<AppointmentEntity> getAppointmentByUser(String email) {
 //        return appointmentRepository.findByEmail(email);
 //    }
 
-    public List<AppointmentEntity> findByEmail(String email) {
-        return appointmentRepository.findByEmailWithGrooming(email);
+//    public List<AppointmentEntity> findByEmail(String email) {
+//        return appointmentRepository.findByEmailWithGrooming(email);
+//    }
+    
+    
+    public List<AppointmentEntity> getAppointmentsByUserEmail(String email) {
+        return appointmentRepository.findByUserEmail(email);
     }
     
-    public String cancelAppointment(int appId) {
-        if (appointmentRepository.existsById(appId)) {
-            appointmentRepository.deleteById(appId);
-            return "Appointment with ID " + appId + " canceled successfully.";
-        } else {
-            throw new IllegalArgumentException("Appointment with ID " + appId + " not found.");
-        }
-    }
 }

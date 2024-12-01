@@ -9,71 +9,54 @@ import org.springframework.stereotype.Service;
 import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.CartItemEntity;
 import com.ccdjmv.petshop.repository.CartItemRepository;
-import com.ccdjmv.petshop.repository.CartRepository;
 
 @Service
 public class CartItemService {
 	@Autowired
-	CartItemRepository cirepo;
-	
-	@Autowired
-	CartRepository crepo;
+	CartItemRepository cartItemRepo;
 
 	public CartItemService() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	//Create cartItem Record without cart
-		public CartItemEntity postCartItem(CartItemEntity cartItem) {
-		return cirepo.save(cartItem);
-	}
-	
 	//Create of CRUD
-	//Create CartItem Record with Cart assigned
-	public CartItemEntity postCartItemRecord(CartItemEntity cartItem) {
-		
-		// Fetch the Cart entity by ID from the CartItemEntity
-		CartEntity cart = crepo.findById(cartItem.getCart().getCart_id()).orElseThrow(() -> 
-		new NoSuchElementException("Cart with ID " + cartItem.getCart().getCart_id() + " not found"));
-    
-		// Assign the cart to the cartItem
-		cartItem.setCart(cart);
-    
-		return cirepo.save(cartItem);
+	//Create cartItem Record 
+		public CartItemEntity postCartItem(CartItemEntity cartItem) {
+		return cartItemRepo.save(cartItem);
 	}
 	
 	//Read of CRUD 
 	public List<CartItemEntity> getAllCartItems(){
-		return cirepo.findAll();
+		return cartItemRepo.findAll();
 	}
 	
-	public CartItemEntity putCartItemDetails(int cartItem_id, CartItemEntity newCartItemDetails) {
+	//Update of CRUD
+	public CartItemEntity putCartItemDetails(int cartItemId, CartItemEntity newCartItemDetails) {
 	    try {
 	        // Search for the cartItem by ID
-	        CartItemEntity cartItem = cirepo.findById(cartItem_id).orElseThrow(() -> 
-	            new NoSuchElementException("CartItem " + cartItem_id + " not found"));
+	        CartItemEntity cartItem = cartItemRepo.findById(cartItemId).orElseThrow(() -> 
+	            new NoSuchElementException("CartItem " + cartItemId + " not found"));
 
 	        // If ID found, set new values
-	        cartItem.setQuantity(newCartItemDetails.getQuantity()); //KUWANG
+	        cartItem.setQuantity(newCartItemDetails.getQuantity());
 
 	        // Save the updated cartItem
-	        return cirepo.save(cartItem);
+	        return cartItemRepo.save(cartItem);
 	    } catch (NoSuchElementException nex) {
 	        throw nex; // Re-throw the exception
 	        
 	    }
 	}
 
-
 	//Delete of CRUD
-	public String deleteCartItem(int id) {
+	public String deleteCartItem(int cartItemId) {
 		String msg = "";
-		if (cirepo.findById(id).isPresent()) {
-			cirepo.deleteById(id);
+		if (cartItemRepo.findById(cartItemId).isPresent()) {
+			cartItemRepo.deleteById(cartItemId);
 			msg = "CartItem Successfully deleted";
 		}else {
-			msg = id + " NOT found";
+			msg = cartItemId + " NOT found";
 		}
 		return msg;
 	}

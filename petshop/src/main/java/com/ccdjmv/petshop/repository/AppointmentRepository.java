@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.ccdjmv.petshop.entity.AppointmentEntity;
 @Repository
 public interface AppointmentRepository extends JpaRepository<AppointmentEntity, Integer> {
-	@Query("SELECT a FROM AppointmentEntity a LEFT JOIN FETCH a.grooming g WHERE a.email = :email")
-	 List<AppointmentEntity> findByEmailWithGrooming(@Param("email") String email);
-//	List<AppointmentEntity> findByEmail(@Param("email") String email);
+//	@Query("SELECT a FROM AppointmentEntity a LEFT JOIN FETCH a.grooming g WHERE a.email = :email")
+//	 List<AppointmentEntity> findByEmailWithGrooming(@Param("email") String email);
+
+	List<AppointmentEntity> findByUserEmail(String email);
 	 
 	
 }

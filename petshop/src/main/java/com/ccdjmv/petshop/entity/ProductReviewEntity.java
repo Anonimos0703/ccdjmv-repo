@@ -26,11 +26,6 @@ public class ProductReviewEntity {
     @JsonBackReference("product-productreview")
     private ProductEntity product;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    @JsonBackReference("customer-productreview")
-    private CustomerEntity customer;
-    
     public ProductReviewEntity() {
     	
     }
@@ -65,12 +60,4 @@ public class ProductReviewEntity {
     	this.product  = product;
     }
     
-    public CustomerEntity getCustomer() {
-    	return customer;
-    }
-    
-    public void setCustomer(CustomerEntity customer) {
-    	this.customer = customer;
-    }
-
 }    

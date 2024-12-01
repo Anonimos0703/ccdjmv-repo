@@ -35,11 +35,11 @@ public class UserEntity {
 
     @Column(name = "role", nullable = false)
     private String role;
-
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference("user-customer")
-    private List<CustomerEntity> customer;
+    @OneToMany
+    @JsonManagedReference
+    private List<AppointmentEntity> appointment;
+    
     
     public UserEntity() {}
 
@@ -108,11 +108,11 @@ public class UserEntity {
         this.role = role;
     }
     
-    public List<CustomerEntity> getCustomer() {
-        return customer;
+    public List<AppointmentEntity> getAppointment(){
+    	return appointment;
     }
-
-    public void setCustomer(List<CustomerEntity> customer) {
-        this.customer = customer;
+    
+    public void setAppointment(List<AppointmentEntity> appointment) {
+    	this.appointment = appointment;
     }
 }
