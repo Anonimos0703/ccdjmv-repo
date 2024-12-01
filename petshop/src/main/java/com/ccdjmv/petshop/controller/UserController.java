@@ -106,5 +106,10 @@ public class UserController {
     public UserEntity postUser(@RequestBody UserEntity user) {
         return userService.postUser(user);
     }
+    
+    @DeleteMapping("/deleteUser/{userId}")
+    public String deleteUser(@PathVariable Long userId) {
+    	return userService.deleteUser(userId);
+    }
 
 }
