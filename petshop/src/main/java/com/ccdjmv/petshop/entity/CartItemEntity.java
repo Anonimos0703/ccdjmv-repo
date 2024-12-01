@@ -67,5 +67,11 @@ public class CartItemEntity {
 		this.cart = cart;
 	}
 
-	
+	public ProductEntity getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductEntity product) {
+		this.product = product;
+	}
 }

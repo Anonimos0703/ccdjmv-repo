@@ -106,4 +106,12 @@ public class ProductEntity {
 	    public void setProductImage(String productImage) {
 	        this.productImage = productImage;
 	    }
+
+		public List<CartItemEntity> getCartItems() {
+			return cartItems;
+		}
+
+		public void setCartItems(List<CartItemEntity> cartItems) {
+			this.cartItems = cartItems;
+		}
 }
