@@ -242,6 +242,7 @@ const Inventory = () => {
               <MenuItem value="Fur Clothing">Fur Clothing</MenuItem>
               <MenuItem value="Care Products">Care Products</MenuItem>
               <MenuItem value="Food">Food</MenuItem>
+              <MenuItem value="Accessory">Accessory</MenuItem>
             </Select>
           </FormControl>
           <TextField

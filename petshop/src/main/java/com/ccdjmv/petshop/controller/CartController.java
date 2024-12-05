@@ -41,6 +41,11 @@ public class CartController {
 		return cartServ.getAllCarts();
 	}
 	
+	@GetMapping("/getCartById/{cartId}")
+    public CartEntity getCartById(@PathVariable Long cartId) {
+        return cartServ.getCartById(cartId);
+    }
+	
 	//Update of CRUD
 	//This function may have no use
 	@PutMapping("/putCartDetails")

@@ -11,7 +11,27 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+
 export default function CartItem(props) {
+
+  const handleCheckboxChange = (event) => {
+    props.onCheckChange(props.itemId, event.target.checked); // Notify parent about the checkbox change
+  };
+
+  const handleIncreaseQuantity = () => {
+    props.onQuantityChange(props.itemId, props.quantity + 1); // used to check if cartItemQuantity has reached 
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (props.quantity > 1) {
+      props.onQuantityChange(props.itemId, props.quantity - 1);
+    }
+  };
+
+  const handleDelete = () => {
+    props.onDelete(props.itemId);
+  };
+
   return (
     <>
       <Grid item xs={12}>
@@ -19,11 +39,14 @@ export default function CartItem(props) {
           variant="outlined"
           style={{ display: "flex", alignItems: "center" }}
         >
-          <Checkbox />
+          <Checkbox
+            checked={props.isSelected}  // This indicates whether the checkbox is selected
+            onChange={handleCheckboxChange}
+          />  
           <CardMedia
             component="img"
-            image="https://via.placeholder.com/80"
-            alt="Product Image"
+            image={props.image}
+            alt={props.title}
             style={{ width: 80, height: 80, marginLeft: "10px" }}
           />
           <CardContent style={{ flex: 1 }}>
@@ -33,7 +56,7 @@ export default function CartItem(props) {
             </Typography>
           </CardContent>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <IconButton>
+            <IconButton onClick={handleDecreaseQuantity}>
               <RemoveIcon />
             </IconButton>
             <TextField
@@ -41,12 +64,12 @@ export default function CartItem(props) {
               size="small"
               value={props.quantity}
               inputProps={{ style: { textAlign: "center" } }}
-              style={{ width: 50 }}
+              style={{ width: 100 }}
             />
-            <IconButton>
+            <IconButton onClick={handleIncreaseQuantity}>
               <AddIcon />
             </IconButton>
-            <IconButton color="error">
+            <IconButton color="error" onClick={handleDelete}>
               <DeleteIcon />
             </IconButton>
           </div>

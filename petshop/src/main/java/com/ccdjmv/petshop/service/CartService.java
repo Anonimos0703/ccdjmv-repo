@@ -3,6 +3,7 @@ package com.ccdjmv.petshop.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,16 @@ public class CartService {
 	//Read of CRUD 
 	public List<CartEntity>getAllCarts(){
 		return cartRepo.findAll();
+	}
+	
+	public CartEntity getCartById(Long cartId) {
+		Optional<CartEntity> cartOptional = cartRepo.findById(cartId);
+        if (cartOptional.isPresent()) {
+            return cartOptional.get();
+        } else {
+            // Handle case where cart is not found (throw an exception, return null, etc.)
+            throw new RuntimeException("Cart not found for id: " + cartId);
+        }
 	}
 	
 	//Update of CRUD 

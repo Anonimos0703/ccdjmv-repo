@@ -22,7 +22,13 @@ public class CartItemService {
 	
 	//Create of CRUD
 	//Create cartItem Record 
-		public CartItemEntity postCartItem(CartItemEntity cartItem) {
+	public CartItemEntity postCartItem(CartItemEntity cartItem) {
+		if (cartItem.getQuantity() <= 0) {
+	        // Optionally throw an exception or return null
+	        throw new IllegalArgumentException("Quantity must be greater than 0");
+	        // Or return null, or handle as needed
+	        // return null;
+	    }
 		return cartItemRepo.save(cartItem);
 	}
 	
@@ -32,7 +38,7 @@ public class CartItemService {
 	}
 	
 	//Update of CRUD
-	public CartItemEntity putCartItemDetails(int cartItemId, CartItemEntity newCartItemDetails) {
+	public CartItemEntity UpdateCartItem(int cartItemId, CartItemEntity newCartItemDetails) {
 	    try {
 	        // Search for the cartItem by ID
 	        CartItemEntity cartItem = cartItemRepo.findById(cartItemId).orElseThrow(() -> 
