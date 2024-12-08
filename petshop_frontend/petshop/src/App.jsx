@@ -140,14 +140,14 @@ function App() {
               </Layout>
             }
           /> 
-          <Route
+          {/* <Route
             path="/MyPurchases/:orderID"
             element={
               <Layout username={username} role={role}>
                 <OrderDetails />
               </Layout>
             }
-          /> 
+          />  */}
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />

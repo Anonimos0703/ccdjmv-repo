@@ -139,7 +139,7 @@ export default function Header({ username, role, userId }) {
                       <ListItemText primary="Cart" />
                     </ListItem>
                     <ListItem button onClick={() => handleMenuOptionClick("/MyPurchases")}>
-                      <ListItemText primary="Cart" />
+                      <ListItemText primary="My Purchases" />
                     </ListItem>
                     <ListItem button onClick={() => handleMenuOptionClick("/appointmentslist")}>
                       <ListItemText primary="Appointments" />
