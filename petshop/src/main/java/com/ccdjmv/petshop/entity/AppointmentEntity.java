@@ -34,6 +34,7 @@ public class AppointmentEntity {
     private LocalTime time;
     
     private boolean canceled = false; 
+    private boolean confirmed;
     private String groomService;
     private String paymentMethod;
     private int price;
@@ -47,7 +48,7 @@ public class AppointmentEntity {
     }
     
     public AppointmentEntity(Integer appId, Date date, String email, String contactNo, LocalTime time, 
-    		boolean canceled, String groomService, String paymentMethod, int price ) {
+    		boolean canceled, String groomService, String paymentMethod, int price, boolean confirmed ) {
     	super();
         this.appId = appId;
 //        this.customerId = customerId;
@@ -59,8 +60,16 @@ public class AppointmentEntity {
         this.groomService = groomService;
         this.paymentMethod = paymentMethod;
         this.price = price;
+        this.confirmed = confirmed;
     }
     
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
     public int getPrice() {
     	return price;
     }

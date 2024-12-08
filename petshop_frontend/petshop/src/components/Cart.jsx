@@ -13,23 +13,19 @@ import CartItem from "./CartItem";
 import axios from "axios";
 import Checkout from "./Checkout";
 import { useNavigate } from "react-router-dom";
-
-// const products = [
-//   { image: dog_food.jpg, name: 'Dog Food', price: '₱200.00' },
-//   { image: cat_food, name: 'Cat Food', price: '₱180.00' },
-//   { image: cat_treats, name: 'Cat Treats', price: '₱120.00' },
-//   { image: dog_treats, name: 'Dog Treats', price: '₱140.00' },
-// ];
+import { toast } from "sonner";
 
 function Cart() {
   const [cartItems, setCartItem] = useState([]);
+  const [selectedItems, setSelectedItems] = useState(new Set()); //track selected items by ID
 
-  const getCartItems = () => {
+
+  const getCartItems = (cartId) => {
     axios
-      .get("http://localhost:8080/api/cartItem/getAllCartItems")
+      .get(`http://localhost:8080/api/cart/getCartById/${cartId}`)
       .then((res) => {
-        console.log(res.data);
-        setCartItem(res.data);
+        console.log(res.data.cartItems);
+        setCartItem(res.data.cartItems);
       })
       .catch((err) => {
         console.error("Error fetching cart items:", err);
@@ -37,7 +33,8 @@ function Cart() {
   };
 
   useEffect(() => {
-    getCartItems();
+    const cartId = localStorage.getItem("id");
+    getCartItems(cartId);
   }, []);
 
   const navigate = useNavigate()
@@ -45,6 +42,59 @@ function Cart() {
   const handleCheckoutClick = () => {
     navigate('/Checkout');
   }
+
+  const handleCheckChange = (itemId, isChecked) => {
+    const updatedSelectedItems = new Set(selectedItems);
+    if (isChecked) {
+      updatedSelectedItems.add(itemId); //add item to selected set
+    } else {
+      updatedSelectedItems.delete(itemId); //ma remove ang item from selected set
+    }
+    setSelectedItems(updatedSelectedItems); //update state 
+  };
+
+  const handleQuantityChange = (itemId, newQuantity) => {
+    axios
+      .put(`http://localhost:8080/api/cartItem/updateCartItem/${itemId}`, {
+        quantity: newQuantity
+      })
+      .then(() => {
+        setCartItem((prevItems) =>
+          prevItems.map((item) =>
+            item.cartItemId === itemId ? { ...item, quantity: newQuantity } : item
+          )
+        );
+      })
+      .catch((err) => console.error("Error updating quantity:", err));
+  };
+
+  const handleDeleteItem = (itemId) => {
+    const confirmDelete = window.confirm("Are you sure you want to remove this item from your cart?");
+    if(confirmDelete){
+      axios
+      .delete(`http://localhost:8080/api/cartItem/deleteCartItem/${itemId}`)
+      .then(() => {
+        setCartItem((prevItems) =>
+          prevItems.filter((item) => item.cartItemId !== itemId)
+        );
+      })
+      .catch((err) => console.error("Error deleting item:", err));
+    }
+    
+  };
+
+  //functions for calculations
+  const getSubtotal = () => {
+    return cartItems
+      .filter((item) => selectedItems.has(item.cartItemId))
+      .reduce((total, item) => total + item.product.productPrice * item.quantity, 0)
+      .toFixed(2);
+  };
+
+  const getTotal = () => {
+    const subtotal = parseFloat(getSubtotal());
+    return (subtotal + 30).toFixed(2); //shipping fee 30 pesos
+  };
 
   return (
     <Box
@@ -74,61 +124,48 @@ function Cart() {
         {/* Cart Items */}
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {/* {cartItems.map((item, index) => (
+            {cartItems.map((item, index) => (
               <CartItem
                 key={index}
-                price={item.price}
-                title={item.productName}
+                price={item.product?.productPrice}
+                title={item.product?.productName}
                 quantity={item.quantity}
+                image={item.product?.productImage}
+                itemId={item.cartItemId}
+                isSelected={selectedItems.has(item.cartItemId)}
+                onCheckChange={handleCheckChange}
+                onQuantityChange={handleQuantityChange}
+                onDelete={handleDeleteItem}
               />
-            ))} */}
-            <CartItem
-              price={159}
-              title={"Cat Food Tuna Flavor 1kg"}
-              quantity={3}
-              img=""
-            />
-            <CartItem
-              price={200}
-              title={"Dog Food Beef Flavor 1kg"}
-              quantity={1}
-            />
-            <CartItem price={59} title={"Cat toy mouse"} quantity={1} />
-            <CartItem price={99} title={"Dog Rope Toy"} quantity={1} />
-            <CartItem
-              price={299}
-              title={"Pet Food bowl stainless"}
-              quantity={2}
-            />
-            <CartItem price={80} title={"Doggy collar green"} quantity={1} />
+            ))}
           </Grid>
         </Grid>
 
         {/* Order Summary */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} 
+        sx={{
+          position: "sticky",
+            top: "140px",
+            zIndex: 2,
+            backgroundColor: "#fff", // Ensure it has a background to stand out
+            padding: "10px", // Add padding to make the content look better
+            height: "fit-content", // Ensures the card doesn't take up unnecessary space
+            borderRadius: "16px"
+            
+          }}>
           <Card variant="outlined">
             <CardContent>
-              <Typography variant="h6">Order Summary</Typography>
+              <Typography variant="h6">Summary</Typography>
               <Divider style={{ margin: "10px 0" }} />
-              {/* <Typography variant="body2">
-                Subtotal ({cartItems.length} items): ₱
-                {cartItems
-                  .reduce((total, item) => total + item.price, 0)
-                  .toFixed(2)}
-              </Typography> */}
               <Typography variant="body2">
-                Subtotal (9 items): ₱896.00
+                  Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
               </Typography>
-              <Typography variant="body2">Shipping Fee: ₱80.00</Typography>
+              <Typography variant="body2">Shipping Fee: ₱30.00</Typography>
 
               <Divider style={{ margin: "10px 0" }} />
-              {/* <Typography variant="h6">
-                Total: ₱
-                {cartItems
-                  .reduce((total, item) => total + item.price, 80)
-                  .toFixed(2)}
-              </Typography> */}
-              <Typography variant="h6">Total: ₱976.00</Typography>
+              <Typography variant="h6">
+                  Total: ₱{getTotal()}
+              </Typography>
               <Typography variant="caption" color="text.secondary">
                 VAT included, where applicable
               </Typography>

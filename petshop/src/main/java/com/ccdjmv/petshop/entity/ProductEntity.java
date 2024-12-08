@@ -1,6 +1,8 @@
 package com.ccdjmv.petshop.entity;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -23,6 +25,11 @@ public class ProductEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference("product-productreview")
     private List<ProductReviewEntity> productreview;
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+//    @JsonManagedReference("product-cartItem")
+    @JsonIgnore
+    private List<CartItemEntity> cartItems;
     
     // Constructors
     public ProductEntity() {}
@@ -90,4 +97,12 @@ public class ProductEntity {
 	    public void setProductImage(String productImage) {
 	        this.productImage = productImage;
 	    }
+
+		public List<CartItemEntity> getCartItems() {
+			return cartItems;
+		}
+
+		public void setCartItems(List<CartItemEntity> cartItems) {
+			this.cartItems = cartItems;
+		}
 }

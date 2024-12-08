@@ -1,15 +1,20 @@
 package com.ccdjmv.petshop.controller;
 
+import com.ccdjmv.petshop.entity.AddressEntity;
 import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
 import com.ccdjmv.petshop.service.UserService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -110,6 +115,88 @@ public class UserController {
     @DeleteMapping("/deleteUser/{userId}")
     public String deleteUser(@PathVariable Long userId) {
     	return userService.deleteUser(userId);
+    }
+    
+    @PostMapping("/users/{id}/upload-profile-pic")
+    public ResponseEntity<?> uploadProfileImage(
+        @PathVariable Long id,
+        @RequestParam("profileImage") MultipartFile imageFile
+    ) {
+        try {
+            // Validate image file
+            if (imageFile.isEmpty()) {
+                return ResponseEntity.badRequest().body("No file uploaded.");
+            }
+
+            String contentType = imageFile.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                return ResponseEntity.badRequest().body("Invalid file type. Please upload an image.");
+            }
+
+            // Find the user by ID
+            Optional<UserEntity> optionalUser = userRepository.findById(id);
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
+
+            // Convert the image file to Base64 string
+            byte[] imageBytes = imageFile.getBytes();
+            String profileImageBase64 = Base64.getEncoder().encodeToString(imageBytes);
+
+            // Update the user's profile image
+            UserEntity user = optionalUser.get();
+            user.setProfileImage(profileImageBase64);
+            userRepository.save(user);
+
+            // Return the Base64 image string in the response
+            return ResponseEntity.ok(Map.of("profileImage", profileImageBase64));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image.");
+        }
+    }
+
+
+
+
+
+
+    @GetMapping("/users/{id}/profile-image")
+    public ResponseEntity<?> getProfileImage(@PathVariable Long id) {
+        try {
+            // Find the user by ID
+            Optional<UserEntity> optionalUser = userRepository.findById(id);
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
+
+            // Get the profile image
+            UserEntity user = optionalUser.get();
+            String profileImage = user.getProfileImage();
+
+            if (profileImage == null || profileImage.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No profile image available.");
+            }
+
+            return ResponseEntity.ok(profileImage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve profile image.");
+        }
+    }
+
+    
+    @PutMapping("users/{id}/address")
+    public ResponseEntity<String> updateUserAddress(
+            @PathVariable Long id,
+            @RequestBody AddressEntity addressEntity
+    ) {
+        try {
+            userService.updateAddress(id, addressEntity);
+            return ResponseEntity.ok("Address updated successfully.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update address.");
+        }
     }
 
 }
