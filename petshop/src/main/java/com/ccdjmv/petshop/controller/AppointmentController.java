@@ -85,6 +85,33 @@ public class AppointmentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel appointment.");
         }
     }
+    
+    @PutMapping("/confirm/{appid}")
+    public ResponseEntity<String> confirmAppointment(@PathVariable int appid) {
+        // Find the appointment by appid
+        AppointmentEntity appointment = appointmentService.getAppointmentById(appid);
+
+        if (appointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Appointment not found.");
+        }
+
+        // Check if the appointment has already been confirmed
+        if (appointment.isConfirmed()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Appointment is already confirmed.");
+        }
+
+        // Update the confirmed flag to true
+        appointment.setConfirmed(true);
+
+        // Save the updated appointment to the database
+        String response = appointmentService.updateAppointment(appointment);
+
+        if (response.equals("Appointment successfully updated.")) {
+            return ResponseEntity.ok("Appointment successfully confirmed.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to confirm appointment.");
+        }
+    }
 
     @GetMapping("/byUserEmail/{email}")
     public List<AppointmentEntity> getAppointmentsByUserEmail(@PathVariable String email) {

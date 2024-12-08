@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  TextField,
 } from '@mui/material';
 import { Toaster, toast } from 'sonner';
 
@@ -15,6 +16,7 @@ const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -75,6 +77,35 @@ const AppointmentList = () => {
     }
   };
 
+  const handleConfirmAppointment = async (appId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/appointments/confirm/${appId}`, {
+        method: 'PUT',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to confirm the appointment.');
+      }
+
+      toast.success('Appointment confirmed successfully.');
+
+      // Update the local state to reflect the confirmed status
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.appId === appId ? { ...appointment, confirmed: true } : appointment
+        )
+      );
+    } catch (err) {
+      console.error('Error confirming appointment:', err);
+      toast.error(err.message);
+    }
+  };
+
+  const filteredAppointments = appointments.filter((appointment) =>
+    appointment.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Box
       sx={{
@@ -89,7 +120,7 @@ const AppointmentList = () => {
     >
       <Toaster richColors />
       <Container
-        maxWidth="sm"
+        maxWidth="md"
         sx={{
           padding: '2rem',
           boxShadow: 3,
@@ -101,6 +132,15 @@ const AppointmentList = () => {
           My Appointments
         </Typography>
 
+        <TextField
+          fullWidth
+          label="Search by Email"
+          variant="outlined"
+          sx={{ mb: 3 }}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" p={3}>
             <CircularProgress />
@@ -109,11 +149,11 @@ const AppointmentList = () => {
           <Typography color="error" align="center">
             {error}
           </Typography>
-        ) : appointments.length === 0 ? (
+        ) : filteredAppointments.length === 0 ? (
           <Typography align="center">No appointments found.</Typography>
         ) : (
           <List>
-            {appointments.map((appointment) => (
+            {filteredAppointments.map((appointment) => (
               <ListItem
                 key={appointment.appId}
                 sx={{
@@ -140,17 +180,30 @@ const AppointmentList = () => {
                     </>
                   }
                 />
-                
                 {appointment.canceled && (
                   <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>
-                    This appointment has been canceled.
+                    This appointment has been canceled. 
                   </Typography>
                 )}
-                
+                {appointment.confirmed ? (
+                  <Typography color="success" sx={{ fontStyle: 'italic', marginTop: 1 }}>
+                    This appointment has been confirmed.
+                  </Typography>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleConfirmAppointment(appointment.appId)}
+                    sx={{ ml: 2 }}
+                  >
+                    Confirm
+                  </Button>
+                )}
                 <Button
                   variant="contained"
                   color="error"
                   onClick={() => handleCancelAppointment(appointment.appId)}
+                  sx={{ ml: 2 }}
                 >
                   Cancel
                 </Button>
