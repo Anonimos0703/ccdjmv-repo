@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('email');
     
     
+    
     // Do not remove the profile image, just remove the current user's specific profile image
     localStorage.removeItem(`profileImage_${currentUserId}`);
   };

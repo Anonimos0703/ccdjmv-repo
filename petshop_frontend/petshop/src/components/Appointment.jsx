@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, MenuItem, Container, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Toaster, toast } from 'sonner'
+import { Toaster, toast } from 'sonner';
 
 const Appointment = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +13,8 @@ const Appointment = () => {
     groomService: '',
     paymentMethod: '',    
     user: {
-      id: parseInt(localStorage.getItem('id'), 10)  // Ensure user ID is set from localStorage
-    }
+      id: parseInt(localStorage.getItem('id'), 10), // Ensure user ID is set from localStorage
+    },
   });
 
   const navigate = useNavigate();
@@ -37,15 +37,14 @@ const Appointment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const loggedInEmail = localStorage.getItem('email'); 
-  
+
     if (formData.email !== loggedInEmail) {
-      toast.error("You can only book an appointment using your registered email.");
+      toast.error('You can only book an appointment using your registered email.');
       return; 
     }
-  
-    // Prepare appointment data with nested user object
+
     const appointmentData = {
       email: formData.email,
       contactNo: formData.contactNo,
@@ -55,10 +54,10 @@ const Appointment = () => {
       groomService: formData.groomService,
       paymentMethod: formData.paymentMethod,
       user: {
-        id: formData.user.id
-      }
+        id: formData.user.id,
+      },
     };
-  
+
     console.log('Appointment Data:', appointmentData);
     try {
       const response = await fetch(
@@ -69,12 +68,14 @@ const Appointment = () => {
           body: JSON.stringify(appointmentData),
         }
       );
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log('Appointment created:', result.appId);
-        toast.success('Booking Successful! Appointment ID: ' + result.appId);
-  
+        
+        // Display success toast
+        toast.success(`Booking Successful!`);
+        
         // Reset form, keeping user ID
         setFormData({
           email: '',
@@ -85,19 +86,19 @@ const Appointment = () => {
           groomService: '',
           paymentMethod: '',
           user: {
-            id: formData.user.id
-          }
+            id: formData.user.id,
+          },
         });
       } else {
         toast.error('Failed to Create Appointment');
         console.error('Failed to create appointment:', response.statusText);
       }
     } catch (error) {
-      alert('Error: ' + error.message);
+      toast.error('Error: ' + error.message);
       console.error('Error:', error);
     }
   };
-  
+
   return (
     <Box
       sx={{
@@ -110,7 +111,7 @@ const Appointment = () => {
         backgroundColor: '#f7f7f7',
       }}
     >
-      <Toaster richColors  />
+      <Toaster richColors />
       <Container
         maxWidth="sm"
         sx={{
@@ -140,11 +141,7 @@ const Appointment = () => {
           {['email', 'contactNo'].map((field, index) => (
             <TextField
               key={index}
-              label={
-                field === 'email'
-                  ? 'Email'
-                  : 'Contact No.'
-              }
+              label={field === 'email' ? 'Email' : 'Contact No.'}
               type={field === 'email' ? 'email' : 'text'}
               name={field}
               value={formData[field]}
