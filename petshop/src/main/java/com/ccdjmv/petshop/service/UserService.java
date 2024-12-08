@@ -3,9 +3,13 @@ package com.ccdjmv.petshop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ccdjmv.petshop.entity.AddressEntity;
 import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
+import com.ccdjmv.petshop.repository.AddressRepository;
 import com.ccdjmv.petshop.repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +19,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+	private AddressRepository addressRepository;
 
     public String signUp(UserEntity user) {
         Optional<UserEntity> existingUser = userRepository.findByEmail(user.getEmail());
@@ -68,4 +73,32 @@ public class UserService {
         return userRepository.save(user);
     }
     
+    public void updateAddress(Long userId, AddressEntity addressEntity) {
+        // Fetch user from the database
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+        // Check if the address to update already exists for the user
+        AddressEntity existingAddress = user.getAddresses().stream()
+                .filter(address -> address.getAddressId().equals(addressEntity.getAddressId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existingAddress != null) {
+            // Update the existing address
+            existingAddress.setRegion(addressEntity.getRegion());
+            existingAddress.setProvince(addressEntity.getProvince());
+            existingAddress.setCity(addressEntity.getCity());
+            existingAddress.setBarangay(addressEntity.getBarangay());
+            existingAddress.setPostalCode(addressEntity.getPostalCode());
+            existingAddress.setBuildingHouseNo(addressEntity.getBuildingHouseNo());
+        } else {
+            // Create a new address and associate it with the user
+            addressEntity.setUser(user);
+            user.getAddresses().add(addressEntity);
+        }
+
+        // Save the user entity (addresses will cascade)
+        userRepository.save(user);
+    }
 }

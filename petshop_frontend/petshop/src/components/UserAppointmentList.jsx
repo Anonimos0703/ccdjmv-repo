@@ -102,7 +102,38 @@ const UserAppointmentList = () => {
       toast.error(err.message);
     }
   };
-  
+
+  const handleConfirm = async (appId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/appointments/confirm/${appId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to confirm appointment.");
+      }
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.appId === appId
+            ? { ...appointment, confirmed: true }
+            : appointment
+        )
+      );
+
+      toast.success("Your appointment has been confirmed.");
+    } catch (err) {
+      console.error("Error confirming appointment:", err);
+      toast.error(err.message);
+    }
+  };
+
   const pawPositions = [
     { top: '5%', left: '5%', width: '80px', opacity: 0.2, transform: 'rotate(-20deg)' },
     { bottom: '10%', right: '10%', width: '100px', opacity: 0.2, transform: 'rotate(15deg)' },
@@ -111,7 +142,7 @@ const UserAppointmentList = () => {
     { bottom: '20%', left: '15%', width: '90px', opacity: 0.2, transform: 'rotate(-15deg)' },
     { top: '60%', right: '5%', width: '50px', opacity: 0.2, transform: 'rotate(30deg)' }
   ];
-  
+
   return (
     <Box
       sx={{
@@ -185,128 +216,133 @@ const UserAppointmentList = () => {
           </Typography>
         ) : (
           <List>
-            {pawPositions.map((pos, index) => (
-        <img
-          key={index}
-          src={paw1}
-          alt="paw"
-          style={{
-            position: 'absolute',
-            ...pos,
-            zIndex: 1,
-          }}
-        />
-      ))}
-  {appointments.map((appointment, index) => (
-    <Paper 
-      elevation={1} 
-      sx={{ 
-        mb: 2, 
-        p: 2, 
-        borderRadius: 2,
-        background: '#f9f9f9',
-        border: '1px solid #e0e0e0',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-      }}
-      key={appointment.appId}
-    >
-      <ListItem
-        disableGutters
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          width: '100%'
-        }}
-      >
-        <ListItemText
-          primary={
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 600, 
-                color: '#2c3e50',
-                mb: 1
-              }}
-            >
-              {`${appointment.date} at ${appointment.time}`}
-            </Typography>
-          }
-          secondary={
-            <Box sx={{ width: '100%' }}>
-              <Typography 
-                variant="body2" 
-                color="text.secondary" 
-                sx={{ mb: 0.5 }}
+            {appointments.map((appointment) => (
+              <Paper 
+                elevation={1} 
+                sx={{ 
+                  mb: 2, 
+                  p: 2, 
+                  borderRadius: 2,
+                  background: '#f9f9f9',
+                  border: '1px solid #e0e0e0',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}
+                key={appointment.appId}
               >
-                <strong>Service:</strong> {appointment.groomService}
-              </Typography>
-              <Typography 
-                variant="body2" 
-                color="text.secondary" 
-                sx={{ mb: 0.5 }}
-              >
-                <strong>Price:</strong> {appointment.price}
-              </Typography>
-              <Divider sx={{ my: 1, borderColor: '#e0e0e0' }} />
-              <Typography 
-                variant="body2" 
-                color="text.primary"
-              >
-                <strong>Contact:</strong> {appointment.contactNo}
-              </Typography>
-            </Box>
-          }
-        />
-        {appointment.canceled ? (
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              width: '100%', 
-              mt: 2 
-            }}
-          >
-            <Typography 
-              color="error" 
-              sx={{ 
-                fontStyle: "italic",
-                fontWeight: 500
-              }}
-            >
-              This Appointment Has Been Cancelled By The User.
-            </Typography>
-            <Button
-              variant="outlined"
-              color="error"
-              size="small"
-              onClick={() => handleDelete(appointment.appId)}
-            >
-              Delete
-            </Button>
-          </Box>
-        ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ 
-              mt: 2,
-              backgroundColor: '#3498db',
-              '&:hover': {
-                backgroundColor: '#2980b9'
-              }
-            }}
-            onClick={() => handleCancel(appointment.appId)}
-          >
-            Cancel Appointment
-          </Button>
-        )}
-      </ListItem>
-    </Paper>
-  ))}
-</List>
+                <ListItem
+                  disableGutters
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    width: '100%'
+                  }}
+                >
+                  <ListItemText
+                    primary={
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: 600, 
+                          color: '#2c3e50',
+                          mb: 1
+                        }}
+                      >
+                        {`${appointment.date} at ${appointment.time}`}
+                      </Typography>
+                    }
+                    secondary={
+                      <Box sx={{ width: '100%' }}>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary" 
+                          sx={{ mb: 0.5 }}
+                        >
+                          <strong>Service:</strong> {appointment.groomService}
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary" 
+                          sx={{ mb: 0.5 }}
+                        >
+                          <strong>Price:</strong> {appointment.price}
+                        </Typography>
+                        <Divider sx={{ my: 1, borderColor: '#e0e0e0' }} />
+                        <Typography 
+                          variant="body2" 
+                          color="text.primary"
+                        >
+                          <strong>Contact:</strong> {appointment.contactNo}
+                        </Typography>
+                      </Box>
+                    }
+                  />
+                  {appointment.canceled ? (
+                    <Box 
+                      sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        width: '100%', 
+                        mt: 2 
+                      }}
+                    >
+                      <Typography 
+                        color="error" 
+                        sx={{ 
+                          fontStyle: "italic",
+                          fontWeight: 500
+                        }}
+                      >
+                        This Appointment Has Been Cancelled.
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(appointment.appId)}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  ) : appointment.confirmed ? (
+                    <Box 
+                      sx={{
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        alignItems: 'center', 
+                        mt: 2
+                      }}
+                    >
+                      <Typography 
+                        variant="body2" 
+                        color="success.main" 
+                        sx={{ fontWeight: 600 }}
+                      >
+                        Appointment Confirmed!
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      sx={{ 
+                        mt: 2,
+                        backgroundColor: '#3498db',
+                        '&:hover': {
+                          backgroundColor: '#2980b9'
+                        }
+                      }}
+                      onClick={() => handleConfirm(appointment.appId)}
+                    >
+                      Confirm Appointment
+                    </Button>
+                  )}
+                </ListItem>
+              </Paper>
+            ))}
+          </List>
         )}
       </Container>
     </Box>

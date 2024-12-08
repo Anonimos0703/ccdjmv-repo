@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
@@ -13,20 +12,28 @@ import {
   Avatar,
   Button,
   Snackbar,
+  TextField,
 } from '@mui/material';
 import defaultProfileImage from '../assets/default_profile.png';
 
 const Profile = ({ onProfileImageUpdate }) => {
-  // State variables
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileImage, setProfileImage] = useState(defaultProfileImage);
-  const [imageFile, setImageFile] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [address, setAddress] = useState({
+    region: '',
+    province: '',
+    city: '',
+    barangay: '',
+    postalCode: '',
+    buildingHouseNo: '',
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);  // Add state for submission process
 
-  // Fetch user data on component mount
   useEffect(() => {
     const fetchUser = async () => {
       const id = localStorage.getItem('id');
@@ -36,21 +43,25 @@ const Profile = ({ onProfileImageUpdate }) => {
         setLoading(false);
         return;
       }
-  
+
       try {
         const response = await axios.get(`http://localhost:8080/auth/users/${id}`);
         setUser(response.data);
-  
-        // Determine profile image
-        const userImage = response.data.profileImage 
-          ? `data:image/png;base64,${response.data.profileImage}` 
-          : defaultProfileImage;
-  
-        setProfileImage(userImage);
-  
-        // Notify parent component
+
+        // Load the address for this specific user from localStorage
+        const storedAddress = localStorage.getItem(`userAddress_${id}`);
+        if (storedAddress) {
+          setAddress(JSON.parse(storedAddress)); // Populate the state with stored address
+        } else {
+          setAddress(response.data.address || {});
+        }
+
+        // Retrieve user-specific profile image from localStorage
+        const storedImage = localStorage.getItem(`profileImage_${id}`);
+        setProfileImage(storedImage || defaultProfileImage);
+
         if (onProfileImageUpdate) {
-          onProfileImageUpdate(userImage);
+          onProfileImageUpdate(response.data.profileImage);
         }
       } catch (err) {
         console.error('Error fetching user:', err.response || err);
@@ -59,78 +70,44 @@ const Profile = ({ onProfileImageUpdate }) => {
         setLoading(false);
       }
     };
-  
+
     fetchUser();
   }, [onProfileImageUpdate]);
-  
 
-  // Handle image file selection
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Validate file type and size
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      const maxSize = 5 * 1024 * 1024; // 5MB
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    const updatedAddress = {
+      ...address,
+      [name]: value,
+    };
+    setAddress(updatedAddress);
 
-      if (!validTypes.includes(file.type)) {
-        setError('Invalid file type. Please upload a JPEG, PNG, or GIF.');
-        return;
-      }
-
-      if (file.size > maxSize) {
-        setError('File is too large. Maximum size is 5MB.');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageFile(file);
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    const id = localStorage.getItem('id');
+    // Store the updated address under the specific user's ID in localStorage
+    localStorage.setItem(`userAddress_${id}`, JSON.stringify(updatedAddress));
   };
 
-  // Handle image upload
-  const handleImageUpload = async () => {
-    if (!imageFile) {
-      setError("Please select an image to upload.");
-      return;
-    }
-  
-    const id = localStorage.getItem("id");
-    const formData = new FormData();
-    formData.append("image", imageFile);
-  
+  const handleSaveAddress = async () => {
+    setIsSubmitting(true);  // Set submitting state to true
+
+    const id = localStorage.getItem('id');
     try {
-      const response = await axios.post(
-        `http://localhost:8080/auth/users/${id}/upload-image`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-  
-      const newProfileImage = response.data.profileImage;
-      setProfileImage(newProfileImage);
-  
-      if (onProfileImageUpdate) {
-        onProfileImageUpdate(newProfileImage);
-      }
-  
-      setSnackbarMessage("Profile image uploaded successfully!");
+      await axios.put(`http://localhost:8080/auth/users/${id}/address`, address);
+      
+      // Persist address to localStorage after saving to the backend
+      localStorage.setItem(`userAddress_${id}`, JSON.stringify(address));
+      
+      setSnackbarMessage('Address updated successfully!');
       setOpenSnackbar(true);
     } catch (err) {
-      console.error("Error uploading image:", err.response || err);
-      setError("Error uploading image. Please try again.");
+      console.error('Error updating address:', err.response || err);
+      setSnackbarMessage('Error updating address. Please try again.');
+      setOpenSnackbar(true);
+    } finally {
+      setIsSubmitting(false);  // Reset submitting state after the process is complete
     }
   };
-  
-  
 
-  // Handle snackbar close
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -138,7 +115,61 @@ const Profile = ({ onProfileImageUpdate }) => {
     setOpenSnackbar(false);
   };
 
-  // Loading state
+  const handleImageUpload = async () => {
+    const id = localStorage.getItem('id');
+    if (!imageFile) {
+      setSnackbarMessage('No image selected. Please select a file first.');
+      setOpenSnackbar(true);
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('profileImage', imageFile);
+  
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/auth/users/${id}/upload-profile-pic`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+  
+      const updatedImage = `data:image/png;base64,${response.data.profileImage}`;
+      if (response.data.profileImage) {
+        // Save the updated image to localStorage with user ID as key
+        const imageKey = `profileImage_${id}`;
+        localStorage.setItem(imageKey, updatedImage);
+  
+        // Update the state to reflect the new image
+        setProfileImage(updatedImage);
+  
+        // Pass the new image to the parent if necessary
+        if (onProfileImageUpdate) {
+          onProfileImageUpdate(updatedImage);
+        }
+      } else {
+        throw new Error('Image not returned correctly');
+      }
+  
+      setSnackbarMessage('Profile picture updated successfully!');
+      setOpenSnackbar(true);
+    } catch (err) {
+      console.error('Error uploading profile picture:', err.response || err);
+      setSnackbarMessage('Error uploading profile picture. Please try again.');
+      setOpenSnackbar(true);
+    }
+  };
+  
+
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
   if (loading) {
     return (
       <Box
@@ -154,7 +185,6 @@ const Profile = ({ onProfileImageUpdate }) => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <Container
@@ -172,112 +202,200 @@ const Profile = ({ onProfileImageUpdate }) => {
 
   return (
     <Container
-      maxWidth="lg"
+      maxWidth="md"
       sx={{
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
         padding: 2,
+        overflow: 'hidden',
       }}
     >
-      <Card sx={{ width: '100%', boxShadow: 3 }}>
-        <CardContent>
-          <Typography variant="h4" gutterBottom align="center">
-            User Profile
-          </Typography>
-          {user && (
-            <Box>
-              {/* Profile Image */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 2,
-                }}
-              >
-                <Avatar
-                  src={profileImage}
-                  alt={user.username}
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          overflowY: 'auto',
+        }}
+      >
+        <Card sx={{ width: '100%', boxShadow: 3 }}>
+          <CardContent>
+            <Typography variant="h4" gutterBottom align="center">
+              User Profile
+            </Typography>
+            {user && (
+              <Box>
+                <Box
                   sx={{
-                    width: 120,
-                    height: 120,
-                    border: '2px solid black',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 2,
                   }}
-                />
-              </Box>
-              
-              {/* User Details */}
-              <Typography variant="h6" gutterBottom>Username:</Typography>
-              <Typography variant="body1" gutterBottom>
-                {user.username}
-              </Typography>
-              
-              <Divider sx={{ my: 2 }} />
-              
-              <Typography variant="h6" gutterBottom>First Name:</Typography>
-              <Typography variant="body1" gutterBottom>
-                {user.firstName}
-              </Typography>
-              
-              <Divider sx={{ my: 2 }} />
-              
-              <Typography variant="h6" gutterBottom>Last Name:</Typography>
-              <Typography variant="body1" gutterBottom>
-                {user.lastName}
-              </Typography>
-              
-              <Divider sx={{ my: 2 }} />
-              
-              <Typography variant="h6" gutterBottom>Email:</Typography>
-              <Typography variant="body1" gutterBottom>
-                {user.email}
-              </Typography>
-              
-              <Divider sx={{ my: 2 }} />
-
-              {/* Image Upload Section */}
-              <Box sx={{ marginTop: 2 }}>
-                <input
-                  accept="image/*"
-                  id="upload-image"
-                  type="file"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                />
-                <label htmlFor="upload-image">
-                  <Button
-                    variant="contained"
-                    component="span"
-                    color="primary"
-                    sx={{ width: '200px' }}
-                  >
-                    Upload New Image
-                  </Button>
-                </label>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{ marginLeft: 2 }}
-                  onClick={handleImageUpload}
                 >
-                  Save Image
-                </Button>
-              </Box>
-            </Box>
-          )}
-        </CardContent>
-      </Card>
+                  <Avatar
+                    src={profileImage}
+                    alt={user.username}
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      border: '2px solid black',
+                      marginBottom: 1,
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 20,
+                      marginBottom: 1,
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      component="label"
+                    >
+                      Select Image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleFileChange}
+                      />
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleImageUpload}
+                    >
+                      Upload Picture
+                    </Button>
+                  </Box>
+                </Box>
 
-      {/* Snackbar for success message */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-      />
+                <Typography variant="h6" gutterBottom>Username:</Typography>
+                <Typography variant="body1" gutterBottom>
+                  {user.username}
+                </Typography>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="h6" gutterBottom>FirstName:</Typography>
+                <Typography variant="body1" gutterBottom>
+                  {user.firstName}
+                </Typography>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="h6" gutterBottom>LastName:</Typography>
+                <Typography variant="body1" gutterBottom>
+                  {user.lastName}
+                </Typography>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="h6" gutterBottom>Email:</Typography>
+                <Typography variant="body1" gutterBottom>
+                  {user.email}
+                </Typography>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="h6" gutterBottom>
+                  Address:
+                </Typography>
+                <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {/* Input fields for each part of the address */}
+                  <TextField
+                    name="region"
+                    label="Region"
+                    value={address.region || ''}
+                    onChange={handleAddressChange}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                  />
+                  <TextField
+                    name="province"
+                    label="Province"
+                    value={address.province || ''}
+                    onChange={handleAddressChange}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                  />
+                  <TextField
+                    name="city"
+                    label="City"
+                    value={address.city || ''}
+                    onChange={handleAddressChange}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                  />
+                  <TextField
+                    name="barangay"
+                    label="Barangay"
+                    value={address.barangay || ''}
+                    onChange={handleAddressChange}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                  />
+                  <TextField
+                    name="postalCode"
+                    label="Postal Code"
+                    value={address.postalCode || ''}
+                    onChange={handleAddressChange}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                  />
+                  <TextField
+                    name="buildingHouseNo"
+                    label="Building/House No."
+                    value={address.buildingHouseNo || ''}
+                    onChange={handleAddressChange}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                  />
+                </Box>
+                 <Box
+                 sx={{
+                  marginTop: 2,
+              
+    
+                 }}> 
+                  <Button
+    
+                    variant="contained"
+                    onClick={handleSaveAddress}
+                   
+                  >
+                    Submit
+                  </Button>
+                  </Box>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbarMessage.includes('Error') ? 'error' : 'success'}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
     </Container>
   );
 };

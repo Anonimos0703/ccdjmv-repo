@@ -77,6 +77,31 @@ const AppointmentList = () => {
     }
   };
 
+  const handleConfirmAppointment = async (appId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/appointments/confirm/${appId}`, {
+        method: 'PUT',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to confirm the appointment.');
+      }
+
+      toast.success('Appointment confirmed successfully.');
+
+      // Update the local state to reflect the confirmed status
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.appId === appId ? { ...appointment, confirmed: true } : appointment
+        )
+      );
+    } catch (err) {
+      console.error('Error confirming appointment:', err);
+      toast.error(err.message);
+    }
+  };
+
   const filteredAppointments = appointments.filter((appointment) =>
     appointment.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -160,12 +185,27 @@ const AppointmentList = () => {
                     This appointment has been canceled. 
                   </Typography>
                 )}
+                {appointment.confirmed ? (
+                  <Typography color="success" sx={{ fontStyle: 'italic', marginTop: 1 }}>
+                    This appointment has been confirmed.
+                  </Typography>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleConfirmAppointment(appointment.appId)}
+                    sx={{ ml: 2 }}
+                  >
+                    Confirm
+                  </Button>
+                )}
                 <Button
                   variant="contained"
                   color="error"
                   onClick={() => handleCancelAppointment(appointment.appId)}
+                  sx={{ ml: 2 }}
                 >
-                   Cancel
+                  Cancel
                 </Button>
               </ListItem>
             ))}

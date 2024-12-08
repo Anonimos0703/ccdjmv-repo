@@ -1,9 +1,12 @@
 package com.ccdjmv.petshop.controller;
 
+import com.ccdjmv.petshop.entity.AddressEntity;
 import com.ccdjmv.petshop.entity.CartEntity;
 import com.ccdjmv.petshop.entity.UserEntity;
 import com.ccdjmv.petshop.repository.UserRepository;
 import com.ccdjmv.petshop.service.UserService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -114,31 +117,39 @@ public class UserController {
     	return userService.deleteUser(userId);
     }
     
-    @PostMapping("/users/{id}/upload-image")
-    public ResponseEntity<String> uploadProfileImage(
-        @PathVariable Long id, 
-        @RequestParam("image") MultipartFile imageFile
+    @PostMapping("/users/{id}/upload-profile-pic")
+    public ResponseEntity<?> uploadProfileImage(
+        @PathVariable Long id,
+        @RequestParam("profileImage") MultipartFile imageFile
     ) {
         try {
+            // Validate image file
+            if (imageFile.isEmpty()) {
+                return ResponseEntity.badRequest().body("No file uploaded.");
+            }
+
+            String contentType = imageFile.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                return ResponseEntity.badRequest().body("Invalid file type. Please upload an image.");
+            }
+
             // Find the user by ID
             Optional<UserEntity> optionalUser = userRepository.findById(id);
-
             if (optionalUser.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
 
             // Convert the image file to Base64 string
             byte[] imageBytes = imageFile.getBytes();
-            String profileImage = Base64.getEncoder().encodeToString(imageBytes); // Use 'profileImage' as the name
+            String profileImageBase64 = Base64.getEncoder().encodeToString(imageBytes);
 
-            // Set the Base64 image in the UserEntity
+            // Update the user's profile image
             UserEntity user = optionalUser.get();
-            user.setProfileImage(profileImage);  // Continue using 'profileImage' directly
-
-            // Save the updated User entity
+            user.setProfileImage(profileImageBase64);
             userRepository.save(user);
 
-            return ResponseEntity.ok("Profile image uploaded successfully.");
+            // Return the Base64 image string in the response
+            return ResponseEntity.ok(Map.of("profileImage", profileImageBase64));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image.");
         }
@@ -148,18 +159,44 @@ public class UserController {
 
 
 
+
     @GetMapping("/users/{id}/profile-image")
-    public ResponseEntity<String> getProfileImage(@PathVariable Long id) {
-        Optional<UserEntity> optionalUser = userRepository.findById(id);
+    public ResponseEntity<?> getProfileImage(@PathVariable Long id) {
+        try {
+            // Find the user by ID
+            Optional<UserEntity> optionalUser = userRepository.findById(id);
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
 
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            // Get the profile image
+            UserEntity user = optionalUser.get();
+            String profileImage = user.getProfileImage();
+
+            if (profileImage == null || profileImage.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No profile image available.");
+            }
+
+            return ResponseEntity.ok(profileImage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve profile image.");
         }
+    }
 
-        // Get the profile image from the UserEntity
-        String profileImage = optionalUser.get().getProfileImage(); // Use 'profileImage' directly
-
-        return ResponseEntity.ok(profileImage != null ? profileImage : ""); // Return empty if no image is set
+    
+    @PutMapping("users/{id}/address")
+    public ResponseEntity<String> updateUserAddress(
+            @PathVariable Long id,
+            @RequestBody AddressEntity addressEntity
+    ) {
+        try {
+            userService.updateAddress(id, addressEntity);
+            return ResponseEntity.ok("Address updated successfully.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update address.");
+        }
     }
 
 }
