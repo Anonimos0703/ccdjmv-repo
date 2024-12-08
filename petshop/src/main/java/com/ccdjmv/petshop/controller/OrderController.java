@@ -3,13 +3,14 @@ package com.ccdjmv.petshop.controller;
 import com.ccdjmv.petshop.entity.OrderEntity;
 import com.ccdjmv.petshop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(method = RequestMethod.GET, path="/api/order")
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173")
 public class OrderController {
 
     @Autowired
@@ -25,6 +26,12 @@ public class OrderController {
     @GetMapping("/getAllOrders")
     public List<OrderEntity> getAllOrder() {
         return oserv.getAllOrder();
+    }
+
+    @GetMapping("/getOrderDetails/{orderID}")
+    public ResponseEntity<OrderEntity> getOrderDetails(@PathVariable int orderID) {
+        OrderEntity order = oserv.getOrderDetails(orderID);
+        return ResponseEntity.ok(order);
     }
 
     // UPDATE

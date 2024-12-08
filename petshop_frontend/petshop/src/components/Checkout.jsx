@@ -47,13 +47,6 @@ const CheckoutPage = () => {
         e.preventDefault();
         alert("Order placed successfully!");
     };
-    // TEMPORARY!! PLACEHOLDERS UNTIL PRODUCT BACKEND IS APPLIED
-    const cartItems = [
-        { name: "Wireless Headphones", price: 120 },
-        { name: "Bluetooth Speaker", price: 80 },
-        { name: "Smartwatch", price: 200 },
-    ];
-    const total = cartItems.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <ThemeProvider theme={theme}>
@@ -67,7 +60,6 @@ const CheckoutPage = () => {
             }}
         >
         <Box maxWidth="lg" margin="0 auto">
-          {/* Back Button in the Top-Left Corner */}
             <Box display="flex" justifyContent="flex-start">
                 <IconButton
                 color="secondary"
@@ -92,61 +84,32 @@ const CheckoutPage = () => {
                         <Typography variant="h6" gutterBottom>
                         Order Summary
                         </Typography>
-                        {/* <List>
-                        {cartItems.map((item, index) => (
-                            <ListItem key={index}>
-                            <ListItemText primary={item.name} />
-                            <Typography color="secondary">
-                                ${item.price.toFixed(2)}
-                            </Typography>
-                            </ListItem>
-                        ))}
-                        </List> */}
-
-                        <CartItem
-                            price={159}
-                            title={"Cat Food Tuna Flavor 1kg"}
-                            quantity={3}
-                            img=""
-                            />
-                            <CartItem
-                            price={200}
-                            title={"Dog Food Beef Flavor 1kg"}
-                            quantity={1}
-                            />
-                            <CartItem price={59} title={"Cat toy mouse"} quantity={1} />
-                            <CartItem price={99} title={"Dog Rope Toy"} quantity={1} />
-                            <CartItem
-                            price={299}
-                            title={"Pet Food bowl stainless"}
-                            quantity={2}
-                            />
-                            <CartItem price={80} title={"Doggy collar green"} quantity={1} />
-
-                        <Divider sx={{ marginY: 2 }} />
                         
+                        {/* Individual Cart Items go here */}
+                        
+                        <Divider sx={{ marginY: 2 }} />
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="h6">Subtotal (9 items)</Typography>
-                            <Typography variant="h6" color="secondary">
-                                ₱896.00
-                            </Typography>
+                        <Typography variant="h6">Subtotal</Typography>
+                        <Typography variant="h6" color="secondary">
+                            {/* ₱{subtotal.toFixed(2)} */}
+                        </Typography>
                         </Box>
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="h6">Shipping Fee</Typography>
-                            <Typography variant="h6" color="secondary">
-                                ₱80.00
-                            </Typography>
+                        <Typography variant="h6">Shipping Fee</Typography>
+                        <Typography variant="h6" color="secondary">
+                            {/* ₱{shippingFee.toFixed(2)} */}
+                        </Typography>
                         </Box>
-                        <Divider/>
+                        <Divider />
                         <Box display="flex" justifyContent="space-between">
-                            <Typography variant="h6">Total</Typography>
-                            <Typography variant="h6" color="secondary">
-                                {/* ${total.toFixed(2)} */}
-                                ₱976.00
-                            </Typography>
+                        <Typography variant="h6">Total</Typography>
+                        <Typography variant="h6" color="secondary">
+                            {/* ₱{total.toFixed(2)} */}
+                        </Typography>
                         </Box>
                     </Paper>
                 </Grid>
+
 
                 {/* BILLING FORM */}
                 <Grid item xs={12} md={5}>

@@ -112,6 +112,9 @@ export default function Header({ username, role }) {
                 <MenuItem onClick={() => handleMenuOptionClick("/cart")}>
                   Cart
                 </MenuItem>
+                <MenuItem onClick={() => handleMenuOptionClick('/MyPurchases')}>
+                  My Purchases
+                </MenuItem>
                 <MenuItem onClick={() => handleMenuOptionClick('/appointmentslist')}>
                   Appointments
                 </MenuItem>

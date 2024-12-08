@@ -6,31 +6,39 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 
-@Table(name = "tblorder")
+import java.util.List;
+
 @Entity
 public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private int orderID;
-    @Column
     private String orderDate;
     private String paymentMethod;
+    private String paymentStatus;
+    private String orderStatus;
     private Double totalPrice;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productid")
-    @JsonBackReference("product-order")
-    private ProductEntity product;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItemEntity> orderItems;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
     public OrderEntity() {
         super();
     }
 
-    public OrderEntity(int orderID, String orderDate, String paymentMethod, Double totalPrice) {
+    public OrderEntity(int orderID, String orderDate, String paymentMethod, String paymentStatus, String orderStatus, Double totalPrice) {
         this.orderID = orderID;
         this.orderDate = orderDate;
         this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
+        this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
     }
 
@@ -58,6 +66,22 @@ public class OrderEntity {
         this.paymentMethod = paymentMethod;
     }
 
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     public Double getTotalPrice() {
         return totalPrice;
     }
@@ -65,12 +89,20 @@ public class OrderEntity {
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
-     
-    public ProductEntity getProduct() {
-    	return product;
+
+    public List<OrderItemEntity> getOrderItems() {
+        return orderItems;
     }
-    
-    public void setProduct(ProductEntity product) {
-    	this.product  = product;
+
+    public void setOrderItems(List<OrderItemEntity> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }
