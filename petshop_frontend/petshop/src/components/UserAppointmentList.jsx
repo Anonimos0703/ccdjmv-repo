@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Toaster, toast } from "sonner";
 import paw1 from '../assets/paw1.png';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const UserAppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
@@ -47,6 +48,47 @@ const UserAppointmentList = () => {
 
     fetchAppointments();
   }, []);
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#8B4513', // Rich Brown
+        light: '#D2B48C', // Tan
+      },
+      secondary: {
+        main: '#FFA500', // Vibrant Orange
+      },
+      background: {
+        default: '#FFF5E6', // Soft Cream
+        paper: '#FFFFFF',
+      },
+    },
+    typography: {
+      fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 20,
+            textTransform: 'none',
+            fontWeight: 600,
+          },
+        },
+      },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 16,
+            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+            transition: 'transform 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-5px)',
+            },
+          },
+        },
+      },
+    },
+  });
 
   const handleCancel = async (appId) => {
     try {
@@ -144,6 +186,7 @@ const UserAppointmentList = () => {
   ];
 
   return (
+    <ThemeProvider theme={theme}> 
     <Box
       sx={{
         display: "flex",
@@ -151,10 +194,11 @@ const UserAppointmentList = () => {
         minHeight: "100vh",
         justifyContent: "center",
         alignItems: "center",
-        background: '#ffffff',
+        // background: '#ffffff',
         padding: "2rem",
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        
       }}
     >
       {pawPositions.map((pos, index) => (
@@ -334,9 +378,9 @@ const UserAppointmentList = () => {
                           backgroundColor: '#2980b9'
                         }
                       }}
-                      onClick={() => handleConfirm(appointment.appId)}
+                      onClick={() => handleCancel(appointment.appId)}
                     >
-                      Confirm Appointment
+                      Cancel Appointment
                     </Button>
                   )}
                 </ListItem>
@@ -346,6 +390,7 @@ const UserAppointmentList = () => {
         )}
       </Container>
     </Box>
+    </ThemeProvider>
   );
 };
 
