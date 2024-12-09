@@ -16,7 +16,7 @@ Springboot (Eclipse):
 4. Open 'PetshopApplication.java' file  in 'src>main>java > com.ccdjmv.petshop' package and run it
 
 React (VS Code)
-1. Open or import 'petshop_frontend > **petshop**' folder in vs code
+1. Open 'petshop_frontend > **petshop**' folder in vs code
 2. Terminal: npm install
 3. Terminal: npm run dev
 
