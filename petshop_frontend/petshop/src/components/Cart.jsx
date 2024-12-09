@@ -16,6 +16,7 @@ import {
 import CartItem from "./CartItem";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Toaster, toast } from "sonner";
 
 function Cart() {
   const [cartItems, setCartItem] = useState([]);
@@ -93,10 +94,12 @@ function Cart() {
             prevItems.filter((item) => item.cartItemId !== itemToDelete)
           );
           setOpenDialog(false); // Close the dialog after deletion
+          toast.success("Item removed from cart");
         })
         .catch((err) => {
           console.error("Error deleting item:", err);
           setOpenDialog(false); // Close the dialog on error
+          toast.error("Failed to delete item from cart");
         });
     }
   };
@@ -128,6 +131,7 @@ function Cart() {
         padding: "2rem",
       }}
     >
+      <Toaster position="top-center" duration={2500} />
       {/* Centered Heading */}
       <Box
         display="flex"
@@ -157,6 +161,7 @@ function Cart() {
                 onCheckChange={handleCheckChange}
                 onQuantityChange={handleQuantityChange}
                 onDelete={handleDeleteItem}
+                availableStock={item.product?.quantity} // Pass stock quantity
               />
             ))}
           </Grid>

@@ -10,16 +10,21 @@ import TextField from "@mui/material/TextField";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { Toaster, toast } from "sonner";
 
 export default function CartItem(props) {
-
   const handleCheckboxChange = (event) => {
     props.onCheckChange(props.itemId, event.target.checked); // Notify parent about the checkbox change
   };
 
   const handleIncreaseQuantity = () => {
-    props.onQuantityChange(props.itemId, props.quantity + 1); // used to check if cartItemQuantity has reached 
+    if (props.quantity < props.availableStock) {
+      props.onQuantityChange(props.itemId, props.quantity + 1);
+    } else {
+      toast.error(
+        "You have reached the maximum available stock for this item."
+      ); // Optional: Notify the user
+    }
   };
 
   const handleDecreaseQuantity = () => {
@@ -35,14 +40,15 @@ export default function CartItem(props) {
   return (
     <>
       <Grid item xs={12}>
+        <Toaster position="top-center" duration={2500} />
         <Card
           variant="outlined"
           style={{ display: "flex", alignItems: "center" }}
         >
           <Checkbox
-            checked={props.isSelected}  // This indicates whether the checkbox is selected
+            checked={props.isSelected} // This indicates whether the checkbox is selected
             onChange={handleCheckboxChange}
-          />  
+          />
           <CardMedia
             component="img"
             image={props.image}
