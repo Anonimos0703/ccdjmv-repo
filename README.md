@@ -19,3 +19,5 @@ React (VS Code)
 1. Open or import 'petshop_frontend > **petshop**' folder in vs code
 2. Terminal: npm install
 3. Terminal: npm run dev
+
+**Have fun!**
