@@ -155,7 +155,18 @@ function Cart() {
 
   const getTotal = () => {
     const subtotal = parseFloat(getSubtotal());
+    if (subtotal == 0) {
+      return "0.00";
+    }
     return (subtotal + 30).toFixed(2); //shipping fee 30 pesos
+  };
+
+  const getShippingFee = () => {
+    const subtotal = parseFloat(getSubtotal());
+    if (subtotal == 0) {
+      return "0.00";
+    }
+    return "30.00";
   };
 
   return (
@@ -183,7 +194,7 @@ function Cart() {
       </Box>
 
       {/* Main Grid Layout */}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="center">
         {/* Cart Items */}
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
@@ -209,12 +220,11 @@ function Cart() {
         <Grid
           item
           xs={12}
-          md={4}
+          md={3}
           sx={{
             position: "sticky",
             top: "140px",
-            zIndex: 2,
-            backgroundColor: "#fff", // Ensure it has a background to stand out
+            zIndex: 2, // Ensure it has a background to stand out
             padding: "10px", // Add padding to make the content look better
             height: "fit-content", // Ensures the card doesn't take up unnecessary space
             borderRadius: "16px",
@@ -227,7 +237,9 @@ function Cart() {
               <Typography variant="body2">
                 Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
               </Typography>
-              <Typography variant="body2">Shipping Fee: ₱30.00</Typography>
+              <Typography variant="body2">
+                Shipping Fee: ₱{getShippingFee()}
+              </Typography>
 
               <Divider style={{ margin: "10px 0" }} />
               <Typography variant="h6">Total: ₱{getTotal()}</Typography>
