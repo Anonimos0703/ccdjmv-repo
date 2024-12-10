@@ -29,11 +29,11 @@ function Cart() {
       .get(`http://localhost:8080/api/cart/getCartById/${cartId}`)
       .then((res) => {
         const updatedCartItems = res.data.cartItems.map((item) => {
+          // If cart item quantity is greater than available stock
           if (item.quantity > item.product.quantity) {
-            // If cart item quantity is greater than available stock
             axios
               .put(
-                `http://localhost:8080/api/cartItem/updateCartItem/${item.cartItemId}`,
+                `http://localhost:8080/api/cartItem/systemUpdateCartItem/${item.cartItemId}`,
                 {
                   quantity: item.product.quantity,
                 }
@@ -49,7 +49,12 @@ function Cart() {
           return item; // No change needed
         });
 
-        setCartItem(updatedCartItems); // Update the state
+        // Sort cart items by lastUpdated in descending order (most recent first)
+        const sortedCartItems = updatedCartItems.sort((a, b) => {
+          return new Date(b.lastUpdated) - new Date(a.lastUpdated);
+        });
+
+        setCartItem(sortedCartItems); // Update the state
       })
       .catch((err) => {
         console.error("Error fetching cart items:", err);
@@ -59,15 +64,16 @@ function Cart() {
   useEffect(() => {
     const cartId = localStorage.getItem("id");
 
-    //necessary for up to date cart items quantities. Updates every 15 seconds so no need to reload page
-    const fetchAndScheduleNext = () => {
-      getCartItems(cartId); // Fetch cart items
-      setTimeout(fetchAndScheduleNext, 15000); // Schedule next fetch
-    };
+    // //necessary for up to date cart items quantities. Updates every 15 seconds so no need to reload page
+    // const fetchAndScheduleNext = () => {
+    //   getCartItems(cartId); // Fetch cart items
+    //   setTimeout(fetchAndScheduleNext, 15000); // Schedule next fetch
+    // };
+    // fetchAndScheduleNext(); // Start the recursive fetching
 
-    fetchAndScheduleNext(); // Start the recursive fetching
+    // return () => clearTimeout(fetchAndScheduleNext); // Cleanup
 
-    return () => clearTimeout(fetchAndScheduleNext); // Cleanup
+    getCartItems(cartId);
   }, []);
 
   const navigate = useNavigate();
@@ -100,7 +106,10 @@ function Cart() {
           )
         );
       })
-      .catch((err) => console.error("Error updating quantity:", err));
+      .catch((err) => {
+        console.error("Error updating quantity:", err);
+        toast.error("Error updating quantity.");
+      });
   };
 
   const handleDeleteItem = (itemId) => {
@@ -240,7 +249,7 @@ function Cart() {
         </Grid>
       </Grid>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Confirmation dialog for Delete Cart Item */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>

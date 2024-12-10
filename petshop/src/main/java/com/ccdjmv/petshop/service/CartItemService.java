@@ -1,5 +1,6 @@
 package com.ccdjmv.petshop.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -38,7 +39,26 @@ public class CartItemService {
 	}
 	
 	//Update of CRUD
-	public CartItemEntity UpdateCartItem(int cartItemId, CartItemEntity newCartItemDetails) {
+	public CartItemEntity updateCartItem(int cartItemId, CartItemEntity newCartItemDetails) {
+	    try {
+	        // Search for the cartItem by ID
+	        CartItemEntity cartItem = cartItemRepo.findById(cartItemId).orElseThrow(() -> 
+	            new NoSuchElementException("CartItem " + cartItemId + " not found"));
+
+	        // If ID found, set new values
+	        cartItem.setQuantity(newCartItemDetails.getQuantity());
+	        cartItem.setLastUpdated(LocalDateTime.now());
+
+	        // Save the updated cartItem
+	        return cartItemRepo.save(cartItem);
+	    } catch (NoSuchElementException nex) {
+	        throw nex; // Re-throw the exception
+	        
+	    }
+	}
+	
+	//Doesn't update time last updated
+	public CartItemEntity systemUpdateCartItem(int cartItemId, CartItemEntity newCartItemDetails) {
 	    try {
 	        // Search for the cartItem by ID
 	        CartItemEntity cartItem = cartItemRepo.findById(cartItemId).orElseThrow(() -> 

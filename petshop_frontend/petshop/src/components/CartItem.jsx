@@ -23,7 +23,7 @@ export default function CartItem(props) {
     } else {
       toast.error(
         "You have reached the maximum available stock for this item."
-      ); // Optional: Notify the user
+      );
     }
   };
 

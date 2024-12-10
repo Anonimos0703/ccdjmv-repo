@@ -1,5 +1,7 @@
 package com.ccdjmv.petshop.entity;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,28 +21,28 @@ public class CartItemEntity {
 	private int cartItemId;
 	
 	private int quantity;
-	
-	//@ManyToOne with productEntity here
-	@ManyToOne
-	@JoinColumn(name = "product_id", nullable = false)
-//	@JsonBackReference("product-cartItem")
-	private ProductEntity product;
+	private LocalDateTime lastUpdated;
 	
 	@ManyToOne
 	@JoinColumn(name = "cart_id", nullable = false)
 	@JsonBackReference("cart-cartItem")
 	private CartEntity cart;
 
+	@ManyToOne
+	@JoinColumn(name = "product_id", nullable = false)
+	private ProductEntity product;
+
 	public CartItemEntity() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.lastUpdated = LocalDateTime.now(); //initialize lastUpdated upon creation
 	}
 
-	public CartItemEntity(int cartItemId, int quantity, CartEntity cart) {
+	public CartItemEntity(int cartItemId, int quantity, CartEntity cart, ProductEntity product) {
 		super();
 		this.cartItemId = cartItemId;
 		this.quantity = quantity;
 		this.cart = cart;
+		this.product = product;
 	}
 
 	public int getCartItemId() {
@@ -57,6 +59,14 @@ public class CartItemEntity {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public LocalDateTime getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(LocalDateTime lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 
 	public CartEntity getCart() {
