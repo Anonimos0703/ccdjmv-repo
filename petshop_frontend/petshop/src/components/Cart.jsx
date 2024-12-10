@@ -28,8 +28,28 @@ function Cart() {
     axios
       .get(`http://localhost:8080/api/cart/getCartById/${cartId}`)
       .then((res) => {
-        console.log(res.data.cartItems);
-        setCartItem(res.data.cartItems);
+        const updatedCartItems = res.data.cartItems.map((item) => {
+          if (item.quantity > item.product.quantity) {
+            // If cart item quantity is greater than available stock
+            axios
+              .put(
+                `http://localhost:8080/api/cartItem/updateCartItem/${item.cartItemId}`,
+                {
+                  quantity: item.product.quantity,
+                }
+              )
+              .catch((err) => console.error("Error updating quantity:", err));
+
+            // Update the cart item quantity locally
+            return {
+              ...item,
+              quantity: item.product.quantity,
+            };
+          }
+          return item; // No change needed
+        });
+
+        setCartItem(updatedCartItems); // Update the state
       })
       .catch((err) => {
         console.error("Error fetching cart items:", err);
@@ -38,7 +58,16 @@ function Cart() {
 
   useEffect(() => {
     const cartId = localStorage.getItem("id");
-    getCartItems(cartId);
+
+    //necessary for up to date cart items quantities. Updates every 15 seconds so no need to reload page
+    const fetchAndScheduleNext = () => {
+      getCartItems(cartId); // Fetch cart items
+      setTimeout(fetchAndScheduleNext, 15000); // Schedule next fetch
+    };
+
+    fetchAndScheduleNext(); // Start the recursive fetching
+
+    return () => clearTimeout(fetchAndScheduleNext); // Cleanup
   }, []);
 
   const navigate = useNavigate();
