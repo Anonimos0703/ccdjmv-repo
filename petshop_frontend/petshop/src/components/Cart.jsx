@@ -5,7 +5,6 @@ import {
   CardContent,
   Typography,
   Button,
-  TextField,
   Divider,
   Box,
   Dialog,
@@ -58,12 +57,13 @@ function Cart() {
       })
       .catch((err) => {
         console.error("Error fetching cart items:", err);
+        toast.error("Error fetching cart items");
       });
   };
 
   useEffect(() => {
     const cartId = localStorage.getItem("id");
-
+    // //this is a problem for the user because last updated cart items are sorted to the top upon reload
     // //necessary for up to date cart items quantities. Updates every 15 seconds so no need to reload page
     // const fetchAndScheduleNext = () => {
     //   getCartItems(cartId); // Fetch cart items
@@ -75,12 +75,6 @@ function Cart() {
 
     getCartItems(cartId);
   }, []);
-
-  const navigate = useNavigate();
-
-  const handleCheckoutClick = () => {
-    navigate("/Checkout");
-  };
 
   const handleCheckChange = (itemId, isChecked) => {
     const updatedSelectedItems = new Set(selectedItems);
@@ -119,6 +113,31 @@ function Cart() {
 
   const handleDialogClose = () => {
     setOpenDialog(false); // Close the dialog
+  };
+
+  const navigate = useNavigate();
+
+  const handleCheckoutClick = () => {
+    if (selectedItems.size === 0) {
+      toast.error("Please select items to checkout");
+      return;
+    }
+
+    // Calculate the subtotal and selected items
+    const selectedItemsDetails = cartItems.filter((item) =>
+      selectedItems.has(item.cartItemId)
+    );
+
+    const orderSummary = {
+      subtotal: getSubtotal(),
+      shippingFee: getShippingFee(),
+      total: getTotal(),
+    };
+
+    // Pass selected items and order summary to Checkout page via `state`
+    navigate("/Checkout", {
+      state: { selectedItems: selectedItemsDetails, orderSummary },
+    });
   };
 
   const handleConfirmDelete = () => {
@@ -253,6 +272,7 @@ function Cart() {
                 fullWidth
                 style={{ marginTop: "15px" }}
                 onClick={handleCheckoutClick}
+                disabled={selectedItems.size === 0}
               >
                 PROCEED TO CHECKOUT
               </Button>

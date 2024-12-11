@@ -2,7 +2,6 @@ import React from "react";
 import {
   Grid,
   Paper,
-  CardMedia,
   Typography,
   Checkbox,
   IconButton,
@@ -80,10 +79,16 @@ export default function CartItem(props) {
 
             {/* Image */}
             <Grid item>
-              <img
+              <Box
+                component="img"
                 src={props.image || imagePlaceholder}
                 alt={props.title}
-                style={{ width: 80, height: 80 }}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 1,
+                  objectFit: "contain",
+                }}
               />
             </Grid>
 
