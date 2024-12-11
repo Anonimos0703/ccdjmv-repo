@@ -105,8 +105,10 @@ export default function Header({ username, role, userId }) {
     navigate(route);
   };
 
-  const handleLogout = () => {
-    localStorage.clear();
+  const handleLogout = (id) => {
+    if (userId) {
+      localStorage.removeItem(`userAddress_${userId}`);
+    }
     setDrawerOpen(false);
     navigate("/auth");
   };

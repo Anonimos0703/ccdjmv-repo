@@ -21,6 +21,7 @@ import AdminAppointmentList from './components/AdminAppointmentList';
 import Inventory from './components/Inventory';
 import Products from './components/Products'
 import OrderList from './components/Orders';
+import { AuthProvider } from './components/AuthProvider'; 
 // import OrderDetails from './components/OrderDetails'; 
 
 function Layout({ children, username, role }) {
@@ -58,6 +59,7 @@ function App() {
   return (
      
       <Router>
+        <AuthProvider> 
         <AdminAuthProvider>
         <Routes>
           <Route
@@ -183,6 +185,7 @@ function App() {
             />
         </Routes>
         </AdminAuthProvider>
+        </AuthProvider>
       </Router>
     
   );
