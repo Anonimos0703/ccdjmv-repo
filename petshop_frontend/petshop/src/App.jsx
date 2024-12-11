@@ -19,7 +19,9 @@ import AdminFooter from './components/AdminFooter'
 import { AdminAuthProvider } from './components/AdminAuthProvider';
 import AdminAppointmentList from './components/AdminAppointmentList';  
 import Inventory from './components/Inventory';
-import Products from './components/Products'
+import Products from './components/Products';
+import ProductDetail from './components/ProductDetail';
+import RateProduct from './components/RateProduct';
 
 function Layout({ children, username, role }) {
   return (
@@ -130,6 +132,25 @@ function App() {
               </Layout>
             }
           />  
+
+          <Route
+            path="/productdetails/:productId"
+            element={
+              <Layout username={username} role={role}>
+                <ProductDetail />
+              </Layout>
+            }
+          />
+
+          <Route 
+            path="/rate-product/:productId" 
+            element={ 
+              <Layout username={username} role={role}> 
+                <RateProduct /> 
+              </Layout>
+            } 
+          />  
+          
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
