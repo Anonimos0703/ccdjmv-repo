@@ -97,5 +97,9 @@ public class UserService {
         // Save the user entity (the address will cascade if configured properly)
         userRepository.save(user);
     }
+    
+    public Optional<UserEntity> findUserById(Long id) {
+    	return userRepository.findById(id);
+    }
 
 }
