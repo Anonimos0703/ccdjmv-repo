@@ -21,6 +21,7 @@ function OrderList() {
     axios
       .get("http://localhost:8080/api/order/getAllOrders") // Assuming the backend runs at this URL
       .then((response) => {
+        console.log("Orders fetched from backend:", response.data); // Log orders data
         setOrders(response.data); // Assuming the backend returns an array of orders
         setLoading(false);
       })
@@ -36,8 +37,12 @@ function OrderList() {
 
     if (items) {
       items.forEach((item) => {
-        if (item.product.productPrice && item.quantity) {
-          itemsTotal += item.product.productPrice * item.quantity;
+        // Log item details to verify if they're correct
+        console.log("Item details in calculateTotal:", item);  // Log the entire item object
+        if (item.price && item.quantity) {
+          itemsTotal += item.price * item.quantity;
+          console.log("Item price:", item.price);   // Log item price
+          console.log("Item quantity:", item.quantity); // Log item quantity
         }
       });
     }
@@ -65,6 +70,7 @@ function OrderList() {
           <Typography textAlign="center">No orders available.</Typography>
         ) : (
           orders.map((order) => {
+            console.log("Order data:", order); // Log the whole order object
             const total = calculateTotal(order.orderItems || []);
 
             return (
@@ -104,56 +110,53 @@ function OrderList() {
                 {/* Order Items */}
                 <CardContent>
                   {order.orderItems && order.orderItems.length > 0 ? (
-                    order.orderItems.map((item, index) => (
-                      <Box
-                        key={index}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        sx={{
-                          mb: 1,
-                          pb: 1,
-                          borderBottom: "1px solid #ddd",
-                        }}
-                      >
-                        <CardMedia
-                          component="img"
-                          image={item.product.image}
-                          alt={item.product.productName}
+                    order.orderItems.map((item, index) => {
+                      console.log("Order Item details:", item); // Log each item
+                      return (
+                        <Box
+                          key={index}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="space-between"
                           sx={{
-                            width: 100,
-                            height: 100,
-                            objectFit: "cover",
-                            borderRadius: 1,
-                            mr: 2,
+                            mb: 1,
+                            pb: 1,
+                            borderBottom: "1px solid #ddd",
                           }}
-                        />
-                        <Box flex={1} ml={2}>
-                          <Typography color="text.primary" style={{ fontWeight: 'bold' }}>
-                            {item.product.productName}
-                          </Typography>
+                        >
+                          <CardMedia
+                            component="img"
+                            image={item.orderItemImage}
+                            alt={item.orderItemName}
+                            sx={{
+                              width: 100,
+                              height: 100,
+                              objectFit: "cover",
+                              borderRadius: 1,
+                              mr: 2,
+                            }}
+                          />
+                          <Box flex={1} ml={2}>
+                            <Typography color="text.primary" style={{ fontWeight: 'bold' }}>
+                              {item.orderItemName}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.primary"
+                              style={{ fontWeight: 'bold', fontSize: '14px' }}
+                            >
+                              Quantity: {item.quantity}
+                            </Typography>
+                          </Box>
                           <Typography
-                            variant="body2"
-                            color="text.secondary"
-                          >
-                            {item.product.description}
-                          </Typography>
-                          <Typography
-                            variant="body2"
+                            fontWeight="bold"
                             color="text.primary"
-                            style={{ fontWeight: 'bold', fontSize: '14px' }}
                           >
-                            Quantity: {item.quantity}
+                            ₱{item.price.toFixed(2)}
                           </Typography>
                         </Box>
-                        <Typography
-                          fontWeight="bold"
-                          color="text.primary"
-                        >
-                          ₱{item.product.productPrice.toFixed(2)}
-                        </Typography>
-                      </Box>
-                    ))
+                      );
+                    })
                   ) : (
                     <Typography>No items available for this order.</Typography>
                   )}
@@ -209,7 +212,6 @@ function OrderList() {
                     </Button>
                   </Link>
                 </Box>
-
               </Card>
             );
           })

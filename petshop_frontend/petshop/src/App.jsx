@@ -21,7 +21,7 @@ import AdminAppointmentList from './components/AdminAppointmentList';
 import Inventory from './components/Inventory';
 import Products from './components/Products'
 import OrderList from './components/Orders';
-// import OrderDetails from './components/OrderDetails'; 
+import OrderDetails from './components/OrderDetails'; 
 
 function Layout({ children, username, role }) {
   return (
@@ -140,14 +140,14 @@ function App() {
               </Layout>
             }
           /> 
-          {/* <Route
+          <Route
             path="/MyPurchases/:orderID"
             element={
               <Layout username={username} role={role}>
                 <OrderDetails />
               </Layout>
             }
-          />  */}
+          /> 
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
