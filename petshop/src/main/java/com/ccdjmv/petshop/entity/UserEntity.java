@@ -50,9 +50,9 @@ public class UserEntity {
     private CartEntity cart;
 
     // One-to-Many relationship with AddressEntity
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference("user-address")
-    private List<AddressEntity> addresses;  // Add the List of AddressEntities
+    private AddressEntity address;  // Add the List of AddressEntities
     
     public UserEntity() {
 		super();
@@ -60,7 +60,7 @@ public class UserEntity {
 	}
 
 	public UserEntity(Long id, String username, String firstName, String lastName, String email, String password,
-			String role, CartEntity cart, List<AddressEntity> addresses, String profileImage) {
+			String role, CartEntity cart, AddressEntity address, String profileImage) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -70,7 +70,7 @@ public class UserEntity {
 		this.password = password;
 		this.role = role;
 		this.cart = cart;
-		this.addresses = addresses;
+		this.address = address;
 		this.profileImage  = profileImage;
 	}
 
@@ -145,12 +145,12 @@ public class UserEntity {
 	}
 
 	// Getter and Setter for addresses
-    public List<AddressEntity> getAddresses() {
-        return addresses;
+    public AddressEntity getAddress() {
+        return address;
     }
 
-    public void setAddresses(List<AddressEntity> addresses) {
-        this.addresses = addresses;
+    public void setAddress(AddressEntity address) {
+        this.address = address;
     }
 
 }

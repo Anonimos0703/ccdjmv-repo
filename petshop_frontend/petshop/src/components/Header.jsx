@@ -11,7 +11,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import defaultProfileImage from "../assets/default_profile.png";
-import paw1 from '../assets/paw1.png';
+import paw1 from "../assets/paw1.png";
 
 export default function Header({ username, role, userId }) {
   const navigate = useNavigate();
@@ -32,17 +32,55 @@ export default function Header({ username, role, userId }) {
   }, [userId]);
 
   const pawPositions = [
-    { top: '5%', left: '5%', width: '80px', opacity: 0.2, transform: 'rotate(-20deg)' },
-    { bottom: '5%', right: '10%', width: '100px', opacity: 0.2, transform: 'rotate(15deg)' },
-    { top: '25%', right: '20%', width: '60px', opacity: 0.2, transform: 'rotate(-10deg)' },
-    { top: '40%', left: '50%', width: '70px', opacity: 0.2, transform: 'rotate(25deg)' },
-    { bottom: '18%', left: '15%', width: '90px', opacity: 0.2, transform: 'rotate(-15deg)' },
-    { top: '55%', right: '5%', width: '50px', opacity: 0.2, transform: 'rotate(30deg)' }
+    {
+      top: "5%",
+      left: "5%",
+      width: "80px",
+      opacity: 0.2,
+      transform: "rotate(-20deg)",
+    },
+    {
+      bottom: "5%",
+      right: "10%",
+      width: "100px",
+      opacity: 0.2,
+      transform: "rotate(15deg)",
+    },
+    {
+      top: "25%",
+      right: "20%",
+      width: "60px",
+      opacity: 0.2,
+      transform: "rotate(-10deg)",
+    },
+    {
+      top: "40%",
+      left: "50%",
+      width: "70px",
+      opacity: 0.2,
+      transform: "rotate(25deg)",
+    },
+    {
+      bottom: "18%",
+      left: "15%",
+      width: "90px",
+      opacity: 0.2,
+      transform: "rotate(-15deg)",
+    },
+    {
+      top: "55%",
+      right: "5%",
+      width: "50px",
+      opacity: 0.2,
+      transform: "rotate(30deg)",
+    },
   ];
 
   const fetchProfileImage = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/auth/users/${id}/profile-image`);
+      const response = await fetch(
+        `http://localhost:8080/auth/users/${id}/profile-image`
+      );
       if (response.ok) {
         const profileImageUrl = await response.text();
         const imageUrl = profileImageUrl || defaultProfileImage;
@@ -68,9 +106,7 @@ export default function Header({ username, role, userId }) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("role");
-    localStorage.removeItem("profileImage");
+    localStorage.clear();
     setDrawerOpen(false);
     navigate("/auth");
   };
@@ -99,8 +135,7 @@ export default function Header({ username, role, userId }) {
           >
             Tails and Whiskers
           </Typography>
-           
-          
+
           {username ? (
             <>
               <Avatar
@@ -131,28 +166,33 @@ export default function Header({ username, role, userId }) {
                 >
                   <List>
                     {role === "ADMIN" && (
-                      <ListItem button onClick={() => handleMenuOptionClick("/inventory")}>
+                      <ListItem
+                        button
+                        onClick={() => handleMenuOptionClick("/inventory")}
+                      >
                         <ListItemText primary="Inventory" />
                       </ListItem>
                     )}
-                     
-                    <ListItem sx={{ 
-                      color: "solid black", 
-                      fontWeight:"bold",
-                      fontSize:"17px",
-                      marginBottom: 3, }}>
-                    <Avatar
-                src={profileImage}
-                alt={username}
-                sx={{
-                  cursor: "pointer",
-                  width: 17,
-                  height: 17,
-                  border: "2px solid black",
-                  marginRight: 1,
-                  
-                }}
-              />
+
+                    <ListItem
+                      sx={{
+                        color: "solid black",
+                        fontWeight: "bold",
+                        fontSize: "17px",
+                        marginBottom: 3,
+                      }}
+                    >
+                      <Avatar
+                        src={profileImage}
+                        alt={username}
+                        sx={{
+                          cursor: "pointer",
+                          width: 17,
+                          height: 17,
+                          border: "2px solid black",
+                          marginRight: 1,
+                        }}
+                      />
                       {username}
                     </ListItem>
                     <ListItem>
@@ -165,34 +205,43 @@ export default function Header({ username, role, userId }) {
                       />
                     </ListItem>
 
-                    <ListItem sx={{ padding: 0,marginLeft:"13px"  }}>
+                    <ListItem sx={{ padding: 0, marginLeft: "13px" }}>
                       <Button
-                        sx={{ color: "black", textTransform: "none",fontSize:"16px" }}
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
                         onClick={() => navigate("/")}
                       >
                         Home
                       </Button>
                     </ListItem>
-                    <ListItem sx={{ padding: 0,marginLeft:"15px"  }}>
+                    <ListItem sx={{ padding: 0, marginLeft: "15px" }}>
                       <Button
-                        sx={{ color: "black", textTransform: "none",fontSize:"16px" }}
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
                         onClick={() => navigate("/products")}
                       >
                         Products
                       </Button>
                     </ListItem>
-                    <ListItem sx={{ padding: 0,marginLeft:"15px"  }}>
+                    <ListItem sx={{ padding: 0, marginLeft: "15px" }}>
                       <Button
-                        sx={{ color: "black", textTransform: "none",fontSize:"16px" }}
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
                         onClick={() => navigate("/aboutus")}
                       >
                         About Us
                       </Button>
                     </ListItem>
 
-                    
-                     
-                     
                     <ListItem>
                       <ListItemText
                         primary="Personal:"
@@ -202,68 +251,82 @@ export default function Header({ username, role, userId }) {
                         }}
                       />
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/profile")}
-                     sx={{marginLeft:"10px" }}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/profile")}
+                      sx={{ marginLeft: "10px" }}
+                    >
                       <ListItemText primary="Profile" />
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/cart")}
-                      sx={{marginLeft:"10px" }}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/cart")}
+                      sx={{ marginLeft: "10px" }}
+                    >
                       <ListItemText primary="Cart" />
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/MyPurchases")}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/MyPurchases")}
+                    >
                       <ListItemText primary="My Purchases" />
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/appointmentslist")}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/appointmentslist")}
+                    >
                       <ListItemText primary="Appointments" />
                     </ListItem>
-                    <ListItem button onClick={handleLogout}
-                     sx={{marginLeft:"10px" }}>
+                    <ListItem
+                      button
+                      onClick={handleLogout}
+                      sx={{ marginLeft: "10px" }}
+                    >
                       <ListItemText primary="Log Out" />
                     </ListItem>
-                    
                   </List>
                   {pawPositions.map((pos, index) => (
-        <img
-          key={index}
-          src={paw1}
-          alt="paw"
-          style={{
-            position: 'absolute',
-            ...pos,
-            zIndex: 1,
-          }}
-        />
-      ))}
-                </Box>              
+                    <img
+                      key={index}
+                      src={paw1}
+                      alt="paw"
+                      style={{
+                        position: "absolute",
+                        ...pos,
+                        zIndex: 1,
+                      }}
+                    />
+                  ))}
+                </Box>
               </Drawer>
             </>
           ) : (
             <>
-    <Button
-      sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-      onClick={() => navigate("/")}
-    >
-      Home
-    </Button>
-    <Button
-      sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-      onClick={() => navigate("/products")}
-    >
-      Products
-    </Button>
-    <Button
-      sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-      onClick={() => navigate("/aboutus")}
-    >
-      About Us
-    </Button>
-    <Button
-      sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-      onClick={() => navigate("/auth")}
-    >
-      Login
-    </Button>
-  </>
+              <Button
+                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
+                onClick={() => navigate("/")}
+              >
+                Home
+              </Button>
+              <Button
+                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
+                onClick={() => navigate("/products")}
+              >
+                Products
+              </Button>
+              <Button
+                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
+                onClick={() => navigate("/aboutus")}
+              >
+                About Us
+              </Button>
+              <Button
+                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
+                onClick={() => navigate("/auth")}
+              >
+                Login
+              </Button>
+            </>
           )}
         </Toolbar>
       </AppBar>

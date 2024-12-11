@@ -31,7 +31,7 @@ const Profile = ({ onProfileImageUpdate }) => {
     city: '',
     barangay: '',
     postalCode: '',
-    buildingHouseNo: '',
+    streetBuildingHouseNo: '',
   });
   const [imageFile, setImageFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -289,7 +289,7 @@ const Profile = ({ onProfileImageUpdate }) => {
                 { name: 'city', label: 'City' },
                 { name: 'barangay', label: 'Barangay' },
                 { name: 'postalCode', label: 'Postal Code' },
-                { name: 'buildingHouseNo', label: 'Building/House No.' }
+                { name: 'streetBuildingHouseNo', label: 'Street Name, Building, House No.' }
               ].map((field) => (
                 <Grid item xs={12} sm={6} key={field.name}>
                   <TextField
