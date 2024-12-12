@@ -148,51 +148,64 @@ const ProductDetail = () => {
   return (
     <ThemeProvider theme={theme}>
       <PageWrapper>
-        <Toaster position="top-center" duration={2500}/>
-        <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
-          <CardMedia
-            component="img"
-            sx={{ width: "300px", height: "300px", objectFit: "cover", mb: 2 }}
-            image={product.productImage || "/placeholder-image.png"}
-            alt={product.productName}
-          />
-          <CardContent>
-            <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
-              {product.productName}
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-              {product.description}
-            </Typography>
-            <Typography variant="h6" color="primary">
-              Price: ₱{product.productPrice.toFixed(2)}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Available Stock: {product.quantity}
-            </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-              <IconButton onClick={handleDecreaseQuantity} disabled={itemQuantity <= 1}>
-                <RemoveIcon />
-              </IconButton>
-              <TextField
-                variant="outlined"
-                size="small"
-                value={itemQuantity}
-                inputProps={{ style: { textAlign: "center" } }}
-                sx={{ width: 60, mx: 1 }}
-              />
-              <IconButton onClick={handleIncreaseQuantity} disabled={itemQuantity >= product.quantity}>
-                <AddIcon />
-              </IconButton>
-            </Box>
-            <Button 
-              variant="contained" 
-              color="primary"
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </Button>
-          </CardContent>
-        </Card>
+        <Toaster position="top-center" duration={2500} />
+
+        {/* Wrapper Box to center the card */}
+        <Box 
+          sx={{ 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center", 
+            height: "100vh", // Makes the parent container take the full height of the viewport
+          }}
+        >
+          <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", mb: 4, width: "50%" }}>
+            <CardMedia
+              component="img"
+              sx={{ width: "300px", height: "300px", objectFit: "cover", mb: 2 }}
+              image={product.productImage || "/placeholder-image.png"}
+              alt={product.productName}
+            />
+            <CardContent sx={{ textAlign: "center" }}>
+              <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
+                {product.productName}
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                {product.description}
+              </Typography>
+              <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
+                Price: ₱{product.productPrice.toFixed(2)}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Available Stock: {product.quantity}
+              </Typography>
+
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
+                <IconButton onClick={handleDecreaseQuantity} disabled={itemQuantity <= 1}>
+                  <RemoveIcon />
+                </IconButton>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  value={itemQuantity}
+                  inputProps={{ style: { textAlign: "center" } }}
+                  sx={{ width: 60, mx: 1 }}
+                />
+                <IconButton onClick={handleIncreaseQuantity} disabled={itemQuantity >= product.quantity}>
+                  <AddIcon />
+                </IconButton>
+              </Box>
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={handleAddToCart}
+                sx={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
+              >
+                Add to Cart
+              </Button>
+            </CardContent>
+          </Card>
+        </Box>
 
         <Divider sx={{ mb: 4 }} />
 
@@ -205,7 +218,7 @@ const ProductDetail = () => {
               <Grid item xs={12} key={index}>
                 <Card>
                   <CardContent>
-                    <Typography variant="body2"> {review.username}</Typography><br></br>
+                    <Typography variant="body2"> {review.username}</Typography><br />
                     <StarDisplay rating={review.ratings} /> {/* Display star rating */}
                     <Typography variant="body2">Comment: {review.comment}</Typography>
                   </CardContent>
@@ -218,6 +231,7 @@ const ProductDetail = () => {
         </Grid>
       </PageWrapper>
     </ThemeProvider>
+
   );
 };
 
