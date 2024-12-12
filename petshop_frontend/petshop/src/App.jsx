@@ -22,7 +22,6 @@ import Inventory from './components/Inventory';
 import Products from './components/Products';
 import ProductDetail from './components/ProductDetail';
 import RateProduct from './components/RateProduct';
-import Products from './components/Products'
 import OrderList from './components/Orders';
 // import OrderDetails from './components/OrderDetails'; 
 
