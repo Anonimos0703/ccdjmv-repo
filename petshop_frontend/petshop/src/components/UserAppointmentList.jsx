@@ -320,6 +320,7 @@ const UserAppointmentList = () => {
                         </Typography>
                       </Box>
                     }
+                    disableTypography
                   />
                   {appointment.canceled ? (
                     <Box 

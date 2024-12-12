@@ -24,6 +24,7 @@ import ProductDetail from './components/ProductDetail';
 import RateProduct from './components/RateProduct';
 import OrderList from './components/Orders';
 import OrderDetails from './components/OrderDetails'; 
+import {AuthProvider} from './components/AuthProvider';
 
 function Layout({ children, username, role }) {
   return (
@@ -60,6 +61,7 @@ function App() {
   return (
      
       <Router>
+         
         <AdminAuthProvider>
         <Routes>
           <Route
@@ -204,6 +206,7 @@ function App() {
             />
         </Routes>
         </AdminAuthProvider>
+         
       </Router>
     
   );

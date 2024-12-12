@@ -14,9 +14,11 @@ import {
   createTheme,
   ThemeProvider,
   styled,
+  Button,
 } from "@mui/material";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 
 import order from '../assets/order.png';
 import paw1 from '../assets/paw1.png';
@@ -280,9 +282,19 @@ const OrderDetails = () => {
                       <Typography variant="body2" color="text.secondary">Quantity: {item.quantity}</Typography>
                     </Box>
                   </Box>
+                  <Box display="flex" flexDirection="column" alignItems="flex-end" gap={1}>
                   <Typography variant="body1" fontWeight="bold" color="primary.main">
                     ₱{item.price.toFixed(2)}
                   </Typography>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    onClick={() => navigate(`/rate-product/${item.productId}`)}
+                  >
+                    Rate Product
+                  </Button>
+                  </Box>
                 </Box>
               ))}
             </Box>
