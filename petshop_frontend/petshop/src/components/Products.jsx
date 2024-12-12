@@ -74,6 +74,42 @@ const theme = createTheme({
   },
 });
 
+const ScatteredPaws = ({ count = 10 }) => {
+  const positions = [
+    { top: '5%', left: '3%' },
+    { top: '10%', right: '5%' },
+    { bottom: '15%', left: '7%' },
+    { bottom: '10%', right: '3%' },
+    { top: '20%', left: '10%' },
+    { bottom: '25%', right: '10%' },
+    { top: '30%', left: '2%' },
+    { bottom: '5%', right: '15%' },
+    { top: '15%', right: '12%' },
+    { bottom: '20%', left: '15%' },
+  ];
+
+  return (
+    <>
+      {positions.slice(0, count).map((pos, index) => (
+        <Box
+          key={index}
+          component="img"
+          src={paw1}
+          alt="Paw Icon"
+          sx={{
+            position: 'absolute',
+            width: '30px',
+            height: '30px',
+            opacity: 0.3,
+            zIndex: 1,
+            ...pos,
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
   minHeight: '100vh',
@@ -262,13 +298,6 @@ const Products = () => {
           <PetIcon 
             src={petIcon} 
             alt="Pet Icon" 
-            style={{ 
-              animation: 'float 3s ease-in-out infinite',
-              '@keyframes float': {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-10px)' },
-              }
-            }}
           />
           <Typography
             variant="h3"
@@ -283,6 +312,8 @@ const Products = () => {
             Pawsome Products
           </Typography>
         </HeaderWrapper>
+
+        <ScatteredPaws />
 
         <Box sx={{ 
           display: "flex", 
