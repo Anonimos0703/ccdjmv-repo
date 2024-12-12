@@ -260,42 +260,45 @@ const OrderDetails = () => {
               </Typography>
               <Divider sx={{ mb: 2 }} />
               {orderDetails.orderItems.map((item, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  mb={2}
-                  sx={{ backgroundColor: "background.default", padding: 2, borderRadius: 2 }}
-                >
-                  <Box display="flex" alignItems="center" gap={2}>
-                    <img 
-                      src={item.orderItemImage} 
-                      alt={item.orderItemName} 
-                      style={{ width: 60, height: 60, borderRadius: 8, objectFit: "cover" }}
-                    />
-                    <Box>
-                      <Typography variant="body1" fontWeight="bold" color="primary.main">
-                        {item.orderItemName}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">Quantity: {item.quantity}</Typography>
-                    </Box>
+              <Box
+                key={index}
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                sx={{ backgroundColor: "background.default", padding: 2, borderRadius: 2 }}
+              >
+                <Box display="flex" alignItems="center" gap={2}>
+                  <img 
+                    src={item.orderItemImage} 
+                    alt={item.orderItemName} 
+                    style={{ width: 60, height: 60, borderRadius: 8, objectFit: "cover" }}
+                  />
+                  <Box>
+                    <Typography variant="body1" fontWeight="bold" color="primary.main">
+                      {item.orderItemName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">Quantity: {item.quantity}</Typography>
                   </Box>
-                  <Box display="flex" flexDirection="column" alignItems="flex-end" gap={1}>
+                </Box>
+                <Box display="flex" flexDirection="column" alignItems="flex-end" gap={1}>
                   <Typography variant="body1" fontWeight="bold" color="primary.main">
                     ₱{item.price.toFixed(2)}
                   </Typography>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                    onClick={() => navigate(`/rate-product/${item.productId}`)}
-                  >
-                    Rate Product
-                  </Button>
-                  </Box>
+                  {orderDetails.orderStatus === "Completed" && (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      onClick={() => navigate(`/rate-product/${item.productId}`)}
+                    >
+                      Rate Product
+                    </Button>
+                  )}
                 </Box>
-              ))}
+              </Box>
+            ))}
+
             </Box>
 
             <Card sx={{ borderRadius: 2 }}>
