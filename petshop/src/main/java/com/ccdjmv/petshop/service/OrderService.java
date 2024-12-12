@@ -44,6 +44,7 @@ public class OrderService {
             order.setPaymentStatus(newOrderDetails.getPaymentStatus());
             order.setOrderStatus(newOrderDetails.getOrderStatus());
             order.setTotalPrice(newOrderDetails.getTotalPrice());
+            order.setUser(newOrderDetails.getUser());
         } catch(NoSuchElementException nex) {
             throw new NameNotFoundException("Order " + id + " not found");
         } finally {
