@@ -5,32 +5,32 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+// import Menu from "@mui/material/Menu";
+// import MenuItem from "@mui/material/MenuItem";
 
 export default function AdminHeader() {
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  // const [anchorEl, setAnchorEl] = useState(null);
+  // const open = Boolean(anchorEl);
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleMenuClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  // };
 
-  const handleMenuOptionClick = (route) => {
-    setAnchorEl(null);
-    navigate(route);
-  };
+  // const handleMenuOptionClick = (route) => {
+  //   setAnchorEl(null);
+  //   navigate(route);
+  // };
 
   const handleLogout = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("role");
-    setAnchorEl(null);
+    // setAnchorEl(null);
     navigate("/admin/login");
   };
 
@@ -67,13 +67,26 @@ export default function AdminHeader() {
           <Button sx={{ color: "black" }} onClick={() => navigate("/admin/appointments")}>
             Appointments
           </Button>
-          <Button     
+          <Button
+            sx={{
+              color: "red",
+              "&:hover" : {
+                backgroundColor: "error.dark",
+                color: "white",
+              },
+              fontWeight: "bold",
+            }}
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+          {/* <Button     
             sx={{ color: "black" }}
             onClick={handleMenuClick}
           >
             More
-          </Button>
-          <Menu
+          </Button> */}
+          {/* <Menu
             anchorEl={anchorEl}
             open={open}
             onClose={handleMenuClose}
@@ -87,7 +100,7 @@ export default function AdminHeader() {
               Profile
             </MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </Menu>
+          </Menu> */}
         </Toolbar>
       </AppBar>
       <Box sx={{ mt: 8 }} />

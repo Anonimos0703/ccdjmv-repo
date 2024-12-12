@@ -6,7 +6,7 @@ const AdminDashboard = () => {
   const { admin } = useAdminAuth();
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: 'background.default', py: 4 }}>
+    <Box sx={{ height: "100vh", flexGrow: 1, bgcolor: 'background.default', py: 4 }}>
       <Container maxWidth="lg">
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
           Welcome, {admin?.user}!
