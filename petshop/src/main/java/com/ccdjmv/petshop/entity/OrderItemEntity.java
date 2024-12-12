@@ -11,7 +11,10 @@ public class OrderItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderItemID;
     private String orderItemName;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String orderItemImage;
+
     private double price;
     private int quantity;
 
