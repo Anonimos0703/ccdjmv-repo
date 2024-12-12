@@ -11,9 +11,120 @@ import {
   Divider,
   IconButton,
   Button,
+  createTheme,
+  ThemeProvider,
+  styled,
 } from "@mui/material";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import order from '../assets/order.png';
+import paw1 from '../assets/paw1.png';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513',
+      light: '#D2B48C',
+    },
+    secondary: {
+      main: '#FFA500',
+    },
+    background: {
+      default: '#FFF5E6',
+      paper: '#FFFFFF',
+    },
+  },
+  typography: {
+    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          textTransform: 'none',
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
+          transition: 'transform 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-5px)',
+          },
+        },
+      },
+    },
+  },
+});
+
+const ScatteredPaws = ({ count = 10 }) => {
+  const positions = [
+    { top: '5%', left: '3%' },
+    { top: '10%', right: '5%' },
+    { bottom: '15%', left: '7%' },
+    { bottom: '10%', right: '3%' },
+    { top: '20%', left: '10%' },
+    { bottom: '25%', right: '10%' },
+    { top: '30%', left: '2%' },
+    { bottom: '5%', right: '15%' },
+    { top: '15%', right: '12%' },
+    { bottom: '20%', left: '15%' },
+  ];
+
+  return (
+    <>
+      {positions.slice(0, count).map((pos, index) => (
+        <Box
+          key={index}
+          component="img"
+          src={paw1}
+          alt="Paw Icon"
+          sx={{
+            position: 'absolute',
+            width: '30px',
+            height: '30px',
+            opacity: 0.3,
+            zIndex: 1,
+            ...pos,
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
+const PageWrapper = styled(Box)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
+  minHeight: '100vh',
+  padding: theme.spacing(4),
+}));
+
+const HeaderWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: theme.spacing(4),
+}));
+
+const CartIcon = styled('img')({
+  width: '60px',
+  height: '60px',
+  marginRight: '15px',
+});
+
+const PawPrint = styled('img')(({ theme }) => ({
+  position: 'absolute',
+  width: '100px',
+  height: 'auto',
+  opacity: 0.1,
+  zIndex: 0,
+}));
 
 const OrderDetails = () => {
   const { orderID } = useParams();
@@ -42,7 +153,7 @@ const OrderDetails = () => {
     } else {
       setLoading(false);
     }
-  }, [orderID]);
+  }, [orderID, navigate]);
 
   if (loading) {
     return (
@@ -63,141 +174,136 @@ const OrderDetails = () => {
   }
 
   return (
-    <Box
-      padding={3}
-      maxWidth="lg"
-      mx="auto"
-      sx={{ backgroundColor: "#f9f9f9", borderRadius: 2, minHeight: "80vh" }}
-    >
-      <Box display="flex" alignItems="center" gap={2} mb={4}>
-        <IconButton onClick={() => navigate(-1)} color="primary">
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography variant="h5" fontWeight="bold">
-          Order Details
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{ backgroundColor: "#fff", padding: 3, borderRadius: 2, boxShadow: 1 }}
-      >
-        <Card sx={{ mb: 3, borderRadius: 2 }}>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  Order ID:
-                </Typography>
-                <Typography>{orderDetails.orderID}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  Order Date:
-                </Typography>
-                <Typography>{orderDetails.orderDate}</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="bold"
-                  color="success.main"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mt: 2,
-                    backgroundColor: "rgba(76, 175, 80, 0.1)",
-                    padding: "8px",
-                    borderRadius: 1,
-                  }}
-                >
-                  <LocalShippingIcon />
-                  Status: {orderDetails.orderStatus}
-                </Typography>
-              </Grid>
-
-              <Grid item xs={12} sx={{ mt: 2 }}>
-                <Typography variant="h6" fontWeight="bold">
-                  Delivery Address
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Name:</strong> {orderDetails.user.firstName} {orderDetails.user.lastName}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Email:</strong> {orderDetails.user.email}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>Address:</strong> {orderDetails.user.address.streetBuildingHouseNo} {" "}
-                  {orderDetails.user.address.barangay}, {orderDetails.user.address.city} City, {" "}
-                  {orderDetails.user.address.province}, Region {orderDetails.user.address.region}, {" "}
-                  {orderDetails.user.address.postalCode}
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" fontWeight="bold" mb={2}>
-            Order Items
+    <ThemeProvider theme={theme}>
+      <PageWrapper>
+        <HeaderWrapper>
+          <CartIcon src={order} alt="Pet Icon" />
+          <Typography
+            variant="h3"
+            component="h1"
+            sx={{ 
+              textAlign: "center", 
+              fontWeight: 700, 
+              color: 'primary.main',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+            }}
+          >
+            Order Details
           </Typography>
-          <Divider sx={{ mb: 2 }} />
-          {orderDetails.orderItems.map((item, index) => (
-            <Box
-              key={index}
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mb={2}
-              sx={{ backgroundColor: "#FFFFFF", padding: 1, borderRadius: 1 }}
-            >
-              <Box display="flex" alignItems="center" gap={2}>
-                <img
-                  src={item.orderItemImage}
-                  alt={item.orderItemName}
-                  style={{ width: 50, height: 50, borderRadius: 5, objectFit: "cover" }}
-                />
-                <Box>
-                  <Typography variant="body1" fontWeight="bold">
-                    {item.orderItemName}
-                  </Typography>
-                  <Typography variant="body2">Quantity: {item.quantity}</Typography>
-                </Box>
-              </Box>
-              <Box display="flex" flexDirection="column" alignItems="flex-end">
-                <Typography variant="body1" fontWeight="bold">
-                  ₱{item.price.toFixed(2)}
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  onClick={() => navigate(`/rate-product/${item.productId}`)}
-                >
-                  Rate Product
-                </Button>
-              </Box>
-            </Box>
-          ))}
-        </Box>
+        </HeaderWrapper>
 
-        <Card sx={{ borderRadius: 2 }}>
-          <CardContent>
-            <Divider sx={{ mb: 2 }} />
-            <Box display="flex" justifyContent="space-between" mb={1}>
-              <Typography>Shipping Fee</Typography>
-              <Typography>₱30</Typography>
-            </Box>
-            <Box display="flex" justifyContent="space-between" fontWeight="bold">
-              <Typography variant="body1">Total</Typography>
-              <Typography variant="body1" fontWeight="bold">
-                ₱{orderDetails.totalPrice.toFixed(2)}
+        <ScatteredPaws />
+
+        <Box maxWidth="800px" mx="auto">
+          <Box display="flex" alignItems="center" gap={2} mb={4}>
+            <IconButton onClick={() => navigate(-1)} color="primary">
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h5" fontWeight="bold" color="primary.main">
+              Order #{orderDetails.orderID}
+            </Typography>
+          </Box>
+
+          <Box sx={{ backgroundColor: "background.paper", padding: 3, borderRadius: 2, boxShadow: 1, mb: 4, position: 'relative', overflow: 'hidden' }}>
+            <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, right: -20 }} />
+            <Card sx={{ mb: 3, borderRadius: 2 }}>
+              <CardContent>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography variant="subtitle1" fontWeight="bold" color="primary.main">
+                      Order ID:
+                    </Typography>
+                    <Typography>{orderDetails.orderID}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="subtitle1" fontWeight="bold" color="primary.main">
+                      Order Date:
+                    </Typography>
+                    <Typography>{orderDetails.orderDate}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mt: 2,
+                        backgroundColor: "rgba(139, 69, 19, 0.1)",
+                        padding: "8px",
+                        borderRadius: 2,
+                        color: 'primary.main',
+                      }}
+                    >
+                      <LocalShippingIcon />
+                      Status: {orderDetails.orderStatus}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={12} sx={{ mt: 2 }}>
+                    <Typography variant="h6" fontWeight="bold" color="primary.main">
+                      Delivery Address
+                    </Typography>
+                    <Typography variant="body2"><strong>Name:</strong> {orderDetails.user.firstName} {orderDetails.user.lastName}</Typography>
+                    <Typography variant="body2"><strong>Email:</strong> {orderDetails.user.email}</Typography>
+                    <Typography variant="body2"><strong>Address:</strong> {orderDetails.user.address.streetBuildingHouseNo} {orderDetails.user.address.barangay}, {orderDetails.user.address.city} City, {orderDetails.user.address.province}, Region {orderDetails.user.address.region}, {orderDetails.user.address.postalCode}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" fontWeight="bold" mb={2} color="primary.main">
+                Order Items
               </Typography>
+              <Divider sx={{ mb: 2 }} />
+              {orderDetails.orderItems.map((item, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  mb={2}
+                  sx={{ backgroundColor: "background.default", padding: 2, borderRadius: 2 }}
+                >
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <img 
+                      src={item.orderItemImage} 
+                      alt={item.orderItemName} 
+                      style={{ width: 60, height: 60, borderRadius: 8, objectFit: "cover" }}
+                    />
+                    <Box>
+                      <Typography variant="body1" fontWeight="bold" color="primary.main">
+                        {item.orderItemName}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">Quantity: {item.quantity}</Typography>
+                    </Box>
+                  </Box>
+                  <Typography variant="body1" fontWeight="bold" color="primary.main">
+                    ₱{item.price.toFixed(2)}
+                  </Typography>
+                </Box>
+              ))}
             </Box>
-          </CardContent>
-        </Card>
-      </Box>
-    </Box>
+
+            <Card sx={{ borderRadius: 2 }}>
+              <CardContent>
+                <Box display="flex" justifyContent="space-between" mb={1}>
+                  <Typography color="text.secondary">Shipping Fee</Typography>
+                  <Typography fontWeight="bold">₱30.00</Typography>
+                </Box>
+                <Divider sx={{ my: 2 }} />
+                <Box display="flex" justifyContent="space-between" fontWeight="bold">
+                  <Typography variant="h6" color="primary.main">Total</Typography>
+                  <Typography variant="h6" fontWeight="bold" color="primary.main">₱{orderDetails.totalPrice.toFixed(2)}</Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        </Box>
+      </PageWrapper>
+    </ThemeProvider>
   );
 };
 

@@ -11,31 +11,143 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import CartItem from "./CartItem";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import EmptyCart from "./EmptyCart";
-import Table from "@mui/material/Table";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+
+import paw1 from '../assets/paw1.png';
+import cart from '../assets/cart.png';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513',
+      light: '#D2B48C',
+    },
+    secondary: {
+      main: '#FFA500',
+    },
+    background: {
+      default: '#FFF5E6',
+      paper: '#FFFFFF',
+    },
+  },
+  typography: {
+    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          textTransform: 'none',
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
+          transition: 'transform 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-5px)',
+          },
+          backgroundColor: '#FFFFFF',
+          position: 'relative',
+          overflow: 'visible',
+        },
+      },
+    },
+  },
+});
+
+const ScatteredPaws = ({ count = 10 }) => {
+  const positions = [
+    { top: '5%', left: '3%' },
+    { top: '10%', right: '5%' },
+    { bottom: '15%', left: '7%' },
+    { bottom: '10%', right: '3%' },
+    { top: '20%', left: '10%' },
+    { bottom: '25%', right: '10%' },
+    { top: '30%', left: '2%' },
+    { bottom: '5%', right: '15%' },
+    { top: '15%', right: '12%' },
+    { bottom: '20%', left: '15%' },
+  ];
+
+  return (
+    <>
+      {positions.slice(0, count).map((pos, index) => (
+        <Box
+          key={index}
+          component="img"
+          src={paw1}
+          alt="Paw Icon"
+          sx={{
+            position: 'absolute',
+            width: '30px',
+            height: '30px',
+            opacity: 0.3,
+            zIndex: 1,
+            ...pos,
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
+const PageWrapper = styled(Box)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
+  minHeight: '100vh',
+  padding: theme.spacing(4),
+}));
+
+const HeaderWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: theme.spacing(4),
+}));
+
+const CartIcon = styled('img')({
+  width: '60px',
+  height: '60px',
+  marginRight: '15px',
+});
+
+const PawPrint = styled('img')(({ theme }) => ({
+  position: 'absolute',
+  width: '100px',
+  height: 'auto',
+  opacity: 0.1,
+  zIndex: -1,
+}));
 
 function Cart() {
   const [cartItems, setCartItem] = useState([]);
-  const [selectedItems, setSelectedItems] = useState(new Set()); //track selected items by ID
-  const [openDialog, setOpenDialog] = useState(false); // Dialog state
-  const [openNoAddressDialog, setNoAddressDialog] = useState(false); // Dialog state
-  const [itemToDelete, setItemToDelete] = useState(null); // Item ID to delete
+  const [selectedItems, setSelectedItems] = useState(new Set());
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openNoAddressDialog, setNoAddressDialog] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   const [userId, setUserId] = useState(localStorage.getItem("id"));
+  const navigate = useNavigate();
 
   const getCartItems = () => {
     axios
       .get(`http://localhost:8080/api/cart/getCartById/${userId}`)
       .then((res) => {
         const updatedCartItems = res.data.cartItems.map((item) => {
-          // If cart item quantity is greater than available stock
           if (item.quantity > item.product.quantity) {
             axios
               .put(
@@ -46,21 +158,19 @@ function Cart() {
               )
               .catch((err) => console.error("Error updating quantity:", err));
 
-            // Update the cart item quantity locally
             return {
               ...item,
               quantity: item.product.quantity,
             };
           }
-          return item; // No change needed
+          return item;
         });
 
-        // Sort cart items by lastUpdated in descending order (most recent first)
         const sortedCartItems = updatedCartItems.sort((a, b) => {
           return new Date(b.lastUpdated) - new Date(a.lastUpdated);
         });
 
-        setCartItem(sortedCartItems); // Update the state
+        setCartItem(sortedCartItems);
       })
       .catch((err) => {
         console.error("Error fetching cart items", err);
@@ -68,7 +178,6 @@ function Cart() {
       });
   };
 
-  // USE EFFECT
   useEffect(() => {
     if (!userId) {
       navigate("/");
@@ -80,11 +189,11 @@ function Cart() {
   const handleCheckChange = (itemId, isChecked) => {
     const updatedSelectedItems = new Set(selectedItems);
     if (isChecked) {
-      updatedSelectedItems.add(itemId); //add item to selected set
+      updatedSelectedItems.add(itemId);
     } else {
-      updatedSelectedItems.delete(itemId); //ma remove ang item from selected set
+      updatedSelectedItems.delete(itemId);
     }
-    setSelectedItems(updatedSelectedItems); //update state
+    setSelectedItems(updatedSelectedItems);
   };
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -109,18 +218,15 @@ function Cart() {
 
   const handleDeleteItem = (itemId) => {
     setItemToDelete(itemId);
-    setOpenDialog(true); // Open the dialog
+    setOpenDialog(true);
   };
 
   const handleDialogClose = () => {
-    setOpenDialog(false); // Close the dialog
+    setOpenDialog(false);
     setNoAddressDialog(false);
   };
 
-  const navigate = useNavigate();
-
   const handleCheckoutClick = () => {
-    //fetch user address to check if user has an address saved in the db
     if (selectedItems.size === 0) {
       toast.error("Please select items to checkout");
       return;
@@ -136,7 +242,6 @@ function Cart() {
           return;
         }
 
-        // Calculate the subtotal and selected items
         const selectedItemsDetails = cartItems.filter((item) =>
           selectedItems.has(item.cartItemId)
         );
@@ -147,14 +252,13 @@ function Cart() {
           total: getTotal(),
         };
 
-        // Pass selected items and order summary to Checkout page via `state`
         navigate("/checkout", {
           state: { selectedItems: selectedItemsDetails, orderSummary },
         });
       })
       .catch((err) => {
         console.error("Cart: error fetching address", err);
-        toast.error("Unexpected error occured. Please try again later");
+        toast.error("Unexpected error occurred. Please try again later");
       });
   };
 
@@ -168,12 +272,12 @@ function Cart() {
           setCartItem((prevItems) =>
             prevItems.filter((item) => item.cartItemId !== itemToDelete)
           );
-          setOpenDialog(false); // Close the dialog after deletion
+          setOpenDialog(false);
           toast.success("Item removed from cart");
         })
         .catch((err) => {
           console.error("Error deleting item:", err);
-          setOpenDialog(false); // Close the dialog on error
+          setOpenDialog(false);
           toast.error("Failed to delete item from cart");
         });
     }
@@ -183,7 +287,6 @@ function Cart() {
     navigate("/profile");
   };
 
-  //functions for calculations
   const getSubtotal = () => {
     return cartItems
       .filter((item) => selectedItems.has(item.cartItemId))
@@ -199,7 +302,7 @@ function Cart() {
     if (subtotal == 0) {
       return "0.00";
     }
-    return (subtotal + 30).toFixed(2); //shipping fee 30 pesos
+    return (subtotal + 30).toFixed(2);
   };
 
   const getShippingFee = () => {
@@ -211,148 +314,131 @@ function Cart() {
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#ffffff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "96vw",
-        padding: "2rem",
-        height: "100vh",
-      }}
-    >
-      <Toaster position="top-center" duration={2500} />
-      {/* Centered Heading */}
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ marginBottom: "20px" }}
-      >
-        <Typography variant="h4" component="h1">
-          Your Shopping Cart
-        </Typography>
-      </Box>
-
-      {/* Main Grid Layout */}
-      <Grid container spacing={2} justifyContent="center">
-        {/* Cart Items */}
-        <Grid item xs={12} md={8}>
-          <Table variant="paper" size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Product</TableCell>
-                <TableCell>Unit Price</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Total Price</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-          </Table>
-          {cartItems.length === 0 ? (
-            <EmptyCart />
-          ) : (
-            <Grid container spacing={2}>
-              {cartItems.map((item, index) => (
-                <CartItem
-                  key={index}
-                  price={item.product?.productPrice}
-                  title={item.product?.productName}
-                  quantity={item.quantity}
-                  image={item.product?.productImage}
-                  itemId={item.cartItemId}
-                  isSelected={selectedItems.has(item.cartItemId)}
-                  onCheckChange={handleCheckChange}
-                  onQuantityChange={handleQuantityChange}
-                  onDelete={handleDeleteItem}
-                  availableStock={item.product?.quantity} // Pass stock quantity
-                />
-              ))}
-            </Grid>
-          )}
-        </Grid>
-
-        {/* Order Summary */}
-        <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{
-            position: "sticky",
-            top: "140px",
-            zIndex: 2, // Ensure it has a background to stand out
-            padding: "10px", // Add padding to make the content look better
-            height: "fit-content", // Ensures the card doesn't take up unnecessary space
-            borderRadius: "16px",
-          }}
-        >
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6">Summary</Typography>
-              <Divider style={{ margin: "10px 0" }} />
-              <Typography variant="body2">
-                Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
-              </Typography>
-              <Typography variant="body2">
-                Shipping Fee: ₱{getShippingFee()}
-              </Typography>
-
-              <Divider style={{ margin: "10px 0" }} />
-              <Typography variant="h6">Total: ₱{getTotal()}</Typography>
-              <Typography variant="caption" color="text.secondary">
-                VAT included, where applicable
-              </Typography>
-
-              <Button
-                variant="contained"
-                color="warning"
-                fullWidth
-                style={{ marginTop: "15px" }}
-                onClick={handleCheckoutClick}
-                disabled={selectedItems.size === 0}
-              >
-                PROCEED TO CHECKOUT
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Confirmation dialog for Delete Cart Item */}
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to remove this item from your cart?
+    <ThemeProvider theme={theme}>
+      <PageWrapper>
+        <Toaster position="top-center" duration={2500} />
+        <HeaderWrapper>
+          <CartIcon src={cart} alt="Cart Icon" />
+          <Typography
+            variant="h3"
+            component="h1"
+            sx={{ 
+              textAlign: "center", 
+              fontWeight: 700, 
+              color: 'primary.main',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+            }}
+          >
+            Your Shopping Cart
           </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} color="secondary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </HeaderWrapper>
 
-      {/* Confirmation dialog for Missing Address */}
-      <Dialog open={openNoAddressDialog} onClose={handleDialogClose}>
-        <DialogTitle>No Address Yet</DialogTitle>
-        <DialogContent>
-          <Typography>Add address to your profile?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmCreateAddress} color="secondary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        <ScatteredPaws />
+
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} md={8}>
+            <Card variant="outlined">
+              <CardContent>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="left">Product</TableCell>
+                      <TableCell align="right">Unit Price</TableCell>
+                      <TableCell align="center">Quantity</TableCell>
+                      <TableCell align="center">Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                </Table>
+                {cartItems.length === 0 ? (
+                  <EmptyCart />
+                ) : (
+                  <Grid container spacing={2}>
+                    {cartItems.map((item, index) => (
+                      <CartItem
+                        key={index}
+                        price={item.product?.productPrice}
+                        title={item.product?.productName}
+                        quantity={item.quantity}
+                        image={item.product?.productImage}
+                        itemId={item.cartItemId}
+                        isSelected={selectedItems.has(item.cartItemId)}
+                        onCheckChange={handleCheckChange}
+                        onQuantityChange={handleQuantityChange}
+                        onDelete={handleDeleteItem}
+                        availableStock={item.product?.quantity}
+                      />
+                    ))}
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card variant="outlined" sx={{ position: 'sticky', top: '140px' }}>
+              <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, right: -20 }} />
+              <CardContent>
+                <Typography variant="h5" gutterBottom>Order Summary</Typography>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="body1">
+                  Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
+                </Typography>
+                <Typography variant="body1">
+                  Shipping Fee: ₱{getShippingFee()}
+                </Typography>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="h6">Total: ₱{getTotal()}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  VAT included, where applicable
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                  onClick={handleCheckoutClick}
+                  disabled={selectedItems.size === 0}
+                >
+                  PROCEED TO CHECKOUT
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        <Dialog open={openDialog} onClose={handleDialogClose}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to remove this item from your cart?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmDelete} color="secondary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openNoAddressDialog} onClose={handleDialogClose}>
+          <DialogTitle>No Address Yet</DialogTitle>
+          <DialogContent>
+            <Typography>Add address to your profile?</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmCreateAddress} color="secondary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </PageWrapper>
+    </ThemeProvider>
   );
 }
 
