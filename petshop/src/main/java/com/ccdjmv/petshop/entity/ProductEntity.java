@@ -104,17 +104,5 @@ public class ProductEntity {
 
 	public void setCartItems(List<CartItemEntity> cartItems) {
 		this.cartItems = cartItems;
-	}
-		
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	private List<OrderItemEntity> orderItems;
-
-	public List<OrderItemEntity> getOrderItems() {
-	    return orderItems;
-	}
-
-	public void setOrderItems(List<OrderItemEntity> orderItems) {
-	    this.orderItems = orderItems;
-	}
-	
+	}	
 }
