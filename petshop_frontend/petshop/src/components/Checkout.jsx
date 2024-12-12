@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Grid,
-  TextField,
   Typography,
   Button,
   Paper,
@@ -16,40 +15,23 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import imagePlaceholder from "../assets/image.png";
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: "#FFD700",
-    },
-    secondary: {
-      main: "#000",
-    },
-    background: {
-      default: "#FFF8E1",
-    },
+    primary: { main: "#FFD700" },
+    secondary: { main: "#000" },
+    background: { default: "#FFF8E1" },
   },
   typography: {
     fontFamily: "'Roboto', sans-serif",
-    button: {
-      textTransform: "none",
-    },
+    button: { textTransform: "none" },
   },
 });
-// TEMPORARY!! REMOVE ONCE BACKEND IS APPLIED
-const CheckoutPage = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    address: "",
-    city: "",
-    postalCode: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-  });
 
+const CheckoutPage = () => {
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -58,34 +40,73 @@ const CheckoutPage = () => {
     orderSummary: {},
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  useEffect(() => {
+    const userId = localStorage.getItem('id');
+
+    axios
+      .get(`http://localhost:8080/auth/user/findById/${userId}`)
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem('id');
+    
+    if (selectedItems.length === 0) {
+      alert("No items to order. Please go back and add items to the cart.");
+      return;
+    }
+
+    const orderItems = selectedItems.map((item) => ({
+      orderItemName: item.product.productName,
+      orderItemImage: item.product.productImage || imagePlaceholder,
+      price: item.product.productPrice,
+      quantity: item.quantity,
+    }));
+
+    const orderDate = new Date().toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
+
+    const orderData = {
+      customerDetails: user,
+      orderItems,
+      orderSummary,
+      orderDate,
+      orderStatus: "To Receive",
+      paymentMethod: "Cash on Delivery",
+      totalPrice: orderSummary.total,
+      user: user
+    };
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/order/postOrderRecord", orderData);
+
+      if (response.status === 200) { 
+        alert("Order successfully placed!");
+        navigate("/MyPurchases", { state: { orders: response.data } });
+      } else {
+        alert("Failed to place the order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error placing the order:", error);
+      alert("An error occurred while placing the order.");
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert("Order placed successfully!");
-  };
+  if (!user) {
+    return <Typography variant="h6">Loading user data...</Typography>;
+  }
 
   return (
     <ThemeProvider theme={theme}>
-      <Box
-        sx={{
-          width: "100vw",
-          minHeight: "100vh",
-          backgroundColor: "background.default",
-          padding: { xs: 2, md: 6 },
-          boxSizing: "border-box",
-        }}
-      >
+      <Box sx={{ width: "100vw", minHeight: "100vh", backgroundColor: "background.default", padding: { xs: 2, md: 6 }, boxSizing: "border-box" }}>
         <Box maxWidth="lg" margin="0 auto">
           <Box display="flex" justifyContent="flex-start">
-            <IconButton
-              color="secondary"
-              onClick={() => navigate(-1)} // Navigate back
-              sx={{ marginBottom: 2 }}
-            >
+            <IconButton color="secondary" onClick={() => navigate(-1)} sx={{ marginBottom: 2 }}>
               <ArrowBackIcon />
             </IconButton>
           </Box>
@@ -105,27 +126,11 @@ const CheckoutPage = () => {
                   Order Summary
                 </Typography>
 
-                {/* products list */}
                 <List>
                   {selectedItems.map((item, index) => (
                     <ListItem key={index}>
-                      {/* image */}
-                      <Box
-                        component="img"
-                        src={item.product.productImage || imagePlaceholder}
-                        alt={item.product.productName}
-                        sx={{
-                          width: 56,
-                          height: 56,
-                          objectFit: "contain",
-                          marginRight: 2,
-                        }}
-                      />
-                      {/* product name and price*/}
-                      <ListItemText
-                        primary={item.product.productName}
-                        secondary={`₱${item.product.productPrice} x ${item.quantity}`}
-                      />
+                      <Box component="img" src={item.product.productImage || imagePlaceholder} alt={item.product.productName} sx={{ width: 56, height: 56, objectFit: "contain", marginRight: 2 }} />
+                      <ListItemText primary={item.product.productName} secondary={`₱${item.product.productPrice} x ${item.quantity}`} />
                     </ListItem>
                   ))}
                 </List>
@@ -133,128 +138,52 @@ const CheckoutPage = () => {
                 <Divider sx={{ marginY: 2 }} />
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="h6">Subtotal</Typography>
-                  <Typography variant="h6" color="secondary">
-                    ₱{orderSummary.subtotal}
-                  </Typography>
+                  <Typography variant="h6" color="secondary">₱{orderSummary.subtotal}</Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="h6">Shipping Fee</Typography>
-                  <Typography variant="h6" color="secondary">
-                    ₱{orderSummary.shippingFee}
-                  </Typography>
+                  <Typography variant="h6" color="secondary">₱{orderSummary.shippingFee}</Typography>
                 </Box>
                 <Divider />
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="h6">Total</Typography>
-                  <Typography variant="h6" color="secondary">
-                    ₱{orderSummary.total}
-                  </Typography>
+                  <Typography variant="h6" color="secondary">₱{orderSummary.total}</Typography>
                 </Box>
               </Paper>
             </Grid>
 
-            {/* BILLING FORM */}
+            {/* BILLING DETAILS */}
             <Grid item xs={12} md={5}>
               <Paper elevation={4} sx={{ padding: 4, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom>
                   Billing & Shipping Details
                 </Typography>
+                <br />
                 <form onSubmit={handleSubmit}>
+                  {/* NGAN SA TAG IYA SA ACCOUNT */}
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      <TextField
-                        label="Full Name"
-                        name="fullName"
-                        fullWidth
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Email"
-                        name="email"
-                        fullWidth
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Address"
-                        name="address"
-                        fullWidth
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        label="City"
-                        name="city"
-                        fullWidth
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        label="Postal Code"
-                        name="postalCode"
-                        fullWidth
-                        value={formData.postalCode}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="h6" gutterBottom>
-                        Payment Details
+                      <Typography variant="body1" color="secondary">
+                        <strong>Full Name:</strong> {user.firstName} {user.lastName}
                       </Typography>
                     </Grid>
+
+                    {/* EMAIL SA TAG IYA SA ACCOUNT */}
                     <Grid item xs={12}>
-                      <TextField
-                        label="Card Number"
-                        name="cardNumber"
-                        fullWidth
-                        value={formData.cardNumber}
-                        onChange={handleInputChange}
-                        required
-                      />
+                      <Typography variant="body1" color="secondary">
+                        <strong>Email:</strong> {user.email}
+                      </Typography>
                     </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        label="Expiry Date (MM/YY)"
-                        name="expiryDate"
-                        fullWidth
-                        value={formData.expiryDate}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        label="CVV"
-                        name="cvv"
-                        fullWidth
-                        value={formData.cvv}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Grid>
+                    
+                    {/* ADDRESS KUNG ASA SYA GAPUYO HALA STALKER */}
                     <Grid item xs={12}>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        sx={{ fontSize: "1rem", padding: 1.5 }}
-                      >
+                      <Typography variant="body1" color="secondary">
+                        <strong>Address:</strong> {user.address?.streetBuildingHouseNo} {user.address?.barangay}, {user.address?.city} City, Region {user.address?.region}, {user.address?.postalCode}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: "1rem", padding: 1.5 }}>
                         Place Order
                       </Button>
                     </Grid>

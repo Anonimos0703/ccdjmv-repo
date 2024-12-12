@@ -10,12 +10,10 @@ public class OrderItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderItemID;
+    private String orderItemName;
+    private String orderItemImage;
+    private double price;
     private int quantity;
-
-//    MIGHT CHANGE TO CART FOR CHECKOUT
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
-    private ProductEntity product;
 
     @JsonBackReference
     @ManyToOne
@@ -26,8 +24,11 @@ public class OrderItemEntity {
         super();
     }
 
-    public OrderItemEntity(int orderItemID, int quantity) {
+    public OrderItemEntity(int orderItemID, String orderItemName, String orderItemImage, double price, int quantity) {
         this.orderItemID = orderItemID;
+        this.orderItemName = orderItemName;
+        this.orderItemImage = orderItemImage;
+        this.price = price;
         this.quantity = quantity;
     }
 
@@ -39,20 +40,36 @@ public class OrderItemEntity {
         this.orderItemID = orderItemID;
     }
 
+    public String getOrderItemName() {
+        return orderItemName;
+    }
+
+    public void setOrderItemName(String orderItemName) {
+        this.orderItemName = orderItemName;
+    }
+
+    public String getOrderItemImage() {
+        return orderItemImage;
+    }
+
+    public void setOrderItemImage(String orderItemImage) {
+        this.orderItemImage = orderItemImage;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public ProductEntity getProduct() {
-        return product;
-    }
-
-    public void setProduct(ProductEntity product) {
-        this.product = product;
     }
 
     public OrderEntity getOrder() {

@@ -34,6 +34,9 @@ public class OrderItemService {
         try {
             orderItem = oirepo.findById(id).get();
 
+            orderItem.setOrderItemName(newOrderItemDetails.getOrderItemName());
+            orderItem.setOrderItemImage(newOrderItemDetails.getOrderItemImage());
+            orderItem.setPrice(newOrderItemDetails.getPrice());
             orderItem.setQuantity(newOrderItemDetails.getQuantity());
         } catch(NoSuchElementException nex) {
             throw new NameNotFoundException("Order " + id + " not found");
