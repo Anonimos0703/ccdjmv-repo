@@ -59,7 +59,7 @@ function App() {
   return (
      
       <Router>
-        <AuthProvider> 
+         
         <AdminAuthProvider>
         <Routes>
           <Route
@@ -185,7 +185,7 @@ function App() {
             />
         </Routes>
         </AdminAuthProvider>
-        </AuthProvider>
+         
       </Router>
     
   );

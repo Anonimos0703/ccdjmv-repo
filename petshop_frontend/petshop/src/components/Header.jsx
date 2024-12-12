@@ -34,7 +34,7 @@ export default function Header({ username, role, userId }) {
   const pawPositions = [
     {
       top: "5%",
-      left: "5%",
+      left: "30%",
       width: "80px",
       opacity: 0.2,
       transform: "rotate(-20deg)",
@@ -96,9 +96,20 @@ export default function Header({ username, role, userId }) {
     }
   };
 
+  // const handleDrawerToggle = () => {
+  //   setDrawerOpen(!drawerOpen);
+  // };
+  
   const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
+    setDrawerOpen((prevDrawerOpen) => {
+      if (prevDrawerOpen) {
+        // When closing the drawer, shift focus to a safe element
+        document.getElementById('drawer-toggle-button')?.focus();
+      }
+      return !prevDrawerOpen;
+    });
   };
+  
 
   const handleMenuOptionClick = (route) => {
     setDrawerOpen(false);
@@ -185,6 +196,7 @@ export default function Header({ username, role, userId }) {
                 anchor="right"
                 open={drawerOpen}
                 onClose={handleDrawerToggle}
+                disableEnforceFocus
               >
                 <Box
                   sx={{
