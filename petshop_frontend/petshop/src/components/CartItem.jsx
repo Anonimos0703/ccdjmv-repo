@@ -29,7 +29,7 @@ const LightTooltip = styled(({ className, ...props }) => (
 
 export default function CartItem(props) {
   const handleCheckboxChange = (event) => {
-    props.onCheckChange(props.itemId, event.target.checked); // Notify parent about the checkbox change
+    props.onCheckChange(props.itemId, event.target.checked);
   };
 
   const handleIncreaseQuantity = () => {
@@ -61,7 +61,7 @@ export default function CartItem(props) {
         <Paper
           square={false}
           variant="elevation"
-          elevation={12}
+          elevation={3}
           sx={{ padding: 2 }}
         >
           {/* Checkbox */}
@@ -72,7 +72,7 @@ export default function CartItem(props) {
           >
             <Grid item>
               <Checkbox
-                checked={props.isSelected} // This indicates whether the checkbox is selected
+                checked={props.isSelected}
                 onChange={handleCheckboxChange}
               />
             </Grid>

@@ -16,6 +16,7 @@ import CartItem from "./CartItem";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import EmptyCart from "./EmptyCart";
 
 function Cart() {
   const [cartItems, setCartItem] = useState([]);
@@ -210,6 +211,7 @@ function Cart() {
         alignItems: "center",
         width: "96vw",
         padding: "2rem",
+        height: "100vh",
       }}
     >
       <Toaster position="top-center" duration={2500} />
@@ -226,73 +228,77 @@ function Cart() {
       </Box>
 
       {/* Main Grid Layout */}
-      <Grid container spacing={2} justifyContent="center">
-        {/* Cart Items */}
-        <Grid item xs={12} md={8}>
-          <Grid container spacing={2}>
-            {cartItems.map((item, index) => (
-              <CartItem
-                key={index}
-                price={item.product?.productPrice}
-                title={item.product?.productName}
-                quantity={item.quantity}
-                image={item.product?.productImage}
-                itemId={item.cartItemId}
-                isSelected={selectedItems.has(item.cartItemId)}
-                onCheckChange={handleCheckChange}
-                onQuantityChange={handleQuantityChange}
-                onDelete={handleDeleteItem}
-                availableStock={item.product?.quantity} // Pass stock quantity
-              />
-            ))}
+      {cartItems.length === 0 ? (
+        <EmptyCart />
+      ) : (
+        <Grid container spacing={2} justifyContent="center">
+          {/* Cart Items */}
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={2}>
+              {cartItems.map((item, index) => (
+                <CartItem
+                  key={index}
+                  price={item.product?.productPrice}
+                  title={item.product?.productName}
+                  quantity={item.quantity}
+                  image={item.product?.productImage}
+                  itemId={item.cartItemId}
+                  isSelected={selectedItems.has(item.cartItemId)}
+                  onCheckChange={handleCheckChange}
+                  onQuantityChange={handleQuantityChange}
+                  onDelete={handleDeleteItem}
+                  availableStock={item.product?.quantity} // Pass stock quantity
+                />
+              ))}
+            </Grid>
+          </Grid>
+
+          {/* Order Summary */}
+          <Grid
+            item
+            xs={12}
+            md={3}
+            sx={{
+              position: "sticky",
+              top: "140px",
+              zIndex: 2, // Ensure it has a background to stand out
+              padding: "10px", // Add padding to make the content look better
+              height: "fit-content", // Ensures the card doesn't take up unnecessary space
+              borderRadius: "16px",
+            }}
+          >
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="h6">Summary</Typography>
+                <Divider style={{ margin: "10px 0" }} />
+                <Typography variant="body2">
+                  Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
+                </Typography>
+                <Typography variant="body2">
+                  Shipping Fee: ₱{getShippingFee()}
+                </Typography>
+
+                <Divider style={{ margin: "10px 0" }} />
+                <Typography variant="h6">Total: ₱{getTotal()}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  VAT included, where applicable
+                </Typography>
+
+                <Button
+                  variant="contained"
+                  color="warning"
+                  fullWidth
+                  style={{ marginTop: "15px" }}
+                  onClick={handleCheckoutClick}
+                  disabled={selectedItems.size === 0}
+                >
+                  PROCEED TO CHECKOUT
+                </Button>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
-
-        {/* Order Summary */}
-        <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{
-            position: "sticky",
-            top: "140px",
-            zIndex: 2, // Ensure it has a background to stand out
-            padding: "10px", // Add padding to make the content look better
-            height: "fit-content", // Ensures the card doesn't take up unnecessary space
-            borderRadius: "16px",
-          }}
-        >
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6">Summary</Typography>
-              <Divider style={{ margin: "10px 0" }} />
-              <Typography variant="body2">
-                Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
-              </Typography>
-              <Typography variant="body2">
-                Shipping Fee: ₱{getShippingFee()}
-              </Typography>
-
-              <Divider style={{ margin: "10px 0" }} />
-              <Typography variant="h6">Total: ₱{getTotal()}</Typography>
-              <Typography variant="caption" color="text.secondary">
-                VAT included, where applicable
-              </Typography>
-
-              <Button
-                variant="contained"
-                color="warning"
-                fullWidth
-                style={{ marginTop: "15px" }}
-                onClick={handleCheckoutClick}
-                disabled={selectedItems.size === 0}
-              >
-                PROCEED TO CHECKOUT
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      )}
 
       {/* Confirmation dialog for Delete Cart Item */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
