@@ -106,9 +106,7 @@ export default function Header({ username, role, userId }) {
   };
 
   const handleLogout = (id) => {
-    if (userId) {
-      localStorage.removeItem(`userAddress_${userId}`);
-    }
+    localStorage.clear();
     setDrawerOpen(false);
     navigate("/auth");
   };
@@ -137,6 +135,38 @@ export default function Header({ username, role, userId }) {
           >
             Tails and Whiskers
           </Typography>
+          <Button
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => navigate("/")}
+                      >
+                        Home
+                      </Button>
+
+                      <Button
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => navigate("/products")}
+                      >
+                        Products
+                      </Button>
+                      <Button
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => navigate("/aboutus")}
+                      >
+                        About Us
+                      </Button>
+          
 
           {username ? (
             <>
@@ -181,7 +211,7 @@ export default function Header({ username, role, userId }) {
                         color: "solid black",
                         fontWeight: "bold",
                         fontSize: "17px",
-                        marginBottom: 3,
+                        marginBottom: 0,
                       }}
                     >
                       <Avatar
@@ -197,92 +227,38 @@ export default function Header({ username, role, userId }) {
                       />
                       {username}
                     </ListItem>
-                    <ListItem>
-                      <ListItemText
-                        primary="Overview:"
-                        primaryTypographyProps={{
-                          fontStyle: "italic",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </ListItem>
-
-                    <ListItem sx={{ padding: 0, marginLeft: "13px" }}>
-                      <Button
-                        sx={{
-                          color: "black",
-                          textTransform: "none",
-                          fontSize: "16px",
-                        }}
-                        onClick={() => navigate("/")}
-                      >
-                        Home
-                      </Button>
-                    </ListItem>
-                    <ListItem sx={{ padding: 0, marginLeft: "15px" }}>
-                      <Button
-                        sx={{
-                          color: "black",
-                          textTransform: "none",
-                          fontSize: "16px",
-                        }}
-                        onClick={() => navigate("/products")}
-                      >
-                        Products
-                      </Button>
-                    </ListItem>
-                    <ListItem sx={{ padding: 0, marginLeft: "15px" }}>
-                      <Button
-                        sx={{
-                          color: "black",
-                          textTransform: "none",
-                          fontSize: "16px",
-                        }}
-                        onClick={() => navigate("/aboutus")}
-                      >
-                        About Us
-                      </Button>
-                    </ListItem>
-
-                    <ListItem>
-                      <ListItemText
-                        primary="Personal:"
-                        primaryTypographyProps={{
-                          fontStyle: "italic",
-                          fontWeight: "bold",
-                        }}
-                      />
-                    </ListItem>
                     <ListItem
                       button
                       onClick={() => handleMenuOptionClick("/profile")}
-                      sx={{ marginLeft: "10px" }}
+                      sx={{ marginLeft: "5px" }}
                     >
                       <ListItemText primary="Profile" />
                     </ListItem>
                     <ListItem
                       button
                       onClick={() => handleMenuOptionClick("/cart")}
-                      sx={{ marginLeft: "10px" }}
+                      sx={{ marginLeft: "5px" }}
                     >
                       <ListItemText primary="Cart" />
                     </ListItem>
                     <ListItem
                       button
                       onClick={() => handleMenuOptionClick("/MyPurchases")}
+                      sx={{ marginLeft: "5px" }}
                     >
                       <ListItemText primary="My Purchases" />
                     </ListItem>
                     <ListItem
                       button
                       onClick={() => handleMenuOptionClick("/appointmentslist")}
+                      sx={{ marginLeft: "5px" }}
                     >
                       <ListItemText primary="Appointments" />
                     </ListItem>
                     <ListItem
                       button
                       onClick={handleLogout}
-                      sx={{ marginLeft: "10px" }}
+                      sx={{ marginLeft: "5px" }}
                     >
                       <ListItemText primary="Log Out" />
                     </ListItem>
@@ -304,24 +280,9 @@ export default function Header({ username, role, userId }) {
             </>
           ) : (
             <>
-              <Button
-                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-                onClick={() => navigate("/")}
-              >
-                Home
-              </Button>
-              <Button
-                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-                onClick={() => navigate("/products")}
-              >
-                Products
-              </Button>
-              <Button
-                sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
-                onClick={() => navigate("/aboutus")}
-              >
-                About Us
-              </Button>
+              
+              
+             
               <Button
                 sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
                 onClick={() => navigate("/auth")}

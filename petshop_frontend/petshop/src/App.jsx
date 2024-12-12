@@ -22,6 +22,7 @@ import Inventory from './components/Inventory';
 import Products from './components/Products'
 import OrderList from './components/Orders';
 import OrderDetails from './components/OrderDetails'; 
+import {AuthProvider} from './components/AuthProvider';
 
 function Layout({ children, username, role }) {
   return (
@@ -58,6 +59,7 @@ function App() {
   return (
      
       <Router>
+        <AuthProvider> 
         <AdminAuthProvider>
         <Routes>
           <Route
@@ -183,6 +185,7 @@ function App() {
             />
         </Routes>
         </AdminAuthProvider>
+        </AuthProvider>
       </Router>
     
   );
