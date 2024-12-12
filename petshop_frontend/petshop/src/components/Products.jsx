@@ -198,6 +198,10 @@ const Products = () => {
 
   const handleAddToCart = async (selectedProduct, itemQuantity) => {
     const cartId = localStorage.getItem("id");
+    if(!cartId){
+      toast.warning("User is not logged in. Please log in and try again");
+      return;
+    }
     if (itemQuantity <= 0) {
       toast.warning('Quantity must be greater than 0!');
       return;

@@ -17,6 +17,32 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { Toaster, toast } from 'sonner';
 import StarDisplay from "./StarDisplay";
+import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8B4513',
+      light: '#D2B48C',
+    },
+    secondary: {
+      main: '#FFA500',
+    },
+    background: {
+      default: '#FFF5E6',
+      paper: '#FFFFFF',
+    },
+  },
+  typography: {
+    fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+});
+
+const PageWrapper = styled(Box)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
+  minHeight: '100vh',
+  padding: theme.spacing(4),
+}));
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -44,7 +70,6 @@ const ProductDetail = () => {
       try {
         const response = await fetch(`http://localhost:8080/api/review/getReviewsByProductId/${productId}`);
         const data = await response.json();
-        // Check if data is an array before setting reviews
         if (Array.isArray(data)) {
           setReviews(data);
         } else {
@@ -121,76 +146,78 @@ const ProductDetail = () => {
   if (!product) return <Typography>Loading...</Typography>;
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Toaster position="top-center" duration={2500}/>
-      <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
-        <CardMedia
-          component="img"
-          sx={{ width: "300px", height: "300px", objectFit: "cover", mb: 2 }}
-          image={product.productImage || "/placeholder-image.png"}
-          alt={product.productName}
-        />
-        <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
-            {product.productName}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-            {product.description}
-          </Typography>
-          <Typography variant="h6" color="primary">
-            Price: ₱{product.productPrice.toFixed(2)}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Available Stock: {product.quantity}
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-            <IconButton onClick={handleDecreaseQuantity} disabled={itemQuantity <= 1}>
-              <RemoveIcon />
-            </IconButton>
-            <TextField
-              variant="outlined"
-              size="small"
-              value={itemQuantity}
-              inputProps={{ style: { textAlign: "center" } }}
-              sx={{ width: 60, mx: 1 }}
-            />
-            <IconButton onClick={handleIncreaseQuantity} disabled={itemQuantity >= product.quantity}>
-              <AddIcon />
-            </IconButton>
-          </Box>
-          <Button 
-            variant="contained" 
-            color="primary"
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </Button>
-        </CardContent>
-      </Card>
+    <ThemeProvider theme={theme}>
+      <PageWrapper>
+        <Toaster position="top-center" duration={2500}/>
+        <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 4 }}>
+          <CardMedia
+            component="img"
+            sx={{ width: "300px", height: "300px", objectFit: "cover", mb: 2 }}
+            image={product.productImage || "/placeholder-image.png"}
+            alt={product.productName}
+          />
+          <CardContent>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
+              {product.productName}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+              {product.description}
+            </Typography>
+            <Typography variant="h6" color="primary">
+              Price: ₱{product.productPrice.toFixed(2)}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Available Stock: {product.quantity}
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+              <IconButton onClick={handleDecreaseQuantity} disabled={itemQuantity <= 1}>
+                <RemoveIcon />
+              </IconButton>
+              <TextField
+                variant="outlined"
+                size="small"
+                value={itemQuantity}
+                inputProps={{ style: { textAlign: "center" } }}
+                sx={{ width: 60, mx: 1 }}
+              />
+              <IconButton onClick={handleIncreaseQuantity} disabled={itemQuantity >= product.quantity}>
+                <AddIcon />
+              </IconButton>
+            </Box>
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </Button>
+          </CardContent>
+        </Card>
 
-      <Divider sx={{ mb: 4 }} />
+        <Divider sx={{ mb: 4 }} />
 
-      <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
-        Reviews
-      </Typography>
-      <Grid container spacing={2}>
-        {reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <Grid item xs={12} key={index}>
-              <Card>
-                <CardContent>
-                  <Typography variant="body2"> {review.username}</Typography><br></br>
-                  <StarDisplay rating={review.ratings} /> {/* Display star rating */}
-                  <Typography variant="body2">Comment: {review.comment}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))
-        ) : (
-          <Typography>No reviews available for this product.</Typography>
-        )}
-      </Grid>
-    </Box>
+        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+          Reviews
+        </Typography>
+        <Grid container spacing={2}>
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <Grid item xs={12} key={index}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="body2"> {review.username}</Typography><br></br>
+                    <StarDisplay rating={review.ratings} /> {/* Display star rating */}
+                    <Typography variant="body2">Comment: {review.comment}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Typography>No reviews available for this product.</Typography>
+          )}
+        </Grid>
+      </PageWrapper>
+    </ThemeProvider>
   );
 };
 

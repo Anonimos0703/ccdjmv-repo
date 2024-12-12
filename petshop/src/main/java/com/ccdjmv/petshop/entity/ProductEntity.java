@@ -82,27 +82,39 @@ public class ProductEntity {
 		this.quantity = quantity;
 	}
 
-	    public List<ProductReviewEntity> getProductReview(){
-	    	return productreview;
-	    }
-	    
-	    public void setProductReview(List<ProductReviewEntity>productreview) {
-	    	this.productreview = productreview;
-	    }
-	    
-	    public String getProductImage() {
-	        return productImage;
-	    }
-	    
-	    public void setProductImage(String productImage) {
-	        this.productImage = productImage;
-	    }
+    public List<ProductReviewEntity> getProductReview(){
+    	return productreview;
+    }
+    
+    public void setProductReview(List<ProductReviewEntity>productreview) {
+    	this.productreview = productreview;
+    }
+    
+    public String getProductImage() {
+        return productImage;
+    }
+    
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
 
-		public List<CartItemEntity> getCartItems() {
-			return cartItems;
-		}
+	public List<CartItemEntity> getCartItems() {
+		return cartItems;
+	}
 
-		public void setCartItems(List<CartItemEntity> cartItems) {
-			this.cartItems = cartItems;
-		}
+	public void setCartItems(List<CartItemEntity> cartItems) {
+		this.cartItems = cartItems;
+	}
+		
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	private List<OrderItemEntity> orderItems;
+
+	public List<OrderItemEntity> getOrderItems() {
+	    return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItemEntity> orderItems) {
+	    this.orderItems = orderItems;
+	}
+	
 }
