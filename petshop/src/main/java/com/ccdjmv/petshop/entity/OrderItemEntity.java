@@ -17,6 +17,9 @@ public class OrderItemEntity {
 
     private double price;
     private int quantity;
+   
+    @Column(name = "product_id", nullable = true)
+    private String productId;
 
     @JsonBackReference
     @ManyToOne
@@ -27,59 +30,73 @@ public class OrderItemEntity {
         super();
     }
 
-    public OrderItemEntity(int orderItemID, String orderItemName, String orderItemImage, double price, int quantity) {
-        this.orderItemID = orderItemID;
-        this.orderItemName = orderItemName;
-        this.orderItemImage = orderItemImage;
-        this.price = price;
-        this.quantity = quantity;
-    }
+	public OrderItemEntity(int orderItemID, String orderItemName, String orderItemImage, double price, int quantity,
+			String productId, OrderEntity order) {
+		super();
+		this.orderItemID = orderItemID;
+		this.orderItemName = orderItemName;
+		this.orderItemImage = orderItemImage;
+		this.price = price;
+		this.quantity = quantity;
+		this.productId = productId;
+		this.order = order;
+	}
 
-    public int getOrderItemID() {
-        return orderItemID;
-    }
+	public int getOrderItemID() {
+		return orderItemID;
+	}
 
-    public void setOrderItemID(int orderItemID) {
-        this.orderItemID = orderItemID;
-    }
+	public void setOrderItemID(int orderItemID) {
+		this.orderItemID = orderItemID;
+	}
 
-    public String getOrderItemName() {
-        return orderItemName;
-    }
+	public String getOrderItemName() {
+		return orderItemName;
+	}
 
-    public void setOrderItemName(String orderItemName) {
-        this.orderItemName = orderItemName;
-    }
+	public void setOrderItemName(String orderItemName) {
+		this.orderItemName = orderItemName;
+	}
 
-    public String getOrderItemImage() {
-        return orderItemImage;
-    }
+	public String getOrderItemImage() {
+		return orderItemImage;
+	}
 
-    public void setOrderItemImage(String orderItemImage) {
-        this.orderItemImage = orderItemImage;
-    }
+	public void setOrderItemImage(String orderItemImage) {
+		this.orderItemImage = orderItemImage;
+	}
 
-    public double getPrice() {
-        return price;
-    }
+	public double getPrice() {
+		return price;
+	}
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
-    public int getQuantity() {
-        return quantity;
-    }
+	public int getQuantity() {
+		return quantity;
+	}
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 
-    public OrderEntity getOrder() {
-        return order;
-    }
+	public String getProductId() {
+		return productId;
+	}
 
-    public void setOrder(OrderEntity order) {
-        this.order = order;
-    }
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+
+	public OrderEntity getOrder() {
+		return order;
+	}
+
+	public void setOrder(OrderEntity order) {
+		this.order = order;
+	}
+
+    
 }
