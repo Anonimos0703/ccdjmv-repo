@@ -189,11 +189,11 @@ const AboutUs = () => {
           <Grid container spacing={3} justifyContent="center">
             {[
               { name: "Charles", email: "charleswilliam.sevenial@cit.edu", id: "22-3559-292", image: charles },
-              { name: "Jared", email: "jaredchester.canasa@cit.edu", id: "456-988-7273", image: jaredd },
-              { name: "Kyrie", email: "vincekyrie.seville@cit.edu", id: "332-4452-323", image: kyrie },
-              { name: "Charles Dominic", email: "charlesdominic.hordista@cit.edu", id: "332-4452-323", image: hordista },
-              { name: "Dione Alfred", email: "dionealfred.cabigas@cit.edu", id: "332-4452-323", image: cabigas },
-              { name: "Matt Jude Augustine", email: "mattjudeaugustine.getigan@cit.edu", id: "332-4452-323", image: getigan },
+              { name: "Jared", email: "jaredchester.canasa@cit.edu", id: "22-1381-643", image: jaredd },
+              { name: "Kyrie", email: "vincekyrie.seville@cit.edu", id: "2009-40032", image: kyrie },
+              { name: "Charles Dominic", email: "charlesdominic.hordista@cit.edu", id: "20-4351-220", image: hordista },
+              { name: "Dione Alfred", email: "dionealfred.cabigas@cit.edu", id: "21-5093-745", image: cabigas },
+              { name: "Matt Jude Augustine", email: "mattjudeaugustine.getigan@cit.edu", id: "16-0733-320", image: getigan },
             ].map((member, index) => (
               <Grid item xs={12} sm={6} md={4} key={index} textAlign="center">
                 <Box sx={{ 
