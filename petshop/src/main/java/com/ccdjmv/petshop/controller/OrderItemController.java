@@ -1,11 +1,13 @@
 package com.ccdjmv.petshop.controller;
 
 import com.ccdjmv.petshop.entity.OrderItemEntity;
+import com.ccdjmv.petshop.repository.OrderItemRepository;
 import com.ccdjmv.petshop.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(method = RequestMethod.GET, path="/api/orderItem")
@@ -38,4 +40,12 @@ public class OrderItemController {
     public String deleteOrderItem(@PathVariable int id) {
         return oiserv.deleteItemOrder(id);
     }
+    
+    // UPDATE
+    @PutMapping("/updateIsRated/{id}")
+    public OrderItemEntity updateIsRated(@PathVariable int id, @RequestBody OrderItemEntity newOrderItemDetails) {
+        return oiserv.putOrderItemDetails(id, newOrderItemDetails);
+    }
+    
+   
 }

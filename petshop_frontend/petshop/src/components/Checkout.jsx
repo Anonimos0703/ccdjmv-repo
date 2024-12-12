@@ -19,22 +19,22 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
 
-import cart from '../assets/cart.png';
-import paw1 from '../assets/paw1.png';
+import cart from "../assets/cart.png";
+import paw1 from "../assets/paw1.png";
 import imagePlaceholder from "../assets/image.png";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#8B4513',
-      light: '#D2B48C',
+      main: "#8B4513",
+      light: "#D2B48C",
     },
     secondary: {
-      main: '#FFA500',
+      main: "#FFA500",
     },
     background: {
-      default: '#FFF5E6',
-      paper: '#FFFFFF',
+      default: "#FFF5E6",
+      paper: "#FFFFFF",
     },
   },
   typography: {
@@ -45,7 +45,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          textTransform: 'none',
+          textTransform: "none",
           fontWeight: 600,
         },
       },
@@ -54,10 +54,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
-          transition: 'transform 0.3s ease',
-          '&:hover': {
-            transform: 'translateY(-5px)',
+          boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
+          transition: "transform 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-5px)",
           },
         },
       },
@@ -67,16 +67,16 @@ const theme = createTheme({
 
 const ScatteredPaws = ({ count = 10 }) => {
   const positions = [
-    { top: '5%', left: '3%' },
-    { top: '10%', right: '5%' },
-    { bottom: '15%', left: '7%' },
-    { bottom: '10%', right: '3%' },
-    { top: '20%', left: '10%' },
-    { bottom: '25%', right: '10%' },
-    { top: '30%', left: '2%' },
-    { bottom: '5%', right: '15%' },
-    { top: '15%', right: '12%' },
-    { bottom: '20%', left: '15%' },
+    { top: "5%", left: "3%" },
+    { top: "10%", right: "5%" },
+    { bottom: "15%", left: "7%" },
+    { bottom: "10%", right: "3%" },
+    { top: "20%", left: "10%" },
+    { bottom: "25%", right: "10%" },
+    { top: "30%", left: "2%" },
+    { bottom: "5%", right: "15%" },
+    { top: "15%", right: "12%" },
+    { bottom: "20%", left: "15%" },
   ];
 
   return (
@@ -88,9 +88,9 @@ const ScatteredPaws = ({ count = 10 }) => {
           src={paw1}
           alt="Paw Icon"
           sx={{
-            position: 'absolute',
-            width: '30px',
-            height: '30px',
+            position: "absolute",
+            width: "30px",
+            height: "30px",
             opacity: 0.3,
             zIndex: 1,
             ...pos,
@@ -103,27 +103,27 @@ const ScatteredPaws = ({ count = 10 }) => {
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
-  minHeight: '100vh',
+  minHeight: "100vh",
   padding: theme.spacing(4),
 }));
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   marginBottom: theme.spacing(4),
 }));
 
-const CartIcon = styled('img')({
-  width: '60px',
-  height: '60px',
-  marginRight: '15px',
+const CartIcon = styled("img")({
+  width: "60px",
+  height: "60px",
+  marginRight: "15px",
 });
 
-const PawPrint = styled('img')(({ theme }) => ({
-  position: 'absolute',
-  width: '100px',
-  height: 'auto',
+const PawPrint = styled("img")(({ theme }) => ({
+  position: "absolute",
+  width: "100px",
+  height: "auto",
   opacity: 0.1,
   zIndex: -1,
 }));
@@ -138,12 +138,22 @@ const CheckoutPage = () => {
     orderSummary: {},
   };
 
+  const clearState = () => {
+    navigate(location.pathname, { state: { selectedItems: [], orderSummary: {} } });
+  };
+
   useEffect(() => {
-    const userId = localStorage.getItem('id');
-    if(!userId){
+    const userId = localStorage.getItem("id");
+
+    if (!userId) {
       navigate("/");
       return;
     }
+    if (selectedItems.length === 0) {
+      navigate("/cart");
+      return;
+    }
+
     axios
       .get(`http://localhost:8080/auth/user/findById/${userId}`)
       .then((response) => {
@@ -156,8 +166,8 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userId = localStorage.getItem('id');
-    
+    const userId = localStorage.getItem("id");
+
     if (selectedItems.length === 0) {
       toast.warning("No items to order. Please go back and add items to the cart.");
       return;
@@ -171,7 +181,7 @@ const CheckoutPage = () => {
       productId: item.product.productID,
     }));
 
-    const orderDate = new Date().toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
+    const orderDate = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
     const orderData = {
       orderItems,
@@ -179,14 +189,31 @@ const CheckoutPage = () => {
       orderStatus: "To Receive",
       paymentMethod: "Cash on Delivery",
       totalPrice: orderSummary.total,
-      user: user
+      user: user,
     };
 
     try {
       const response = await axios.post("http://localhost:8080/api/order/postOrderRecord", orderData);
 
-      if (response.status === 200) { 
+      if (response.status === 200) {
         toast.success("Order successfully placed!");
+
+        for (let item of selectedItems) {
+          const cartItemId = item.cartItemId;
+          await axios
+            .delete(`http://localhost:8080/api/cartItem/deleteCartItem/${cartItemId}`)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log(`Cart item ${cartItemId} removed from cart`);
+              }
+            })
+            .catch((error) => {
+              console.error(`Error removing cart item ${cartItemId}:`, error);
+            });
+        }
+
+        clearState();
+
         navigate("/MyPurchases", { state: { orders: response.data } });
       } else {
         toast.error("Failed to place the order. Please try again.");
@@ -210,11 +237,11 @@ const CheckoutPage = () => {
           <Typography
             variant="h3"
             component="h1"
-            sx={{ 
-              textAlign: "center", 
-              fontWeight: 700, 
-              color: 'primary.main',
-              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+            sx={{
+              textAlign: "center",
+              fontWeight: 700,
+              color: "primary.main",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
             }}
           >
             Checkout
@@ -236,7 +263,7 @@ const CheckoutPage = () => {
         <Grid container spacing={4}>
           {/* ORDER SUMMARY */}
           <Grid item xs={12} md={7}>
-            <Paper elevation={4} sx={{ padding: 4, position: 'relative', overflow: 'hidden' }}>
+            <Paper elevation={4} sx={{ padding: 4, position: "relative", overflow: "hidden" }}>
               <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, left: -20 }} />
               <Typography variant="h5" gutterBottom color="primary.main">
                 Order Summary
@@ -245,10 +272,23 @@ const CheckoutPage = () => {
               <List>
                 {selectedItems.map((item, index) => (
                   <ListItem key={index}>
-                    <Box component="img" src={item.product.productImage || imagePlaceholder} alt={item.product.productName} sx={{ width: 56, height: 56, objectFit: "contain", marginRight: 2, borderRadius: 1 }} />
-                    <ListItemText 
-                      primary={<Typography variant="subtitle1" color="text.primary">{item.product.productName}</Typography>}
-                      secondary={<Typography variant="body2" color="text.secondary">₱{item.product.productPrice} x {item.quantity}</Typography>}
+                    <Box
+                      component="img"
+                      src={item.product.productImage || imagePlaceholder}
+                      alt={item.product.productName}
+                      sx={{ width: 56, height: 56, objectFit: "contain", marginRight: 2, borderRadius: 1 }}
+                    />
+                    <ListItemText
+                      primary={
+                        <Typography variant="subtitle1" color="text.primary">
+                          {item.product.productName}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography variant="body2" color="text.secondary">
+                          ₱{item.product.productPrice} x {item.quantity}
+                        </Typography>
+                      }
                     />
                   </ListItem>
                 ))}
@@ -257,23 +297,31 @@ const CheckoutPage = () => {
               <Divider sx={{ marginY: 2 }} />
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="subtitle1">Subtotal</Typography>
-                <Typography variant="subtitle1" color="text.secondary">₱{orderSummary.subtotal}</Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  ₱{orderSummary.subtotal}
+                </Typography>
               </Box>
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="subtitle1">Shipping Fee</Typography>
-                <Typography variant="subtitle1" color="text.secondary">₱{orderSummary.shippingFee}</Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  ₱{orderSummary.shippingFee}
+                </Typography>
               </Box>
               <Divider sx={{ marginY: 2 }} />
               <Box display="flex" justifyContent="space-between">
-                <Typography variant="h6" color="primary.main">Total</Typography>
-                <Typography variant="h6" color="primary.main">₱{orderSummary.total}</Typography>
+                <Typography variant="h6" color="primary.main">
+                  Total
+                </Typography>
+                <Typography variant="h6" color="primary.main">
+                  ₱{orderSummary.total}
+                </Typography>
               </Box>
             </Paper>
           </Grid>
 
           {/* BILLING DETAILS */}
           <Grid item xs={12} md={5}>
-            <Paper elevation={4} sx={{ padding: 4, position: 'relative', overflow: 'hidden' }}>
+            <Paper elevation={4} sx={{ padding: 4, position: "relative", overflow: "hidden" }}>
               <PawPrint src={paw1} alt="Paw Print" sx={{ bottom: -20, right: -20 }} />
               <Typography variant="h5" gutterBottom color="primary.main">
                 Billing & Shipping Details
@@ -292,22 +340,23 @@ const CheckoutPage = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle1" color="text.primary">
-                      <strong>Address:</strong> {user.address?.streetBuildingHouseNo} {user.address?.barangay}, {user.address?.city} City, Region {user.address?.region}, {user.address?.postalCode}
+                      <strong>Address:</strong> {user.address?.streetBuildingHouseNo} {user.address?.barangay},{" "}
+                      {user.address?.city} City, Region {user.address?.region}, {user.address?.postalCode}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button 
-                      type="submit" 
-                      variant="contained" 
-                      color="primary" 
-                      fullWidth 
-                      sx={{ 
-                        fontSize: "1rem", 
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      sx={{
+                        fontSize: "1rem",
                         padding: 1.5,
                         mt: 2,
-                        '&:hover': {
-                          backgroundColor: 'secondary.main',
-                        }
+                        "&:hover": {
+                          backgroundColor: "secondary.main",
+                        },
                       }}
                     >
                       Place Order

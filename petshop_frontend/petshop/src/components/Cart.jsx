@@ -21,23 +21,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import EmptyCart from "./EmptyCart";
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
-import paw1 from '../assets/paw1.png';
-import cart from '../assets/cart.png';
+import paw1 from "../assets/paw1.png";
+import cart from "../assets/cart.png";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#8B4513',
-      light: '#D2B48C',
+      main: "#8B4513",
+      light: "#D2B48C",
     },
     secondary: {
-      main: '#FFA500',
+      main: "#FFA500",
     },
     background: {
-      default: '#FFF5E6',
-      paper: '#FFFFFF',
+      default: "#FFF5E6",
+      paper: "#FFFFFF",
     },
   },
   typography: {
@@ -48,7 +48,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          textTransform: 'none',
+          textTransform: "none",
           fontWeight: 600,
         },
       },
@@ -57,14 +57,14 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
-          transition: 'transform 0.3s ease',
-          '&:hover': {
-            transform: 'translateY(-5px)',
+          boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
+          transition: "transform 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-5px)",
           },
-          backgroundColor: '#FFFFFF',
-          position: 'relative',
-          overflow: 'visible',
+          backgroundColor: "#FFFFFF",
+          position: "relative",
+          overflow: "visible",
         },
       },
     },
@@ -73,16 +73,16 @@ const theme = createTheme({
 
 const ScatteredPaws = ({ count = 10 }) => {
   const positions = [
-    { top: '5%', left: '3%' },
-    { top: '10%', right: '5%' },
-    { bottom: '15%', left: '7%' },
-    { bottom: '10%', right: '3%' },
-    { top: '20%', left: '10%' },
-    { bottom: '25%', right: '10%' },
-    { top: '30%', left: '2%' },
-    { bottom: '5%', right: '15%' },
-    { top: '15%', right: '12%' },
-    { bottom: '20%', left: '15%' },
+    { top: "5%", left: "3%" },
+    { top: "10%", right: "5%" },
+    { bottom: "15%", left: "7%" },
+    { bottom: "10%", right: "3%" },
+    { top: "20%", left: "10%" },
+    { bottom: "25%", right: "10%" },
+    { top: "30%", left: "2%" },
+    { bottom: "5%", right: "15%" },
+    { top: "15%", right: "12%" },
+    { bottom: "20%", left: "15%" },
   ];
 
   return (
@@ -94,9 +94,9 @@ const ScatteredPaws = ({ count = 10 }) => {
           src={paw1}
           alt="Paw Icon"
           sx={{
-            position: 'absolute',
-            width: '30px',
-            height: '30px',
+            position: "absolute",
+            width: "30px",
+            height: "30px",
             opacity: 0.3,
             zIndex: 1,
             ...pos,
@@ -109,27 +109,27 @@ const ScatteredPaws = ({ count = 10 }) => {
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
-  minHeight: '100vh',
+  minHeight: "100vh",
   padding: theme.spacing(4),
 }));
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   marginBottom: theme.spacing(4),
 }));
 
-const CartIcon = styled('img')({
-  width: '60px',
-  height: '60px',
-  marginRight: '15px',
+const CartIcon = styled("img")({
+  width: "60px",
+  height: "60px",
+  marginRight: "15px",
 });
 
-const PawPrint = styled('img')(({ theme }) => ({
-  position: 'absolute',
-  width: '100px',
-  height: 'auto',
+const PawPrint = styled("img")(({ theme }) => ({
+  position: "absolute",
+  width: "100px",
+  height: "auto",
   opacity: 0.1,
   zIndex: -1,
 }));
@@ -150,12 +150,9 @@ function Cart() {
         const updatedCartItems = res.data.cartItems.map((item) => {
           if (item.quantity > item.product.quantity) {
             axios
-              .put(
-                `http://localhost:8080/api/cartItem/systemUpdateCartItem/${item.cartItemId}`,
-                {
-                  quantity: item.product.quantity,
-                }
-              )
+              .put(`http://localhost:8080/api/cartItem/systemUpdateCartItem/${item.cartItemId}`, {
+                quantity: item.product.quantity,
+              })
               .catch((err) => console.error("Error updating quantity:", err));
 
             return {
@@ -203,11 +200,7 @@ function Cart() {
       })
       .then(() => {
         setCartItem((prevItems) =>
-          prevItems.map((item) =>
-            item.cartItemId === itemId
-              ? { ...item, quantity: newQuantity }
-              : item
-          )
+          prevItems.map((item) => (item.cartItemId === itemId ? { ...item, quantity: newQuantity } : item))
         );
       })
       .catch((err) => {
@@ -242,9 +235,7 @@ function Cart() {
           return;
         }
 
-        const selectedItemsDetails = cartItems.filter((item) =>
-          selectedItems.has(item.cartItemId)
-        );
+        const selectedItemsDetails = cartItems.filter((item) => selectedItems.has(item.cartItemId));
 
         const orderSummary = {
           subtotal: getSubtotal(),
@@ -265,13 +256,9 @@ function Cart() {
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       axios
-        .delete(
-          `http://localhost:8080/api/cartItem/deleteCartItem/${itemToDelete}`
-        )
+        .delete(`http://localhost:8080/api/cartItem/deleteCartItem/${itemToDelete}`)
         .then(() => {
-          setCartItem((prevItems) =>
-            prevItems.filter((item) => item.cartItemId !== itemToDelete)
-          );
+          setCartItem((prevItems) => prevItems.filter((item) => item.cartItemId !== itemToDelete));
           setOpenDialog(false);
           toast.success("Item removed from cart");
         })
@@ -290,10 +277,7 @@ function Cart() {
   const getSubtotal = () => {
     return cartItems
       .filter((item) => selectedItems.has(item.cartItemId))
-      .reduce(
-        (total, item) => total + item.product.productPrice * item.quantity,
-        0
-      )
+      .reduce((total, item) => total + item.product.productPrice * item.quantity, 0)
       .toFixed(2);
   };
 
@@ -315,18 +299,18 @@ function Cart() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Toaster position="top-center" duration={2500} />
       <PageWrapper>
-        <Toaster position="top-center" duration={2500} />
         <HeaderWrapper>
           <CartIcon src={cart} alt="Cart Icon" />
           <Typography
             variant="h3"
             component="h1"
-            sx={{ 
-              textAlign: "center", 
-              fontWeight: 700, 
-              color: 'primary.main',
-              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+            sx={{
+              textAlign: "center",
+              fontWeight: 700,
+              color: "primary.main",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
             }}
           >
             Your Shopping Cart
@@ -342,9 +326,11 @@ function Cart() {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell align="left">Product</TableCell>
-                      <TableCell align="right">Unit Price</TableCell>
-                      <TableCell align="center">Quantity</TableCell>
+                      <TableCell align="right">Product</TableCell>
+                      <TableCell align="right" sx={{ marginLeft: "px" }}>
+                        Unit Price
+                      </TableCell>
+                      <TableCell align="right">Quantity</TableCell>
                       <TableCell align="center">Actions</TableCell>
                     </TableRow>
                   </TableHead>
@@ -375,17 +361,17 @@ function Cart() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card variant="outlined" sx={{ position: 'sticky', top: '140px' }}>
+            <Card variant="outlined" sx={{ position: "sticky", top: "140px" }}>
               <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, right: -20 }} />
               <CardContent>
-                <Typography variant="h5" gutterBottom>Order Summary</Typography>
+                <Typography variant="h5" gutterBottom>
+                  Order Summary
+                </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="body1">
                   Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
                 </Typography>
-                <Typography variant="body1">
-                  Shipping Fee: ₱{getShippingFee()}
-                </Typography>
+                <Typography variant="body1">Shipping Fee: ₱{getShippingFee()}</Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant="h6">Total: ₱{getTotal()}</Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -409,9 +395,7 @@ function Cart() {
         <Dialog open={openDialog} onClose={handleDialogClose}>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
-            <Typography>
-              Are you sure you want to remove this item from your cart?
-            </Typography>
+            <Typography>Are you sure you want to remove this item from your cart?</Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDialogClose} color="primary">

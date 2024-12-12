@@ -1,6 +1,7 @@
 package com.ccdjmv.petshop.service;
 
 import com.ccdjmv.petshop.entity.OrderItemEntity;
+import com.ccdjmv.petshop.entity.OrderItemEntity;
 import com.ccdjmv.petshop.repository.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,23 @@ public class OrderItemService {
             msg = id +  " NOT found";
         }
         return msg;
+    }
+    
+
+    public OrderItemEntity updateIsRated(int id, OrderItemEntity newOrderItemDetails) {       
+        try {
+	        // Search for the orderItem by ID
+	        OrderItemEntity orderItem = oirepo.findById(id).orElseThrow(() -> 
+	            new NoSuchElementException("OrderItem " + id + " not found"));
+
+	        // If ID found, set new values
+	        orderItem.setQuantity(newOrderItemDetails.getQuantity());
+
+	        // Save the updated orderItem
+	        return oirepo.save(orderItem);
+	    } catch (NoSuchElementException nex) {
+	        throw nex; // Re-throw the exception
+	        
+	    }
     }
 }
