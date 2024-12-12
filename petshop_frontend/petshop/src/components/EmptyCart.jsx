@@ -36,7 +36,6 @@ export default function EmptyCart() {
             gap: 3,
           }}
         >
-          {/* Image */}
           <Box
             component="img"
             src={image}
@@ -47,7 +46,7 @@ export default function EmptyCart() {
               objectFit: "contain",
             }}
           />
-          {/* Text */}
+
           <Typography
             variant="h5"
             sx={{
@@ -57,7 +56,7 @@ export default function EmptyCart() {
           >
             You haven&apos;t added anything here
           </Typography>
-          {/* Button */}
+
           <Button
             variant="contained"
             size="large"

@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Auth from './components/Auth';
-import Header from './components/Header';
-import HomePage from './components/HomePage';
-import Footer from './components/Footer';
-import Cart from './components/Cart';
-import Appointment from './components/Appointment';
-import AboutUs from './components/AboutUs';
-import Profile from './components/Profile';
-import Checkout from './components/Checkout';
-import { Navigate } from 'react-router-dom';
-import UserAppointmentList from './components/UserAppointmentList';
-import AdminLogin from './components/AdminLogin';
-import ProtectedAdminRoute from './components/ProtectedAdminRoute';
-import AdminDashboard from './components/AdminDashboard';
-import AdminHeader from './components/AdminHeader'
-import AdminFooter from './components/AdminFooter'
-import { AdminAuthProvider } from './components/AdminAuthProvider';
-import AdminAppointmentList from './components/AdminAppointmentList';  
-import Inventory from './components/Inventory';
-import Products from './components/Products';
-import ProductDetail from './components/ProductDetail';
-import RateProduct from './components/RateProduct';
-import OrderList from './components/Orders';
-import OrderDetails from './components/OrderDetails'; 
-import {AuthProvider} from './components/AuthProvider';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Auth from "./components/Auth";
+import Header from "./components/Header";
+import HomePage from "./components/HomePage";
+import Footer from "./components/Footer";
+import Cart from "./components/Cart";
+import Appointment from "./components/Appointment";
+import AboutUs from "./components/AboutUs";
+import Profile from "./components/Profile";
+import Checkout from "./components/Checkout";
+import { Navigate } from "react-router-dom";
+import UserAppointmentList from "./components/UserAppointmentList";
+import AdminLogin from "./components/AdminLogin";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import AdminDashboard from "./components/AdminDashboard";
+import AdminHeader from "./components/AdminHeader";
+import AdminFooter from "./components/AdminFooter";
+import { AdminAuthProvider } from "./components/AdminAuthProvider";
+import AdminAppointmentList from "./components/AdminAppointmentList";
+import Inventory from "./components/Inventory";
+import Products from "./components/Products";
+import ProductDetail from "./components/ProductDetail";
+import RateProduct from "./components/RateProduct";
+import OrderList from "./components/Orders";
+import OrderDetails from "./components/OrderDetails";
+import { AuthProvider } from "./components/AuthProvider";
 
 function Layout({ children, username, role }) {
   return (
@@ -36,15 +36,14 @@ function Layout({ children, username, role }) {
   );
 }
 
-function AdminLayout({children,username,role}){
-  return(
+function AdminLayout({ children, username, role }) {
+  return (
     <>
-  <AdminHeader username={username} role={role}/>
-  {children}
-  <AdminFooter />
-  </>
-  )
-   
+      <AdminHeader username={username} role={role} />
+      {children}
+      <AdminFooter />
+    </>
+  );
 }
 
 function App() {
@@ -52,17 +51,15 @@ function App() {
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedRole = localStorage.getItem('role');
+    const storedUsername = localStorage.getItem("username");
+    const storedRole = localStorage.getItem("role");
     if (storedUsername) setUsername(storedUsername);
     if (storedRole) setRole(storedRole);
   }, []);
 
   return (
-     
-      <Router>
-         
-        <AdminAuthProvider>
+    <Router>
+      <AdminAuthProvider>
         <Routes>
           <Route
             path="/"
@@ -72,10 +69,7 @@ function App() {
               </Layout>
             }
           />
-          <Route
-            path="/auth"
-            element={<Auth setUsername={setUsername} setRole={setRole} />}
-          />
+          <Route path="/auth" element={<Auth setUsername={setUsername} setRole={setRole} />} />
           <Route
             path="/cart"
             element={
@@ -87,7 +81,7 @@ function App() {
           <Route
             path="/appointments"
             element={
-              localStorage.getItem('username') ? (
+              localStorage.getItem("username") ? (
                 <Layout username={username} role={role}>
                   <Appointment />
                 </Layout>
@@ -135,7 +129,7 @@ function App() {
                 <Products />
               </Layout>
             }
-          />  
+          />
           <Route
             path="/MyPurchases"
             element={
@@ -143,7 +137,7 @@ function App() {
                 <OrderList />
               </Layout>
             }
-          /> 
+          />
           <Route
             path="/MyPurchases/:orderID"
             element={
@@ -151,7 +145,7 @@ function App() {
                 <OrderDetails />
               </Layout>
             }
-          /> 
+          />
 
           <Route
             path="/productdetails/:productId"
@@ -162,17 +156,15 @@ function App() {
             }
           />
 
-          <Route 
-            path="/rate-product/:productId" 
-            element={ 
-              <Layout username={username} role={role}> 
-                <RateProduct /> 
+          <Route
+            path="/rate-product/:productId"
+            element={
+              <Layout username={username} role={role}>
+                <RateProduct />
               </Layout>
-            } 
-          />  
-          
+            }
+          />
 
-          {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin/dashboard"
@@ -195,20 +187,18 @@ function App() {
             }
           />
           <Route
-              path="/admin/inventory"
-              element={
-                <ProtectedAdminRoute>
-                  <AdminLayout>
-                    <Inventory />
-                  </AdminLayout>
-                </ProtectedAdminRoute>
-              }
-            />
+            path="/admin/inventory"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout>
+                  <Inventory />
+                </AdminLayout>
+              </ProtectedAdminRoute>
+            }
+          />
         </Routes>
-        </AdminAuthProvider>
-         
-      </Router>
-    
+      </AdminAuthProvider>
+    </Router>
   );
 }
 

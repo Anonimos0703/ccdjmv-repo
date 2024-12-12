@@ -306,17 +306,6 @@ const OrderDetails = () => {
                       ₱{item.price.toFixed(2)}
                     </Typography>
 
-                    {/* {orderDetails.orderStatus === "Completed" && item.rated === false && (
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        size="small"
-                        onClick={() => navigate(`/rate-product/${item.productId}`, { state: item })}
-                      >
-                        Rate Product
-                      </Button>
-                    )} */}
-
                     <Button
                       variant="outlined"
                       color="primary"
