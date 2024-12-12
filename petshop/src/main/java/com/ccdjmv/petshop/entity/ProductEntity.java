@@ -27,82 +27,99 @@ public class ProductEntity {
     private List<ProductReviewEntity> productreview;
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-//    @JsonManagedReference("product-cartItem")
     @JsonIgnore
     private List<CartItemEntity> cartItems;
     
     // Constructors
-    public ProductEntity() {}
-    
-    public ProductEntity(int productID, String description, double productPrice, 
-                         String productName, String productType, int quantity, String productImage) {
-        this.ProductID = productID;
-        this.description = description;
-        this.productPrice = productPrice;
-        this.productName = productName;
-        this.productType = productType;
-        this.quantity = quantity;
-        this.productImage = productImage;
+    public ProductEntity() {
+    	super();
     }
-	
+
+	public ProductEntity(int productID, String description, double productPrice, String productName, String productType,
+			int quantity, String productImage, List<ProductReviewEntity> productreview,
+			List<CartItemEntity> cartItems) {
+		super();
+		ProductID = productID;
+		this.description = description;
+		this.productPrice = productPrice;
+		this.productName = productName;
+		this.productType = productType;
+		this.quantity = quantity;
+		this.productImage = productImage;
+		this.productreview = productreview;
+		this.cartItems = cartItems;
+	}
+
 	public int getProductID() {
 		return ProductID;
 	}
+
 	public void setProductID(int productID) {
 		ProductID = productID;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public double getProductPrice() {
 		return productPrice;
 	}
+
 	public void setProductPrice(double productPrice) {
 		this.productPrice = productPrice;
 	}
+
 	public String getProductName() {
 		return productName;
 	}
+
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+
 	public String getProductType() {
 		return productType;
 	}
+
 	public void setProductType(String productType) {
 		this.productType = productType;
 	}
+
 	public int getQuantity() {
 		return quantity;
 	}
+
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	    public List<ProductReviewEntity> getProductReview(){
-	    	return productreview;
-	    }
-	    
-	    public void setProductReview(List<ProductReviewEntity>productreview) {
-	    	this.productreview = productreview;
-	    }
-	    
-	    public String getProductImage() {
-	        return productImage;
-	    }
-	    
-	    public void setProductImage(String productImage) {
-	        this.productImage = productImage;
-	    }
+	public String getProductImage() {
+		return productImage;
+	}
 
-		public List<CartItemEntity> getCartItems() {
-			return cartItems;
-		}
+	public void setProductImage(String productImage) {
+		this.productImage = productImage;
+	}
 
-		public void setCartItems(List<CartItemEntity> cartItems) {
-			this.cartItems = cartItems;
-		}
+	public List<ProductReviewEntity> getProductreview() {
+		return productreview;
+	}
+
+	public void setProductreview(List<ProductReviewEntity> productreview) {
+		this.productreview = productreview;
+	}
+
+	public List<CartItemEntity> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItemEntity> cartItems) {
+		this.cartItems = cartItems;
+	}
+    
 }

@@ -129,12 +129,10 @@ function OrderList() {
 
   useEffect(() => {
     const userId = localStorage.getItem('id');
-    if(!userId){
-      navigate("/");
-      return;
-    }
     axios
-      .get("http://localhost:8080/api/order/getAllOrders")
+      .get(`http://localhost:8080/api/order/getAllOrdersByUserId`, {
+        params: { userId },
+      })
       .then((response) => {
         console.log("Orders fetched from backend:", response.data);
         setOrders(response.data);
@@ -144,7 +142,7 @@ function OrderList() {
         console.error("Error fetching orders:", error);
         setLoading(false);
       });
-  }, []);
+}, []);
 
   const calculateTotal = (items) => {
     const shippingFee = 30;

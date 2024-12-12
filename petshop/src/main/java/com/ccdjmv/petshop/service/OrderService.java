@@ -23,9 +23,17 @@ public class OrderService {
         return orepo.save(order);
     }
 
+    public OrderService(OrderRepository orderRepository) {
+        this.orepo = orderRepository;
+    }
+
     public OrderEntity getOrderDetails(int orderID) {
         return orepo.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+
+    public List<OrderEntity> getAllOrdersByUserId(int userId) {
+        return orepo.findByUserId(userId);
     }
 
     public List<OrderEntity> getAllOrder() {

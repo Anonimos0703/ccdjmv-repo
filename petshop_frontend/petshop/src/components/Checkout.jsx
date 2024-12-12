@@ -168,14 +168,13 @@ const CheckoutPage = () => {
       orderItemImage: item.product.productImage || imagePlaceholder,
       price: item.product.productPrice,
       quantity: item.quantity,
+      productId: item.product.productID,
     }));
 
     const orderDate = new Date().toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
 
     const orderData = {
-      customerDetails: user,
       orderItems,
-      orderSummary,
       orderDate,
       orderStatus: "To Receive",
       paymentMethod: "Cash on Delivery",

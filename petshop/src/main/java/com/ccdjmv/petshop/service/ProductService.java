@@ -23,6 +23,11 @@ public class ProductService {
         return prepo.findAll();
     }
     
+    public ProductEntity getProductById(int productID) {
+        return prepo.findById(productID).orElse(null);
+    }
+
+    
     public ProductEntity updateProduct(int id, ProductEntity productRecord) {
         ProductEntity existingProduct = prepo.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Product with id " + id + " not found."));

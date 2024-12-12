@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -54,7 +56,11 @@ public class UserEntity {
     @JsonManagedReference("user-address")
     private AddressEntity address;  // Add the List of AddressEntities
     
-    public UserEntity() {
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference("user-productreview") // Correct annotation for serialization
+    private List<ProductReviewEntity> reviews;
+    
+    public UserEntity() {	
 		super();
 		// TODO Auto-generated constructor stub
 	}

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Toaster, toast } from 'sonner';
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -159,6 +160,8 @@ const Products = () => {
   const [visibleProducts, setVisibleProducts] = useState(16);
   const [itemQuantity, setItemQuantity] = useState(1);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -212,9 +215,13 @@ const Products = () => {
     setProductTypeFilter(newFilter);
   };
 
-  const handleViewDetails = (product) => {
-    setSelectedProduct(product);
-    setItemQuantity(1);
+  // const handleViewDetails = (product) => {
+  //   setSelectedProduct(product);
+  //   setItemQuantity(1);
+  // };
+
+  const handleViewDetails = (productId) => {
+    navigate(`/productdetails/${productId}`);
   };
 
   const handleCloseDialog = () => {
@@ -227,6 +234,10 @@ const Products = () => {
 
   const handleAddToCart = async (selectedProduct, itemQuantity) => {
     const cartId = localStorage.getItem("id");
+    if(!cartId){
+      toast.warning("User is not logged in. Please log in and try again");
+      return;
+    }
     if (itemQuantity <= 0) {
       toast.warning('Quantity must be greater than 0!');
       return;
@@ -380,7 +391,7 @@ const Products = () => {
                       color="primary" 
                       variant="contained"
                       fullWidth
-                      onClick={() => handleViewDetails(product)}
+                      onClick={() => handleViewDetails(product.productId)}
                     >
                       View Details
                     </Button>
@@ -405,7 +416,9 @@ const Products = () => {
           </Box>
         )}
 
-        <Dialog open={Boolean(selectedProduct)} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+        <Dialog open={Boolean(selectedProduct)} onClose={handleCloseDialog} fullWidth maxWidth="xl" PaperProps={{
+          style: { height: '80vh' }, // Adjust height as needed
+        }}>
           {selectedProduct && (
             <>
               <DialogTitle sx={{ textAlign: "center" }}>

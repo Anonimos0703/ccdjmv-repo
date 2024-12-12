@@ -34,6 +34,10 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
+    @GetMapping("/getAllOrdersByUserId")
+    public List<OrderEntity> getAllOrdersByUserId(@RequestParam int userId) {
+        return oserv.getAllOrdersByUserId(userId);
+    }
     // UPDATE
     @PutMapping("/putOrderDetails")
     public OrderEntity putOrderDetails(@RequestParam int id, @RequestBody OrderEntity newOrderDetails) {
