@@ -3,6 +3,8 @@ package com.ccdjmv.petshop.controller;
 import java.util.List;	
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,17 @@ public class ProductController {
 	public List<ProductEntity>getAllProduct(){
 		return pserv.getAllProduct();
 	}
+	
+	@GetMapping("/getProduct/{id}")
+	public ResponseEntity<ProductEntity> getProductById(@PathVariable("id") int productID) {
+	    ProductEntity product = pserv.getProductById(productID);
+	    if (product != null) {
+	        return ResponseEntity.ok(product);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	    }
+	}
+
 	
 	@PutMapping("/putProduct/{id}")
 	public ProductEntity updateProduct(@PathVariable int id, @RequestBody ProductEntity productRecord) {

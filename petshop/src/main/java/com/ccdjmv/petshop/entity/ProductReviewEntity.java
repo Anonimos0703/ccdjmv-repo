@@ -1,16 +1,9 @@
 package com.ccdjmv.petshop.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Reviews")
@@ -18,23 +11,36 @@ public class ProductReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ReviewID;
-    
+
     private int ratings;
-    
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "productid")
+
+    @Column(nullable = true)
+    private String comment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productid", nullable = false)
     @JsonBackReference("product-productreview")
     private ProductEntity product;
-    
-    public ProductReviewEntity() {
-    	
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid", nullable = false)
+    @JsonBackReference("user-productreview")
+    private UserEntity user;
+
+    @JsonProperty("username")
+    public String getUsername() {
+        return user != null ? user.getUsername() : null;
     }
     
-    public ProductReviewEntity(int reviewID, int ratings) {
-		super();
-		ReviewID = reviewID;
-		this.ratings = ratings;
-	}
+    public ProductReviewEntity() {}
+
+    public ProductReviewEntity(int reviewID, int ratings, String comment, ProductEntity product, UserEntity user) {
+        this.ReviewID = reviewID;
+        this.ratings = ratings;
+        this.comment = comment;
+        this.product = product;
+        this.user = user;
+    }
 
     public int getReviewID() {
         return ReviewID;
@@ -51,13 +57,28 @@ public class ProductReviewEntity {
     public void setRatings(int ratings) {
         this.ratings = ratings;
     }
-    
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public ProductEntity getProduct() {
-    	return product;
+        return product;
     }
-    
+
     public void setProduct(ProductEntity product) {
-    	this.product  = product;
+        this.product = product;
     }
-    
-}    
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+}

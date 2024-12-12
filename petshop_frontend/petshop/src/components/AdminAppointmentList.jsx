@@ -172,13 +172,14 @@ const AppointmentList = () => {
                   }
                   secondary={
                     <>
-                      <Typography variant="body2">Email: {appointment.email}</Typography>
-                      <Typography variant="body2">Contact: {appointment.contactNo}</Typography>
-                      <Typography variant="body2">Service: {appointment.groomService}</Typography>
-                      <Typography variant="body2">Price: ₱{appointment.price}</Typography>
-                      <Typography variant="body2">Payment Method: {appointment.paymentMethod}</Typography>
+                      <Typography variant="body2" component="span">Email: {appointment.email}</Typography>
+                      <Typography variant="body2" component="span">Contact: {appointment.contactNo}</Typography>
+                      <Typography variant="body2" component="span">Service: {appointment.groomService}</Typography>
+                      <Typography variant="body2" component="span">Price: ₱{appointment.price}</Typography>
+                      <Typography variant="body2" component="span">Payment Method: {appointment.paymentMethod}</Typography>
                     </>
                   }
+                  
                 />
                 {appointment.canceled && (
                   <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>

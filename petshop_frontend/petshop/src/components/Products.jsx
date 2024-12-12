@@ -3,6 +3,7 @@ import axios from "axios";
 import { Toaster, toast } from 'sonner';
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -74,6 +75,42 @@ const theme = createTheme({
   },
 });
 
+const ScatteredPaws = ({ count = 10 }) => {
+  const positions = [
+    { top: '5%', left: '3%' },
+    { top: '10%', right: '5%' },
+    { bottom: '15%', left: '7%' },
+    { bottom: '10%', right: '3%' },
+    { top: '20%', left: '10%' },
+    { bottom: '25%', right: '10%' },
+    { top: '30%', left: '2%' },
+    { bottom: '5%', right: '15%' },
+    { top: '15%', right: '12%' },
+    { bottom: '20%', left: '15%' },
+  ];
+
+  return (
+    <>
+      {positions.slice(0, count).map((pos, index) => (
+        <Box
+          key={index}
+          component="img"
+          src={paw1}
+          alt="Paw Icon"
+          sx={{
+            position: 'absolute',
+            width: '30px',
+            height: '30px',
+            opacity: 0.3,
+            zIndex: 1,
+            ...pos,
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
   minHeight: '100vh',
@@ -122,6 +159,8 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [visibleProducts, setVisibleProducts] = useState(16);
   const [itemQuantity, setItemQuantity] = useState(1);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -176,9 +215,13 @@ const Products = () => {
     setProductTypeFilter(newFilter);
   };
 
-  const handleViewDetails = (product) => {
-    setSelectedProduct(product);
-    setItemQuantity(1);
+  // const handleViewDetails = (product) => {
+  //   setSelectedProduct(product);
+  //   setItemQuantity(1);
+  // };
+
+  const handleViewDetails = (productId) => {
+    navigate(`/productdetails/${productId}`);
   };
 
   const handleCloseDialog = () => {
@@ -191,6 +234,10 @@ const Products = () => {
 
   const handleAddToCart = async (selectedProduct, itemQuantity) => {
     const cartId = localStorage.getItem("id");
+    if(!cartId){
+      toast.warning("User is not logged in. Please log in and try again");
+      return;
+    }
     if (itemQuantity <= 0) {
       toast.warning('Quantity must be greater than 0!');
       return;
@@ -262,13 +309,6 @@ const Products = () => {
           <PetIcon 
             src={petIcon} 
             alt="Pet Icon" 
-            style={{ 
-              animation: 'float 3s ease-in-out infinite',
-              '@keyframes float': {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-10px)' },
-              }
-            }}
           />
           <Typography
             variant="h3"
@@ -283,6 +323,8 @@ const Products = () => {
             Pawsome Products
           </Typography>
         </HeaderWrapper>
+
+        <ScatteredPaws />
 
         <Box sx={{ 
           display: "flex", 
@@ -349,7 +391,7 @@ const Products = () => {
                       color="primary" 
                       variant="contained"
                       fullWidth
-                      onClick={() => handleViewDetails(product)}
+                      onClick={() => handleViewDetails(product.productId)}
                     >
                       View Details
                     </Button>
@@ -374,7 +416,9 @@ const Products = () => {
           </Box>
         )}
 
-        <Dialog open={Boolean(selectedProduct)} onClose={handleCloseDialog} fullWidth maxWidth="sm">
+        <Dialog open={Boolean(selectedProduct)} onClose={handleCloseDialog} fullWidth maxWidth="xl" PaperProps={{
+          style: { height: '80vh' }, // Adjust height as needed
+        }}>
           {selectedProduct && (
             <>
               <DialogTitle sx={{ textAlign: "center" }}>
