@@ -10,6 +10,7 @@ import {
   Grid,
   Divider,
   IconButton,
+  Button,
 } from "@mui/material";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -22,7 +23,7 @@ const OrderDetails = () => {
 
   useEffect(() => {
     const userId = localStorage.getItem("id");
-    if(!userId){
+    if (!userId) {
       navigate("/");
       return;
     }
@@ -62,8 +63,12 @@ const OrderDetails = () => {
   }
 
   return (
-    <Box padding={3} maxWidth="lg" mx="auto" sx={{ backgroundColor: "#f9f9f9", borderRadius: 2 , minHeight: "80vh"}}>
-      
+    <Box
+      padding={3}
+      maxWidth="lg"
+      mx="auto"
+      sx={{ backgroundColor: "#f9f9f9", borderRadius: 2, minHeight: "80vh" }}
+    >
       <Box display="flex" alignItems="center" gap={2} mb={4}>
         <IconButton onClick={() => navigate(-1)} color="primary">
           <ArrowBackIcon />
@@ -73,8 +78,9 @@ const OrderDetails = () => {
         </Typography>
       </Box>
 
-      <Box sx={{ backgroundColor: "#fff", padding: 3, borderRadius: 2, boxShadow: 1 }}>
-        
+      <Box
+        sx={{ backgroundColor: "#fff", padding: 3, borderRadius: 2, boxShadow: 1 }}
+      >
         <Card sx={{ mb: 3, borderRadius: 2 }}>
           <CardContent>
             <Grid container spacing={2}>
@@ -114,9 +120,18 @@ const OrderDetails = () => {
                 <Typography variant="h6" fontWeight="bold">
                   Delivery Address
                 </Typography>
-                <Typography variant="body2"><strong>Name:</strong> {orderDetails.user.firstName} {orderDetails.user.lastName}</Typography>
-                <Typography variant="body2"><strong>Email:</strong> {orderDetails.user.email}</Typography>
-                <Typography variant="body2"><strong>Address:</strong> {orderDetails.user.address.streetBuildingHouseNo} {orderDetails.user.address.barangay}, {orderDetails.user.address.city} City, {orderDetails.user.address.province}, Region {orderDetails.user.address.region}, {orderDetails.user.address.postalCode}</Typography>
+                <Typography variant="body2">
+                  <strong>Name:</strong> {orderDetails.user.firstName} {orderDetails.user.lastName}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Email:</strong> {orderDetails.user.email}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Address:</strong> {orderDetails.user.address.streetBuildingHouseNo} {" "}
+                  {orderDetails.user.address.barangay}, {orderDetails.user.address.city} City, {" "}
+                  {orderDetails.user.address.province}, Region {orderDetails.user.address.region}, {" "}
+                  {orderDetails.user.address.postalCode}
+                </Typography>
               </Grid>
             </Grid>
           </CardContent>
@@ -137,9 +152,9 @@ const OrderDetails = () => {
               sx={{ backgroundColor: "#FFFFFF", padding: 1, borderRadius: 1 }}
             >
               <Box display="flex" alignItems="center" gap={2}>
-                <img 
-                  src={item.orderItemImage} 
-                  alt={item.orderItemName} 
+                <img
+                  src={item.orderItemImage}
+                  alt={item.orderItemName}
                   style={{ width: 50, height: 50, borderRadius: 5, objectFit: "cover" }}
                 />
                 <Box>
@@ -149,9 +164,19 @@ const OrderDetails = () => {
                   <Typography variant="body2">Quantity: {item.quantity}</Typography>
                 </Box>
               </Box>
-              <Typography variant="body1" fontWeight="bold">
-                ₱{item.price.toFixed(2)}
-              </Typography>
+              <Box display="flex" flexDirection="column" alignItems="flex-end">
+                <Typography variant="body1" fontWeight="bold">
+                  ₱{item.price.toFixed(2)}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={() => navigate(`/rate-product/${item.productId}`)}
+                >
+                  Rate Product
+                </Button>
+              </Box>
             </Box>
           ))}
         </Box>
@@ -165,7 +190,9 @@ const OrderDetails = () => {
             </Box>
             <Box display="flex" justifyContent="space-between" fontWeight="bold">
               <Typography variant="body1">Total</Typography>
-              <Typography variant="body1" fontWeight="bold">₱{orderDetails.totalPrice.toFixed(2)}</Typography>
+              <Typography variant="body1" fontWeight="bold">
+                ₱{orderDetails.totalPrice.toFixed(2)}
+              </Typography>
             </Box>
           </CardContent>
         </Card>
