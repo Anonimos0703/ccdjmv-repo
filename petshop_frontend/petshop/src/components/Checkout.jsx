@@ -17,6 +17,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import imagePlaceholder from "../assets/image.png";
+import { Toaster, toast } from "sonner";
 
 const theme = createTheme({
   palette: {
@@ -42,7 +43,10 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const userId = localStorage.getItem('id');
-
+    if(!userId){
+      navigate("/");
+      return;
+    }
     axios
       .get(`http://localhost:8080/auth/user/findById/${userId}`)
       .then((response) => {
@@ -58,7 +62,7 @@ const CheckoutPage = () => {
     const userId = localStorage.getItem('id');
     
     if (selectedItems.length === 0) {
-      alert("No items to order. Please go back and add items to the cart.");
+      toast.warning("No items to order. Please go back and add items to the cart.");
       return;
     }
 
@@ -86,14 +90,14 @@ const CheckoutPage = () => {
       const response = await axios.post("http://localhost:8080/api/order/postOrderRecord", orderData);
 
       if (response.status === 200) { 
-        alert("Order successfully placed!");
+        toast.success("Order successfully placed!");
         navigate("/MyPurchases", { state: { orders: response.data } });
       } else {
-        alert("Failed to place the order. Please try again.");
+        toast.error("Failed to place the order. Please try again.");
       }
     } catch (error) {
       console.error("Error placing the order:", error);
-      alert("An error occurred while placing the order.");
+      toast.error("An error occurred while placing the order.");
     }
   };
 
@@ -103,6 +107,7 @@ const CheckoutPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Toaster position="top-center" duration={2500} />
       <Box sx={{ width: "100vw", minHeight: "100vh", backgroundColor: "background.default", padding: { xs: 2, md: 6 }, boxSizing: "border-box" }}>
         <Box maxWidth="lg" margin="0 auto">
           <Box display="flex" justifyContent="flex-start">
