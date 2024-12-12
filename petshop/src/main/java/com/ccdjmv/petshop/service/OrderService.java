@@ -23,6 +23,11 @@ public class OrderService {
         return orepo.save(order);
     }
 
+    public OrderEntity getOrderDetails(int orderID) {
+        return orepo.findById(orderID)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+
     public List<OrderEntity> getAllOrder() {
         return orepo.findAll();
     }
@@ -36,6 +41,8 @@ public class OrderService {
 
             order.setOrderDate(newOrderDetails.getOrderDate());
             order.setPaymentMethod(newOrderDetails.getPaymentMethod());
+            order.setPaymentStatus(newOrderDetails.getPaymentStatus());
+            order.setOrderStatus(newOrderDetails.getOrderStatus());
             order.setTotalPrice(newOrderDetails.getTotalPrice());
         } catch(NoSuchElementException nex) {
             throw new NameNotFoundException("Order " + id + " not found");

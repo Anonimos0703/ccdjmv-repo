@@ -31,27 +31,31 @@ public class CartItemController {
         return "Test endpoint is working!";
     }
 	
-	//Create CartItem 
+	//Create CartItem record
 	@PostMapping("/postCartItem")
 	public CartItemEntity postCartItem(@RequestBody CartItemEntity cartItem) {
 		return cartItemServ.postCartItem(cartItem);
 	}
 		
-	//Read of CRUD
+	//Get all cart items
 	@GetMapping("/getAllCartItems")
 	public List<CartItemEntity> getAllCartItems(){
 		return cartItemServ.getAllCartItems();
 	}
 	
-	
-	
-	//Update of CRUD
+	//Update cart item
 	@PutMapping("/updateCartItem/{cartItemId}")
 	public CartItemEntity updateCartItem(@PathVariable int cartItemId, @RequestBody CartItemEntity newCartItemDetails) {
-		return cartItemServ.UpdateCartItem(cartItemId, newCartItemDetails);
+		return cartItemServ.updateCartItem(cartItemId, newCartItemDetails);
 	}
 	
-	//Delete of CRUD
+	//Update cart item
+	@PutMapping("/systemUpdateCartItem/{cartItemId}")
+	public CartItemEntity systemUpdateCartItem(@PathVariable int cartItemId, @RequestBody CartItemEntity newCartItemDetails) {
+		return cartItemServ.systemUpdateCartItem(cartItemId, newCartItemDetails);
+	}
+	
+	//Delete cart item
 	@DeleteMapping("/deleteCartItem/{cartItemId}")
 	public String deleteCartItem(@PathVariable int cartItemId) {
 		return cartItemServ.deleteCartItem(cartItemId);

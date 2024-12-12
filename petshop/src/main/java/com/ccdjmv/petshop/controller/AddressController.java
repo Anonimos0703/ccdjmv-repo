@@ -26,37 +26,33 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
-    // Add a new address for a user
+    // Add or update an address for a user
     @PostMapping("/users/{userId}")
-    public ResponseEntity<AddressEntity> addAddress(@PathVariable Long userId, @RequestBody AddressEntity address) {
-        AddressEntity createdAddress = addressService.addAddressToUser(userId, address);
-        if (createdAddress != null) {
-            return new ResponseEntity<>(createdAddress, HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<AddressEntity> addOrUpdateAddress(@PathVariable Long userId, @RequestBody AddressEntity address) {
+        AddressEntity createdOrUpdatedAddress = addressService.addOrUpdateAddressForUser(userId, address);
+        return new ResponseEntity<>(createdOrUpdatedAddress, HttpStatus.OK);
     }
 
-    // Get all addresses for a user
+    // Get the address for a user
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<AddressEntity>> getAddresses(@PathVariable Long userId) {
-        List<AddressEntity> addresses = addressService.getAddressesByUserId(userId);
-        return ResponseEntity.ok(addresses);
-    }
-
-    // Update an address
-    @PutMapping("/users/{userId}/{addressId}")
-    public ResponseEntity<AddressEntity> updateAddress(@PathVariable Long userId, @PathVariable Integer addressId, @RequestBody AddressEntity address) {
-        AddressEntity updatedAddress = addressService.updateAddress(userId, addressId, address);
-        if (updatedAddress != null) {
-            return ResponseEntity.ok(updatedAddress);
+    public ResponseEntity<AddressEntity> getAddress(@PathVariable Long userId) {
+        AddressEntity address = addressService.getAddressByUserId(userId);
+        if (address != null) {
+            return ResponseEntity.ok(address);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
+    // Get all addresses in the database regardless of user
+    @GetMapping("/getAllAddress")
+    public List<AddressEntity> getAllAddress(){
+    	return addressService.getAllAddress();
+    }
 
-    // Delete an address
-    @DeleteMapping("/users/{userId}/{addressId}")
-    public ResponseEntity<Void> deleteAddress(@PathVariable Long userId, @PathVariable Integer addressId) {
-        addressService.deleteAddress(userId, addressId);
+    // Delete the address for a user
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable Long userId) {
+        addressService.deleteAddressForUser(userId);
         return ResponseEntity.noContent().build();
     }
 }

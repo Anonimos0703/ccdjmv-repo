@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ccdjmv.petshop.entity.AddressEntity;
 
-public interface AddressRepository extends JpaRepository<AddressEntity, Integer> {
+public interface AddressRepository extends JpaRepository<AddressEntity, Long> {
     
     // Custom method to find addresses by userId
-    List<AddressEntity> findByUserId(Long userId);
+    AddressEntity findByUserId(Long userId);
 }

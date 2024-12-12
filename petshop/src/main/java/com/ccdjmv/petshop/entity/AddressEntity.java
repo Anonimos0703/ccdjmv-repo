@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -19,8 +21,7 @@ import jakarta.persistence.Table;
 public class AddressEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer addressId;
+    private Long addressId;
 
     @Column(name = "region", nullable = false)
     private String region;
@@ -37,13 +38,13 @@ public class AddressEntity {
     @Column(name = "postalCode", nullable = false)
     private String postalCode;
 
-    @Column(name = "buildingHouseNo", nullable = false)
-    private String buildingHouseNo;
+    @Column(name = "streetBuildingHouseNo", nullable = true)
+    private String streetBuildingHouseNo;
 
-    // Many-to-One relationship with UserEntity
-    @ManyToOne
-    @JsonBackReference("user-address")
+    @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference("user-address")
     private UserEntity user; // User that owns this address
     
     public AddressEntity() {
@@ -51,8 +52,8 @@ public class AddressEntity {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AddressEntity(Integer addressId, String region, String province, String city, String barangay,
-			String postalCode, String buildingHouseNo, UserEntity user) {
+	public AddressEntity(Long addressId, String region, String province, String city, String barangay,
+			String postalCode, String streetBuildingHouseNo, UserEntity user) {
 		super();
 		this.addressId = addressId;
 		this.region = region;
@@ -60,74 +61,72 @@ public class AddressEntity {
 		this.city = city;
 		this.barangay = barangay;
 		this.postalCode = postalCode;
-		this.buildingHouseNo = buildingHouseNo;
+		this.streetBuildingHouseNo = streetBuildingHouseNo;
 		this.user = user;
 	}
 
-	// Getter and Setter methods for Address fields
-    public Integer getAddressId() {
-        return addressId;
-    }
+	public Long getAddressId() {
+		return addressId;
+	}
 
-    public void setAddressId(Integer addressId) {
-        this.addressId = addressId;
-    }
+	public void setAddressId(Long addressId) {
+		this.addressId = addressId;
+	}
 
-    public String getRegion() {
-        return region;
-    }
+	public String getRegion() {
+		return region;
+	}
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
+	public void setRegion(String region) {
+		this.region = region;
+	}
 
-    public String getProvince() {
-        return province;
-    }
+	public String getProvince() {
+		return province;
+	}
 
-    public void setProvince(String province) {
-        this.province = province;
-    }
+	public void setProvince(String province) {
+		this.province = province;
+	}
 
-    public String getCity() {
-        return city;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-    public String getBarangay() {
-        return barangay;
-    }
+	public String getBarangay() {
+		return barangay;
+	}
 
-    public void setBarangay(String barangay) {
-        this.barangay = barangay;
-    }
+	public void setBarangay(String barangay) {
+		this.barangay = barangay;
+	}
 
-    public String getPostalCode() {
-        return postalCode;
-    }
+	public String getPostalCode() {
+		return postalCode;
+	}
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
 
-    public String getBuildingHouseNo() {
-        return buildingHouseNo;
-    }
+	public String getStreetBuildingHouseNo() {
+		return streetBuildingHouseNo;
+	}
 
-    public void setBuildingHouseNo(String buildingHouseNo) {
-        this.buildingHouseNo = buildingHouseNo;
-    }
+	public void setStreetBuildingHouseNo(String streetBuildingHouseNo) {
+		this.streetBuildingHouseNo = streetBuildingHouseNo;
+	}
 
-    // Getter and Setter for user (Many-to-One relationship with UserEntity)
-    public UserEntity getUser() {
-        return user;
-    }
+	public UserEntity getUser() {
+		return user;
+	}
 
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
 
 }

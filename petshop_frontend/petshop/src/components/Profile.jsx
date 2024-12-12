@@ -6,15 +6,17 @@ import {
   Box,
   CircularProgress,
   Alert,
-  Card,
-  CardContent,
-  Divider,
-  Avatar,
-  Button,
+  Paper,
+  Grid,
+  IconButton,
   Snackbar,
   TextField,
+  Button,
 } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import EditIcon from '@mui/icons-material/Edit';
 import defaultProfileImage from '../assets/default_profile.png';
+import paw1 from '../assets/paw1.png';
 
 const Profile = ({ onProfileImageUpdate }) => {
   const [user, setUser] = useState(null);
@@ -29,10 +31,20 @@ const Profile = ({ onProfileImageUpdate }) => {
     city: '',
     barangay: '',
     postalCode: '',
-    buildingHouseNo: '',
+    streetBuildingHouseNo: '',
   });
   const [imageFile, setImageFile] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);  // Add state for submission process
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const pawPositions = [
+    { top: '5%', left: '5%', width: '80px', opacity: 0.2, transform: 'rotate(-20deg)' },
+    { bottom: '10%', right: '10%', width: '100px', opacity: 0.2, transform: 'rotate(15deg)' },
+    { top: '40%', right: '20%', width: '60px', opacity: 0.2, transform: 'rotate(-10deg)' },
+    { top: '20%', left: '10%', width: '70px', opacity: 0.2, transform: 'rotate(25deg)' },
+    { bottom: '20%', left: '15%', width: '90px', opacity: 0.2, transform: 'rotate(-15deg)' },
+    { top: '60%', right: '5%', width: '50px', opacity: 0.2, transform: 'rotate(30deg)' }
+  ];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,15 +60,13 @@ const Profile = ({ onProfileImageUpdate }) => {
         const response = await axios.get(`http://localhost:8080/auth/users/${id}`);
         setUser(response.data);
 
-        // Load the address for this specific user from localStorage
         const storedAddress = localStorage.getItem(`userAddress_${id}`);
         if (storedAddress) {
-          setAddress(JSON.parse(storedAddress)); // Populate the state with stored address
+          setAddress(JSON.parse(storedAddress));
         } else {
           setAddress(response.data.address || {});
         }
 
-        // Retrieve user-specific profile image from localStorage
         const storedImage = localStorage.getItem(`profileImage_${id}`);
         setProfileImage(storedImage || defaultProfileImage);
 
@@ -83,28 +93,27 @@ const Profile = ({ onProfileImageUpdate }) => {
     setAddress(updatedAddress);
 
     const id = localStorage.getItem('id');
-    // Store the updated address under the specific user's ID in localStorage
     localStorage.setItem(`userAddress_${id}`, JSON.stringify(updatedAddress));
   };
 
   const handleSaveAddress = async () => {
-    setIsSubmitting(true);  // Set submitting state to true
+    setIsSubmitting(true);
 
     const id = localStorage.getItem('id');
     try {
       await axios.put(`http://localhost:8080/auth/users/${id}/address`, address);
       
-      // Persist address to localStorage after saving to the backend
       localStorage.setItem(`userAddress_${id}`, JSON.stringify(address));
       
       setSnackbarMessage('Address updated successfully!');
       setOpenSnackbar(true);
+      setIsEditMode(false);
     } catch (err) {
       console.error('Error updating address:', err.response || err);
       setSnackbarMessage('Error updating address. Please try again.');
       setOpenSnackbar(true);
     } finally {
-      setIsSubmitting(false);  // Reset submitting state after the process is complete
+      setIsSubmitting(false);
     }
   };
 
@@ -139,14 +148,11 @@ const Profile = ({ onProfileImageUpdate }) => {
   
       const updatedImage = `data:image/png;base64,${response.data.profileImage}`;
       if (response.data.profileImage) {
-        // Save the updated image to localStorage with user ID as key
         const imageKey = `profileImage_${id}`;
         localStorage.setItem(imageKey, updatedImage);
   
-        // Update the state to reflect the new image
         setProfileImage(updatedImage);
   
-        // Pass the new image to the parent if necessary
         if (onProfileImageUpdate) {
           onProfileImageUpdate(updatedImage);
         }
@@ -162,7 +168,6 @@ const Profile = ({ onProfileImageUpdate }) => {
       setOpenSnackbar(true);
     }
   };
-  
 
   const handleFileChange = (e) => {
     if (e.target.files.length > 0) {
@@ -172,14 +177,7 @@ const Profile = ({ onProfileImageUpdate }) => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <CircularProgress />
       </Box>
     );
@@ -187,215 +185,155 @@ const Profile = ({ onProfileImageUpdate }) => {
 
   if (error) {
     return (
-      <Container
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
+      <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <Alert severity="error">{error}</Alert>
       </Container>
     );
   }
 
   return (
-    <Container
-      maxWidth="md"
-      sx={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: 2,
-        overflow: 'hidden',
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          overflowY: 'auto',
-        }}
-      >
-        <Card sx={{ width: '100%', boxShadow: 3 }}>
-          <CardContent>
-            <Typography variant="h4" gutterBottom align="center">
-              User Profile
-            </Typography>
-            {user && (
-              <Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: 2,
-                  }}
-                >
-                  <Avatar
-                    src={profileImage}
-                    alt={user.username}
-                    sx={{
-                      width: 120,
-                      height: 120,
-                      border: '2px solid black',
-                      marginBottom: 1,
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: 20,
-                      marginBottom: 1,
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      component="label"
-                    >
-                      Select Image
-                      <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleFileChange}
-                      />
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleImageUpload}
-                    >
-                      Upload Picture
-                    </Button>
-                  </Box>
-                </Box>
-
-                <Typography variant="h6" gutterBottom>Username:</Typography>
-                <Typography variant="body1" gutterBottom>
-                  {user.username}
-                </Typography>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Typography variant="h6" gutterBottom>FirstName:</Typography>
-                <Typography variant="body1" gutterBottom>
-                  {user.firstName}
-                </Typography>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Typography variant="h6" gutterBottom>LastName:</Typography>
-                <Typography variant="body1" gutterBottom>
-                  {user.lastName}
-                </Typography>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Typography variant="h6" gutterBottom>Email:</Typography>
-                <Typography variant="body1" gutterBottom>
-                  {user.email}
-                </Typography>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Typography variant="h6" gutterBottom>
-                  Address:
-                </Typography>
-                <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  {/* Input fields for each part of the address */}
-                  <TextField
-                    name="region"
-                    label="Region"
-                    value={address.region || ''}
-                    onChange={handleAddressChange}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                  />
-                  <TextField
-                    name="province"
-                    label="Province"
-                    value={address.province || ''}
-                    onChange={handleAddressChange}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                  />
-                  <TextField
-                    name="city"
-                    label="City"
-                    value={address.city || ''}
-                    onChange={handleAddressChange}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                  />
-                  <TextField
-                    name="barangay"
-                    label="Barangay"
-                    value={address.barangay || ''}
-                    onChange={handleAddressChange}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                  />
-                  <TextField
-                    name="postalCode"
-                    label="Postal Code"
-                    value={address.postalCode || ''}
-                    onChange={handleAddressChange}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                  />
-                  <TextField
-                    name="buildingHouseNo"
-                    label="Building/House No."
-                    value={address.buildingHouseNo || ''}
-                    onChange={handleAddressChange}
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                  />
-                </Box>
-                 <Box
-                 sx={{
-                  marginTop: 2,
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+        <Grid container spacing={4}>
+          {/* Profile Image Section */}
+          <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
+            <Box sx={{ position: 'relative', width: 200, height: 200, margin: '0 auto', mb: 2 }}>
               
-    
-                 }}> 
-                  <Button
-    
-                    variant="contained"
-                    onClick={handleSaveAddress}
-                   
-                  >
-                    Submit
-                  </Button>
-                  </Box>
-              </Box>
-            )}
-          </CardContent>
-        </Card>
+              <img
+                src={profileImage}
+                alt="Profile"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '50%',
+                  border: '3px solid #3f51b5'
+                }}
+              />
+              
+              <IconButton
+                color="primary"
+                component="label"
+                sx={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  backgroundColor: 'white',
+                  '&:hover': { backgroundColor: 'white' }
+                }}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={handleFileChange}
+                />
+                <CloudUploadIcon />
+              </IconButton>
+            </Box>
+            {pawPositions.map((pos, index) => (
+        <img
+          key={index}
+          src={paw1}
+          alt="paw"
+          style={{
+            position: 'absolute',
+            ...pos,
+            zIndex: 1,
+          }}
+        />
+      ))}
+            <Button 
+              variant="contained" 
+              onClick={handleImageUpload}
+              startIcon={<CloudUploadIcon />}
+              sx={{ mt: 2 }}
+            >
+              Upload Picture
+            </Button>
+          </Grid>
 
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
+          {/* User Details Section */}
+          <Grid item xs={12} md={8}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h3">Profile</Typography>
+              <IconButton onClick={() => setIsEditMode(!isEditMode)}>
+                <EditIcon />
+              </IconButton>
+            </Box>
+
+            <Grid container spacing={3}>
+              {[
+                { label: 'Username', value: user?.username },
+                { label: 'First Name', value: user?.firstName },
+                { label: 'Last Name', value: user?.lastName },
+                { label: 'Email', value: user?.email }
+              ].map((field, index) => (
+                <Grid item xs={12} sm={6} key={index}>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    {field.label}
+                  </Typography>
+                  <Typography variant="h6">{field.value || 'Not provided'}</Typography>
+                </Grid>
+              ))}
+            </Grid>
+
+            
+            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
+              Address
+            </Typography>
+            <Grid container spacing={2}>
+              {[
+                { name: 'region', label: 'Region' },
+                { name: 'province', label: 'Province' },
+                { name: 'city', label: 'City' },
+                { name: 'barangay', label: 'Barangay' },
+                { name: 'postalCode', label: 'Postal Code' },
+                { name: 'streetBuildingHouseNo', label: 'Street Name, Building, House No.' }
+              ].map((field) => (
+                <Grid item xs={12} sm={6} key={field.name}>
+                  <TextField
+                    fullWidth
+                    name={field.name}
+                    label={field.label}
+                    variant="outlined"
+                    value={address[field.name] || ''}
+                    onChange={handleAddressChange}
+                    disabled={!isEditMode}
+                    size="small"
+                  />
+                </Grid>
+              ))}
+            </Grid>
+
+            {isEditMode && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveAddress}
+                sx={{ mt: 3 }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Saving...' : 'Save Address'}
+              </Button>
+            )}
+          </Grid>
+        </Grid>
+      </Paper>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
           onClose={handleSnackbarClose}
+          severity={snackbarMessage.includes('Error') ? 'error' : 'success'}
+          sx={{ width: '100%' }}
         >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbarMessage.includes('Error') ? 'error' : 'success'}
-            sx={{ width: '100%' }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </Box>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

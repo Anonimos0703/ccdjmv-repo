@@ -23,10 +23,6 @@ public class ProductEntity {
     private String productImage;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonManagedReference("product-order")
-    private List<OrderEntity> order;
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference("product-productreview")
     private List<ProductReviewEntity> productreview;
     
@@ -85,14 +81,6 @@ public class ProductEntity {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	 
-	 public List<OrderEntity> getOrder() {
-	        return order;
-	    }
-
-	    public void setOrder(List<OrderEntity> order) {
-	        this.order = order;
-	    }
 
 	    public List<ProductReviewEntity> getProductReview(){
 	    	return productreview;

@@ -18,45 +18,55 @@ public class AddressService {
     private AddressRepository addressRepository;
 
     @Autowired
-    private UserRepository userRepository; // Add this to access UserEntity
+    private UserRepository userRepository;
 
-    // Add a new address to a user
-    public AddressEntity addAddressToUser(Long userId, AddressEntity address) {
-        Optional<UserEntity> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            address.setUser(user.get());
-            return addressRepository.save(address);
+    // Add or update the address for a user
+    public AddressEntity addOrUpdateAddressForUser(Long userId, AddressEntity address) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        // If user already has an address, update it
+        AddressEntity existingAddress = user.getAddress();
+        if (existingAddress != null) {
+            existingAddress.setRegion(address.getRegion());
+            existingAddress.setProvince(address.getProvince());
+            existingAddress.setCity(address.getCity());
+            existingAddress.setBarangay(address.getBarangay());
+            existingAddress.setPostalCode(address.getPostalCode());
+            existingAddress.setStreetBuildingHouseNo(address.getStreetBuildingHouseNo());
+            return addressRepository.save(existingAddress);
         }
-        return null;
+
+        // Otherwise, create a new address and associate it with the user
+        address.setUser(user);
+        user.setAddress(address);
+        userRepository.save(user); // Cascade ensures address is saved
+        return address;
     }
 
-    // Get all addresses for a user
-    public List<AddressEntity> getAddressesByUserId(Long userId) {
-        return addressRepository.findByUserId(userId);
+    // Get the address for a user
+    public AddressEntity getAddressByUserId(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        return user.getAddress();
     }
 
-    // Update an existing address
-    public AddressEntity updateAddress(Long userId, Integer addressId, AddressEntity address) {
-        Optional<AddressEntity> existingAddress = addressRepository.findById(addressId);
-        if (existingAddress.isPresent() && existingAddress.get().getUser().getId().equals(userId)) {
-            // Update the existing address fields
-            AddressEntity addressToUpdate = existingAddress.get();
-            addressToUpdate.setRegion(address.getRegion());
-            addressToUpdate.setProvince(address.getProvince());
-            addressToUpdate.setCity(address.getCity());
-            addressToUpdate.setBarangay(address.getBarangay());
-            addressToUpdate.setPostalCode(address.getPostalCode());
-            addressToUpdate.setBuildingHouseNo(address.getBuildingHouseNo());
-            return addressRepository.save(addressToUpdate);
-        }
-        return null; // If address is not found or user doesn't match
-    }
+    // Delete the address for a user
+    public void deleteAddressForUser(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-    // Delete an address
-    public void deleteAddress(Long userId, Integer addressId) {
-        Optional<AddressEntity> address = addressRepository.findById(addressId);
-        if (address.isPresent() && address.get().getUser().getId().equals(userId)) {
-            addressRepository.deleteById(addressId);
+        AddressEntity address = user.getAddress();
+        if (address != null) {
+            user.setAddress(null); // Unlink the address from the user
+            userRepository.save(user); // Save changes to the user
+            addressRepository.delete(address); // Delete the address
         }
+    }
+    
+    // Get all addresses from every user
+    public List<AddressEntity> getAllAddress() {
+    	return addressRepository.findAll();
     }
 }
+

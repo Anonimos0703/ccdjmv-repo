@@ -155,11 +155,6 @@ public class UserController {
         }
     }
 
-
-
-
-
-
     @GetMapping("/users/{id}/profile-image")
     public ResponseEntity<?> getProfileImage(@PathVariable Long id) {
         try {
@@ -183,7 +178,6 @@ public class UserController {
         }
     }
 
-    
     @PutMapping("users/{id}/address")
     public ResponseEntity<String> updateUserAddress(
             @PathVariable Long id,
@@ -197,6 +191,11 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update address.");
         }
+    }
+    
+    @GetMapping("/user/findById/{id}")
+    public Optional<UserEntity> findUserById(@PathVariable Long id) {
+    	return userService.findUserById(id);
     }
 
 }

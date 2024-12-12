@@ -19,7 +19,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-	private AddressRepository addressRepository;
 
     public String signUp(UserEntity user) {
         Optional<UserEntity> existingUser = userRepository.findByEmail(user.getEmail());
@@ -78,11 +77,8 @@ public class UserService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
 
-        // Check if the address to update already exists for the user
-        AddressEntity existingAddress = user.getAddresses().stream()
-                .filter(address -> address.getAddressId().equals(addressEntity.getAddressId()))
-                .findFirst()
-                .orElse(null);
+        // Check if the user already has an address
+        AddressEntity existingAddress = user.getAddress();
 
         if (existingAddress != null) {
             // Update the existing address
@@ -91,14 +87,19 @@ public class UserService {
             existingAddress.setCity(addressEntity.getCity());
             existingAddress.setBarangay(addressEntity.getBarangay());
             existingAddress.setPostalCode(addressEntity.getPostalCode());
-            existingAddress.setBuildingHouseNo(addressEntity.getBuildingHouseNo());
+            existingAddress.setStreetBuildingHouseNo(addressEntity.getStreetBuildingHouseNo());
         } else {
             // Create a new address and associate it with the user
             addressEntity.setUser(user);
-            user.getAddresses().add(addressEntity);
+            user.setAddress(addressEntity);
         }
 
-        // Save the user entity (addresses will cascade)
+        // Save the user entity (the address will cascade if configured properly)
         userRepository.save(user);
     }
+    
+    public Optional<UserEntity> findUserById(Long id) {
+    	return userRepository.findById(id);
+    }
+
 }
