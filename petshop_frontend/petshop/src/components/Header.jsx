@@ -12,6 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import defaultProfileImage from "../assets/default_profile.png";
 import paw1 from "../assets/paw1.png";
+import elogo from "../assets/elogo.png";
 
 export default function Header({ username, role, userId }) {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ export default function Header({ username, role, userId }) {
         }}
       >
         <Toolbar>
-          <Typography
+          {/* <Typography
             variant="h4"
             component="div"
             sx={{
@@ -145,7 +146,8 @@ export default function Header({ username, role, userId }) {
             }}
           >
             Tails and Whiskers
-          </Typography>
+          </Typography> */}
+           <img src={elogo} alt="Logo" style={{ width: '200px', height: 'auto', marginRight: '970px'  }} />
           <Button
                         sx={{
                           color: "black",
@@ -189,6 +191,7 @@ export default function Header({ username, role, userId }) {
                   width: 25,
                   height: 25,
                   border: "2px solid black",
+                  marginLeft: '20px' 
                 }}
                 onClick={handleDrawerToggle}
               />
