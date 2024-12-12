@@ -17,22 +17,24 @@ function OrderList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch orders from the Spring Boot API
+    const userId = localStorage.getItem('id');
     axios
-      .get("http://localhost:8080/api/order/getAllOrders") // Assuming the backend runs at this URL
+      .get(`http://localhost:8080/api/order/getAllOrdersByUserId`, {
+        params: { userId },
+      })
       .then((response) => {
-        console.log("Orders fetched from backend:", response.data); // Log orders data
-        setOrders(response.data); // Assuming the backend returns an array of orders
+        console.log("Orders fetched from backend:", response.data);
+        setOrders(response.data);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching orders:", error);
         setLoading(false);
       });
-  }, []);
+}, []);
 
   const calculateTotal = (items) => {
-    const shippingFee = 30; // Always set shipping fee to 30
+    const shippingFee = 30; 
     let itemsTotal = 0;
 
     if (items) {
