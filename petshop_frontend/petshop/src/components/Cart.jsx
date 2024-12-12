@@ -21,11 +21,13 @@ function Cart() {
   const [cartItems, setCartItem] = useState([]);
   const [selectedItems, setSelectedItems] = useState(new Set()); //track selected items by ID
   const [openDialog, setOpenDialog] = useState(false); // Dialog state
+  const [openNoAddressDialog, setNoAddressDialog] = useState(false); // Dialog state
   const [itemToDelete, setItemToDelete] = useState(null); // Item ID to delete
+  const [userId, setUserId] = useState(localStorage.getItem("id"));
 
-  const getCartItems = (cartId) => {
+  const getCartItems = () => {
     axios
-      .get(`http://localhost:8080/api/cart/getCartById/${cartId}`)
+      .get(`http://localhost:8080/api/cart/getCartById/${userId}`)
       .then((res) => {
         const updatedCartItems = res.data.cartItems.map((item) => {
           // If cart item quantity is greater than available stock
@@ -56,24 +58,14 @@ function Cart() {
         setCartItem(sortedCartItems); // Update the state
       })
       .catch((err) => {
-        console.error("Error fetching cart items:", err);
+        console.error("Error fetching cart items", err);
         toast.error("Error fetching cart items");
       });
   };
 
+  // USE EFFECT
   useEffect(() => {
-    const cartId = localStorage.getItem("id");
-    // //this is a problem for the user because last updated cart items are sorted to the top upon reload
-    // //necessary for up to date cart items quantities. Updates every 15 seconds so no need to reload page
-    // const fetchAndScheduleNext = () => {
-    //   getCartItems(cartId); // Fetch cart items
-    //   setTimeout(fetchAndScheduleNext, 15000); // Schedule next fetch
-    // };
-    // fetchAndScheduleNext(); // Start the recursive fetching
-
-    // return () => clearTimeout(fetchAndScheduleNext); // Cleanup
-
-    getCartItems(cartId);
+    getCartItems();
   }, []);
 
   const handleCheckChange = (itemId, isChecked) => {
@@ -113,31 +105,48 @@ function Cart() {
 
   const handleDialogClose = () => {
     setOpenDialog(false); // Close the dialog
+    setNoAddressDialog(false);
   };
 
   const navigate = useNavigate();
 
   const handleCheckoutClick = () => {
+    //fetch user address to check if user has an address saved in the db
     if (selectedItems.size === 0) {
       toast.error("Please select items to checkout");
       return;
     }
 
-    // Calculate the subtotal and selected items
-    const selectedItemsDetails = cartItems.filter((item) =>
-      selectedItems.has(item.cartItemId)
-    );
+    axios
+      .get(`http://localhost:8080/auth/user/findById/${userId}`)
+      .then((res) => {
+        const userAddress = res.data?.address ?? null;
 
-    const orderSummary = {
-      subtotal: getSubtotal(),
-      shippingFee: getShippingFee(),
-      total: getTotal(),
-    };
+        if (userAddress === null) {
+          setNoAddressDialog(true);
+          return;
+        }
 
-    // Pass selected items and order summary to Checkout page via `state`
-    navigate("/Checkout", {
-      state: { selectedItems: selectedItemsDetails, orderSummary },
-    });
+        // Calculate the subtotal and selected items
+        const selectedItemsDetails = cartItems.filter((item) =>
+          selectedItems.has(item.cartItemId)
+        );
+
+        const orderSummary = {
+          subtotal: getSubtotal(),
+          shippingFee: getShippingFee(),
+          total: getTotal(),
+        };
+
+        // Pass selected items and order summary to Checkout page via `state`
+        navigate("/checkout", {
+          state: { selectedItems: selectedItemsDetails, orderSummary },
+        });
+      })
+      .catch((err) => {
+        console.error("Cart: error fetching address", err);
+        toast.error("Unexpected error occured. Please try again later");
+      });
   };
 
   const handleConfirmDelete = () => {
@@ -159,6 +168,10 @@ function Cart() {
           toast.error("Failed to delete item from cart");
         });
     }
+  };
+
+  const handleConfirmCreateAddress = () => {
+    navigate("/profile");
   };
 
   //functions for calculations
@@ -294,6 +307,22 @@ function Cart() {
             Cancel
           </Button>
           <Button onClick={handleConfirmDelete} color="secondary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirmation dialog for Missing Address */}
+      <Dialog open={openNoAddressDialog} onClose={handleDialogClose}>
+        <DialogTitle>No Address Yet</DialogTitle>
+        <DialogContent>
+          <Typography>Add address to your profile?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmCreateAddress} color="secondary">
             Confirm
           </Button>
         </DialogActions>
