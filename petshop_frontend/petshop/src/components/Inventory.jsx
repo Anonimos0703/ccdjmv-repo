@@ -183,7 +183,7 @@ const Inventory = () => {
   };
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ padding: 4, height: "100vh" }}>
       <Typography variant="h4" gutterBottom>
         Inventory Management
       </Typography>

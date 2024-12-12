@@ -24,7 +24,7 @@ export default function EmptyCart() {
           width: "100%",
           maxWidth: 400,
           padding: 4,
-          boxShadow: 3,
+          boxShadow: 0,
         }}
       >
         <CardContent

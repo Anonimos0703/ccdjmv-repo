@@ -21,6 +21,11 @@ const OrderDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const userId = localStorage.getItem("id");
+    if(!userId){
+      navigate("/");
+      return;
+    }
     if (orderID) {
       axios
         .get(`http://localhost:8080/api/order/getOrderDetails/${orderID}`)

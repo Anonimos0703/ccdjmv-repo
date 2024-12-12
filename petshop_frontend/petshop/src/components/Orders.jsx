@@ -17,6 +17,11 @@ function OrderList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const userId = localStorage.getItem('id');
+    if(!userId){
+      navigate("/");
+      return;
+    }
     // Fetch orders from the Spring Boot API
     axios
       .get("http://localhost:8080/api/order/getAllOrders") // Assuming the backend runs at this URL

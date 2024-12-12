@@ -17,6 +17,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import EmptyCart from "./EmptyCart";
+import Table from "@mui/material/Table";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
 
 function Cart() {
   const [cartItems, setCartItem] = useState([]);
@@ -66,6 +70,10 @@ function Cart() {
 
   // USE EFFECT
   useEffect(() => {
+    if (!userId) {
+      navigate("/");
+      return;
+    }
     getCartItems();
   }, []);
 
@@ -228,12 +236,23 @@ function Cart() {
       </Box>
 
       {/* Main Grid Layout */}
-      {cartItems.length === 0 ? (
-        <EmptyCart />
-      ) : (
-        <Grid container spacing={2} justifyContent="center">
-          {/* Cart Items */}
-          <Grid item xs={12} md={8}>
+      <Grid container spacing={2} justifyContent="center">
+        {/* Cart Items */}
+        <Grid item xs={12} md={8}>
+          <Table variant="paper" size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Product</TableCell>
+                <TableCell>Unit Price</TableCell>
+                <TableCell>Quantity</TableCell>
+                <TableCell>Total Price</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+          </Table>
+          {cartItems.length === 0 ? (
+            <EmptyCart />
+          ) : (
             <Grid container spacing={2}>
               {cartItems.map((item, index) => (
                 <CartItem
@@ -251,54 +270,54 @@ function Cart() {
                 />
               ))}
             </Grid>
-          </Grid>
-
-          {/* Order Summary */}
-          <Grid
-            item
-            xs={12}
-            md={3}
-            sx={{
-              position: "sticky",
-              top: "140px",
-              zIndex: 2, // Ensure it has a background to stand out
-              padding: "10px", // Add padding to make the content look better
-              height: "fit-content", // Ensures the card doesn't take up unnecessary space
-              borderRadius: "16px",
-            }}
-          >
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6">Summary</Typography>
-                <Divider style={{ margin: "10px 0" }} />
-                <Typography variant="body2">
-                  Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
-                </Typography>
-                <Typography variant="body2">
-                  Shipping Fee: ₱{getShippingFee()}
-                </Typography>
-
-                <Divider style={{ margin: "10px 0" }} />
-                <Typography variant="h6">Total: ₱{getTotal()}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  VAT included, where applicable
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  color="warning"
-                  fullWidth
-                  style={{ marginTop: "15px" }}
-                  onClick={handleCheckoutClick}
-                  disabled={selectedItems.size === 0}
-                >
-                  PROCEED TO CHECKOUT
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+          )}
         </Grid>
-      )}
+
+        {/* Order Summary */}
+        <Grid
+          item
+          xs={12}
+          md={3}
+          sx={{
+            position: "sticky",
+            top: "140px",
+            zIndex: 2, // Ensure it has a background to stand out
+            padding: "10px", // Add padding to make the content look better
+            height: "fit-content", // Ensures the card doesn't take up unnecessary space
+            borderRadius: "16px",
+          }}
+        >
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6">Summary</Typography>
+              <Divider style={{ margin: "10px 0" }} />
+              <Typography variant="body2">
+                Subtotal ({selectedItems.size} item/s): ₱{getSubtotal()}
+              </Typography>
+              <Typography variant="body2">
+                Shipping Fee: ₱{getShippingFee()}
+              </Typography>
+
+              <Divider style={{ margin: "10px 0" }} />
+              <Typography variant="h6">Total: ₱{getTotal()}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                VAT included, where applicable
+              </Typography>
+
+              <Button
+                variant="contained"
+                color="warning"
+                fullWidth
+                style={{ marginTop: "15px" }}
+                onClick={handleCheckoutClick}
+                disabled={selectedItems.size === 0}
+              >
+                PROCEED TO CHECKOUT
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
       {/* Confirmation dialog for Delete Cart Item */}
       <Dialog open={openDialog} onClose={handleDialogClose}>
