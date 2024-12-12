@@ -20,18 +20,21 @@ public class OrderItemEntity {
    
     @Column(name = "product_id", nullable = true)
     private String productId;
+    
+    private boolean isRated;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;
-
+    
     public OrderItemEntity() {
         super();
+        this.isRated = false;
     }
 
 	public OrderItemEntity(int orderItemID, String orderItemName, String orderItemImage, double price, int quantity,
-			String productId, OrderEntity order) {
+			String productId, boolean isRated, OrderEntity order) {
 		super();
 		this.orderItemID = orderItemID;
 		this.orderItemName = orderItemName;
@@ -39,6 +42,7 @@ public class OrderItemEntity {
 		this.price = price;
 		this.quantity = quantity;
 		this.productId = productId;
+		this.isRated = isRated;
 		this.order = order;
 	}
 
@@ -88,6 +92,14 @@ public class OrderItemEntity {
 
 	public void setProductId(String productId) {
 		this.productId = productId;
+	}
+
+	public boolean isRated() {
+		return isRated;
+	}
+
+	public void setRated(boolean isRated) {
+		this.isRated = isRated;
 	}
 
 	public OrderEntity getOrder() {
