@@ -9,6 +9,11 @@ import {
   Button,
   CircularProgress,
   TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
 import { Toaster, toast } from 'sonner';
 
@@ -17,6 +22,8 @@ const AppointmentList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -53,10 +60,6 @@ const AppointmentList = () => {
   }, []);
 
   const handleCancelAppointment = async (appId) => {
-    if (!window.confirm('Are you sure you want to cancel this appointment?')) {
-      return;
-    }
-
     try {
       const response = await fetch(`http://localhost:8080/api/appointments/cancel/${appId}`, {
         method: 'PUT',
@@ -70,10 +73,13 @@ const AppointmentList = () => {
       toast.success('Appointment canceled successfully.');
 
       // Update the local state to remove the canceled appointment
-      setAppointments(prev => prev.filter(appointment => appointment.appId !== appId));
+      setAppointments((prev) => prev.filter((appointment) => appointment.appId !== appId));
     } catch (err) {
       console.error('Error canceling appointment:', err);
       toast.error(err.message);
+    } finally {
+      setDialogOpen(false);
+      setSelectedAppointmentId(null);
     }
   };
 
@@ -105,6 +111,16 @@ const AppointmentList = () => {
   const filteredAppointments = appointments.filter((appointment) =>
     appointment.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleOpenDialog = (appId) => {
+    setSelectedAppointmentId(appId);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedAppointmentId(null);
+  };
 
   return (
     <Box
@@ -179,7 +195,6 @@ const AppointmentList = () => {
                       <Typography variant="body2" component="span">Payment Method: {appointment.paymentMethod}</Typography>
                     </>
                   }
-                  
                 />
                 {appointment.canceled && (
                   <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>
@@ -203,7 +218,7 @@ const AppointmentList = () => {
                 <Button
                   variant="contained"
                   color="error"
-                  onClick={() => handleCancelAppointment(appointment.appId)}
+                  onClick={() => handleOpenDialog(appointment.appId)}
                   sx={{ ml: 2 }}
                 >
                   Cancel
@@ -213,6 +228,27 @@ const AppointmentList = () => {
           </List>
         )}
       </Container>
+
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Confirm Cancelation</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to cancel this appointment? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            No
+          </Button>
+          <Button
+            onClick={() => handleCancelAppointment(selectedAppointmentId)}
+            color="error"
+            autoFocus
+          >
+            Yes, Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
