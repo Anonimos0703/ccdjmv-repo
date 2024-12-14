@@ -38,6 +38,12 @@ public class OrderController {
     public List<OrderEntity> getAllOrdersByUserId(@RequestParam int userId) {
         return oserv.getAllOrdersByUserId(userId);
     }
+    
+    @GetMapping("/get-total-income")
+    public Double getTotalIncome() {
+        // Call the service method to get the total income
+        return oserv.getTotalIncome();
+    }
     // UPDATE
     @PutMapping("/putOrderDetails")
     public OrderEntity putOrderDetails(@RequestParam int id, @RequestBody OrderEntity newOrderDetails) {
@@ -49,4 +55,5 @@ public class OrderController {
     public String deleteOrder(@PathVariable int id) {
         return oserv.deleteOrder(id);
     }
+    
 }

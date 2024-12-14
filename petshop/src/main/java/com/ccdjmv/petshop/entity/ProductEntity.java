@@ -18,6 +18,7 @@ public class ProductEntity {
     private String productName;
     private String productType;
     private int quantity;
+    private int quantitySold;
     
     @Column(columnDefinition = "LONGTEXT")
     private String productImage;
@@ -33,10 +34,11 @@ public class ProductEntity {
     // Constructors
     public ProductEntity() {
     	super();
+    	this.quantitySold = 0;
     }
 
 	public ProductEntity(int productID, String description, double productPrice, String productName, String productType,
-			int quantity, String productImage, List<ProductReviewEntity> productreview,
+			int quantity, int quantitySold, String productImage, List<ProductReviewEntity> productreview,
 			List<CartItemEntity> cartItems) {
 		super();
 		ProductID = productID;
@@ -45,6 +47,7 @@ public class ProductEntity {
 		this.productName = productName;
 		this.productType = productType;
 		this.quantity = quantity;
+		this.quantitySold = quantitySold;
 		this.productImage = productImage;
 		this.productreview = productreview;
 		this.cartItems = cartItems;
@@ -98,6 +101,14 @@ public class ProductEntity {
 		this.quantity = quantity;
 	}
 
+	public int getQuantitySold() {
+		return quantitySold;
+	}
+
+	public void setQuantitySold(int quantitySold) {
+		this.quantitySold = quantitySold;
+	}
+
 	public String getProductImage() {
 		return productImage;
 	}
@@ -121,5 +132,6 @@ public class ProductEntity {
 	public void setCartItems(List<CartItemEntity> cartItems) {
 		this.cartItems = cartItems;
 	}
-    
+
+	
 }

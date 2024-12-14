@@ -1,26 +1,53 @@
 package com.ccdjmv.petshop.service;
 
 import com.ccdjmv.petshop.entity.OrderEntity;
+import com.ccdjmv.petshop.entity.OrderItemEntity;
+import com.ccdjmv.petshop.entity.ProductEntity;
 import com.ccdjmv.petshop.repository.OrderRepository;
+import com.ccdjmv.petshop.repository.ProductRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameNotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class OrderService {
 
     @Autowired
     OrderRepository orepo;
+    
+    @Autowired
+    ProductRepository productRepository;
 
     public OrderService() {
         super();
     }
 
+    @Transactional
     public OrderEntity postOrderRecord(OrderEntity order) {
-        return orepo.save(order);
+        // Loop through each OrderItemEntity in the order
+        for (OrderItemEntity orderItem : order.getOrderItems()) {
+            // Find the corresponding product for the order item
+        	Optional<ProductEntity> optionalProduct = productRepository.findById(Integer.parseInt(orderItem.getProductId()));
+        	if (optionalProduct.isPresent()) {
+        	    ProductEntity product = optionalProduct.get();
+        	    product.setQuantity(product.getQuantity() - orderItem.getQuantity());
+        	    product.setQuantitySold(product.getQuantitySold() + orderItem.getQuantity());
+        	    productRepository.save(product);
+        	} else {
+        	    throw new RuntimeException("Product not found with ID: " + orderItem.getProductId());
+        	}
+
+        }
+
+        // Save the order
+        return orepo.save(order); // Save the order after handling the product updates
     }
 
     public OrderService(OrderRepository orderRepository) {
@@ -69,5 +96,10 @@ public class OrderService {
             msg = id +  " NOT found";
         }
         return msg;
+    }
+    
+    public Double getTotalIncome() {
+        // Call the repository method to get the sum of all totalPrice values
+        return orepo.calculateTotalIncome();
     }
 }

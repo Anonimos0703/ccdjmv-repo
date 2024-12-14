@@ -55,4 +55,17 @@ public class ProductService {
         }
         return msg;
     }
+    
+    public int calculateTotalQuantitySold() {
+        // Fetch all products
+        List<ProductEntity> products = prepo.findAll();
+        
+        // Calculate total quantitySold
+        int totalQuantitySold = 0;
+        for (ProductEntity product : products) {
+            totalQuantitySold += product.getQuantitySold();
+        }
+
+        return totalQuantitySold;
+    }
 }

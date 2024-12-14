@@ -57,5 +57,10 @@ public class ProductController {
 	public String deleteProduct(@PathVariable int id) {
 		return pserv.deleteProduct(id);
 	}
+	
+	 @GetMapping("/getTotalQuantitySold")
+	    public int getTotalQuantitySold() {
+	        return pserv.calculateTotalQuantitySold();
+	    }
 
 }

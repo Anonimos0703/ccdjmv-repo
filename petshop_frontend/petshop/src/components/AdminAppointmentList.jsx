@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -14,24 +14,24 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@mui/material';
-import { Toaster, toast } from 'sonner';
+} from "@mui/material";
+import { Toaster, toast } from "sonner";
 
 const AppointmentList = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        console.log('Sending request to API: http://localhost:8080/api/appointments/getAppointment');
+        console.log("Sending request to API: http://localhost:8080/api/appointments/getAppointment");
 
-        const response = await fetch('http://localhost:8080/api/appointments/getAppointment');
-        console.log('API response status:', response.status);
+        const response = await fetch("http://localhost:8080/api/appointments/getAppointment");
+        console.log("API response status:", response.status);
 
         if (!response.ok) {
           let errorMessage;
@@ -45,10 +45,10 @@ const AppointmentList = () => {
         }
 
         const data = await response.json();
-        console.log('Fetched appointments:', data);
+        console.log("Fetched appointments:", data);
         setAppointments(data);
       } catch (err) {
-        console.error('Error fetching appointments:', err);
+        console.error("Error fetching appointments:", err);
         setError(err.message);
         toast.error(err.message);
       } finally {
@@ -62,20 +62,20 @@ const AppointmentList = () => {
   const handleCancelAppointment = async (appId) => {
     try {
       const response = await fetch(`http://localhost:8080/api/appointments/cancel/${appId}`, {
-        method: 'PUT',
+        method: "PUT",
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to cancel the appointment.');
+        throw new Error(errorData.message || "Failed to cancel the appointment.");
       }
 
-      toast.success('Appointment canceled successfully.');
+      toast.success("Appointment canceled successfully.");
 
       // Update the local state to remove the canceled appointment
       setAppointments((prev) => prev.filter((appointment) => appointment.appId !== appId));
     } catch (err) {
-      console.error('Error canceling appointment:', err);
+      console.error("Error canceling appointment:", err);
       toast.error(err.message);
     } finally {
       setDialogOpen(false);
@@ -86,15 +86,15 @@ const AppointmentList = () => {
   const handleConfirmAppointment = async (appId) => {
     try {
       const response = await fetch(`http://localhost:8080/api/appointments/confirm/${appId}`, {
-        method: 'PUT',
+        method: "PUT",
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to confirm the appointment.');
+        throw new Error(errorData.message || "Failed to confirm the appointment.");
       }
 
-      toast.success('Appointment confirmed successfully.');
+      toast.success("Appointment confirmed successfully.");
 
       // Update the local state to reflect the confirmed status
       setAppointments((prevAppointments) =>
@@ -103,7 +103,7 @@ const AppointmentList = () => {
         )
       );
     } catch (err) {
-      console.error('Error confirming appointment:', err);
+      console.error("Error confirming appointment:", err);
       toast.error(err.message);
     }
   };
@@ -125,26 +125,26 @@ const AppointmentList = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f7f7f7',
-        padding: '2rem',
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f7f7f7",
+        padding: "2rem",
       }}
     >
       <Toaster richColors />
       <Container
         maxWidth="md"
         sx={{
-          padding: '2rem',
+          padding: "2rem",
           boxShadow: 3,
           borderRadius: 2,
-          backgroundColor: '#ffffff',
+          backgroundColor: "#ffffff",
         }}
       >
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: '#333' }}>
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold", color: "#333" }}>
           My Appointments
         </Typography>
 
@@ -173,36 +173,46 @@ const AppointmentList = () => {
               <ListItem
                 key={appointment.appId}
                 sx={{
-                  borderBottom: '1px solid #ddd',
-                  padding: '1rem 0',
-                  '&:last-child': {
-                    borderBottom: 'none',
+                  borderBottom: "1px solid #ddd",
+                  padding: "1rem 0",
+                  "&:last-child": {
+                    borderBottom: "none",
                   },
                 }}
               >
                 <ListItemText
                   primary={
-                    <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: "medium" }}>
                       {`Date: ${appointment.date}, Time: ${appointment.time}`}
                     </Typography>
                   }
                   secondary={
                     <>
-                      <Typography variant="body2" component="span">Email: {appointment.email}</Typography>
-                      <Typography variant="body2" component="span">Contact: {appointment.contactNo}</Typography>
-                      <Typography variant="body2" component="span">Service: {appointment.groomService}</Typography>
-                      <Typography variant="body2" component="span">Price: ₱{appointment.price}</Typography>
-                      <Typography variant="body2" component="span">Payment Method: {appointment.paymentMethod}</Typography>
+                      <Typography variant="body2" component="span">
+                        Email: {appointment.email}
+                      </Typography>
+                      <Typography variant="body2" component="span">
+                        Contact: {appointment.contactNo}
+                      </Typography>
+                      <Typography variant="body2" component="span">
+                        Service: {appointment.groomService}
+                      </Typography>
+                      <Typography variant="body2" component="span">
+                        Price: ₱{appointment.price}
+                      </Typography>
+                      <Typography variant="body2" component="span">
+                        Payment Method: {appointment.paymentMethod}
+                      </Typography>
                     </>
                   }
                 />
                 {appointment.canceled && (
-                  <Typography color="error" sx={{ fontStyle: 'italic', marginTop: 1 }}>
-                    This appointment has been canceled. 
+                  <Typography color="error" sx={{ fontStyle: "italic", marginTop: 1 }}>
+                    This appointment has been canceled.
                   </Typography>
                 )}
                 {appointment.confirmed ? (
-                  <Typography color="success" sx={{ fontStyle: 'italic', marginTop: 1 }}>
+                  <Typography color="success" sx={{ fontStyle: "italic", marginTop: 1 }}>
                     This appointment has been confirmed.
                   </Typography>
                 ) : (
@@ -240,11 +250,7 @@ const AppointmentList = () => {
           <Button onClick={handleCloseDialog} color="primary">
             No
           </Button>
-          <Button
-            onClick={() => handleCancelAppointment(selectedAppointmentId)}
-            color="error"
-            autoFocus
-          >
+          <Button onClick={() => handleCancelAppointment(selectedAppointmentId)} color="error" autoFocus>
             Yes, Cancel
           </Button>
         </DialogActions>

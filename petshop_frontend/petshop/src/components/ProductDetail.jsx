@@ -11,26 +11,27 @@ import {
   Button,
   IconButton,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import { Toaster, toast } from 'sonner';
+import { Toaster, toast } from "sonner";
 import StarDisplay from "./StarDisplay";
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#8B4513',
-      light: '#D2B48C',
+      main: "#8B4513",
+      light: "#D2B48C",
     },
     secondary: {
-      main: '#FFA500',
+      main: "#FFA500",
     },
     background: {
-      default: '#FFF5E6',
-      paper: '#FFFFFF',
+      default: "#FFF5E6",
+      paper: "#FFFFFF",
     },
   },
   typography: {
@@ -40,7 +41,7 @@ const theme = createTheme({
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
-  minHeight: '100vh',
+  minHeight: "100vh",
   padding: theme.spacing(4),
 }));
 
@@ -95,7 +96,7 @@ const ProductDetail = () => {
   const handleAddToCart = async () => {
     const cartId = localStorage.getItem("id");
     if (itemQuantity <= 0) {
-      toast.warning('Quantity must be greater than 0!');
+      toast.warning("Quantity must be greater than 0!");
       return;
     }
     const cartItem = {
@@ -104,42 +105,36 @@ const ProductDetail = () => {
         cartId: cartId,
       },
       product: {
-        productID: product.productID
-      }
+        productID: product.productID,
+      },
     };
 
     try {
-      const cartResponse = await axios.get(
-        `http://localhost:8080/api/cart/getCartById/${cartId}`
-      );
+      const cartResponse = await axios.get(`http://localhost:8080/api/cart/getCartById/${cartId}`);
       const existingCartItems = cartResponse.data.cartItems;
-      
-      const existingCartItem = existingCartItems.find(
-        (item) => item.product.productID === product.productID
-      );
-  
+
+      const existingCartItem = existingCartItems.find((item) => item.product.productID === product.productID);
+
       if (existingCartItem) {
         const updatedQuantity = existingCartItem.quantity + itemQuantity;
         if (updatedQuantity > product.quantity) {
-          toast.error(`You already have ${existingCartItem.quantity} in your cart. Unable to add more as it would exceed the remaining stock`);
+          toast.error(
+            `You already have ${existingCartItem.quantity} in your cart. Unable to add more as it would exceed the remaining stock`
+          );
           return;
         }
-        await axios.put(
-          `http://localhost:8080/api/cartItem/updateCartItem/${existingCartItem.cartItemId}`,
-          { quantity: updatedQuantity }
-        );
-  
+        await axios.put(`http://localhost:8080/api/cartItem/updateCartItem/${existingCartItem.cartItemId}`, {
+          quantity: updatedQuantity,
+        });
+
         toast.success(`Added ${itemQuantity} more of this item to the cart`);
       } else {
-        const response = await axios.post(
-          'http://localhost:8080/api/cartItem/postCartItem',
-          cartItem
-        );
-  
-        toast.success('Added to cart!');
+        const response = await axios.post("http://localhost:8080/api/cartItem/postCartItem", cartItem);
+
+        toast.success("Added to cart!");
       }
     } catch (error) {
-      toast.error('Failed to add to cart. Please try again.');
+      toast.error("Failed to add to cart. Please try again.");
     }
   };
 
@@ -151,15 +146,24 @@ const ProductDetail = () => {
         <Toaster position="top-center" duration={2500} />
 
         {/* Wrapper Box to center the card */}
-        <Box 
-          sx={{ 
-            display: "flex", 
-            justifyContent: "center", 
-            alignItems: "center", 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             height: "100vh", // Makes the parent container take the full height of the viewport
           }}
         >
-          <Card sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", mb: 4, width: "50%" }}>
+          <Card
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              mb: 4,
+              width: "50%",
+            }}
+          >
             <CardMedia
               component="img"
               sx={{ width: "300px", height: "300px", objectFit: "cover", mb: 2 }}
@@ -195,14 +199,19 @@ const ProductDetail = () => {
                   <AddIcon />
                 </IconButton>
               </Box>
-              <Button 
-                variant="contained" 
-                color="primary"
-                onClick={handleAddToCart}
-                sx={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
-              >
-                Add to Cart
-              </Button>
+              <Tooltip title={product?.quantity <= 0 ? "Out of stock" : ""}>
+                <span>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddToCart}
+                    disabled={product.quantity <= 0}
+                    sx={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
+                  >
+                    Add to Cart
+                  </Button>
+                </span>
+              </Tooltip>
             </CardContent>
           </Card>
         </Box>
@@ -218,7 +227,8 @@ const ProductDetail = () => {
               <Grid item xs={12} key={index}>
                 <Card>
                   <CardContent>
-                    <Typography variant="body2"> {review.username}</Typography><br />
+                    <Typography variant="body2"> {review.username}</Typography>
+                    <br />
                     <StarDisplay rating={review.ratings} /> {/* Display star rating */}
                     <Typography variant="body2">Comment: {review.comment}</Typography>
                   </CardContent>
@@ -231,7 +241,6 @@ const ProductDetail = () => {
         </Grid>
       </PageWrapper>
     </ThemeProvider>
-
   );
 };
 
