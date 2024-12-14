@@ -5,13 +5,32 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+// import Menu from "@mui/material/Menu";
+// import MenuItem from "@mui/material/MenuItem";
 
 export default function AdminHeader() {
   const navigate = useNavigate();
 
+  // const [anchorEl, setAnchorEl] = useState(null);
+  // const open = Boolean(anchorEl);
+
+  // const handleMenuClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  // };
+
+  // const handleMenuOptionClick = (route) => {
+  //   setAnchorEl(null);
+  //   navigate(route);
+  // };
+
   const handleLogout = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("role");
+    // setAnchorEl(null);
     navigate("/admin/login");
   };
 
@@ -51,7 +70,7 @@ export default function AdminHeader() {
           <Button
             sx={{
               color: "red",
-              "&:hover": {
+              "&:hover" : {
                 backgroundColor: "error.dark",
                 color: "white",
               },
@@ -61,6 +80,27 @@ export default function AdminHeader() {
           >
             Logout
           </Button>
+          {/* <Button     
+            sx={{ color: "black" }}
+            onClick={handleMenuClick}
+          >
+            More
+          </Button> */}
+          {/* <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMenuClose}
+            PaperProps={{
+              style: {
+                marginTop: "40px",
+              },
+            }}
+          >
+            <MenuItem onClick={() => handleMenuOptionClick("/admin/profile")}>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu> */}
         </Toolbar>
       </AppBar>
       <Box sx={{ mt: 8 }} />

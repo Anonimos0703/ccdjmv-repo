@@ -21,10 +21,12 @@ export default function Header({ username, role, userId }) {
 
   useEffect(() => {
     if (userId) {
+      // Check localStorage first
       const storedImage = localStorage.getItem("profileImage");
       if (storedImage) {
         setProfileImage(storedImage);
       } else {
+        // Fetch from backend if not in localStorage
         fetchProfileImage(userId);
       }
     }
@@ -77,12 +79,14 @@ export default function Header({ username, role, userId }) {
 
   const fetchProfileImage = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/auth/users/${id}/profile-image`);
+      const response = await fetch(
+        `http://localhost:8080/auth/users/${id}/profile-image`
+      );
       if (response.ok) {
         const profileImageUrl = await response.text();
         const imageUrl = profileImageUrl || defaultProfileImage;
         setProfileImage(imageUrl);
-        localStorage.setItem("profileImage", imageUrl);
+        localStorage.setItem("profileImage", imageUrl); // Cache for future
       } else {
         console.error("Failed to fetch profile image.");
         setProfileImage(defaultProfileImage);
@@ -93,14 +97,20 @@ export default function Header({ username, role, userId }) {
     }
   };
 
+  // const handleDrawerToggle = () => {
+  //   setDrawerOpen(!drawerOpen);
+  // };
+  
   const handleDrawerToggle = () => {
     setDrawerOpen((prevDrawerOpen) => {
       if (prevDrawerOpen) {
-        document.getElementById("drawer-toggle-button")?.focus();
+        // When closing the drawer, shift focus to a safe element
+        document.getElementById('drawer-toggle-button')?.focus();
       }
       return !prevDrawerOpen;
     });
   };
+  
 
   const handleMenuOptionClick = (route) => {
     setDrawerOpen(false);
@@ -125,38 +135,51 @@ export default function Header({ username, role, userId }) {
         }}
       >
         <Toolbar>
-          <img src={elogo} alt="Logo" style={{ width: "200px", height: "auto", marginRight: "970px" }} />
-          <Button
+          {/* <Typography
+            variant="h4"
+            component="div"
             sx={{
+              flexGrow: 1,
+              fontFamily: "comic sans ms",
+              fontWeight: "bold",
               color: "black",
-              textTransform: "none",
-              fontSize: "16px",
             }}
-            onClick={() => navigate("/")}
           >
-            Home
-          </Button>
+            Tails and Whiskers
+          </Typography> */}
+           <img src={elogo} alt="Logo" style={{ width: '200px', height: 'auto', marginRight: '970px'  }} />
+          <Button
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => navigate("/")}
+                      >
+                        Home
+                      </Button>
 
-          <Button
-            sx={{
-              color: "black",
-              textTransform: "none",
-              fontSize: "16px",
-            }}
-            onClick={() => navigate("/products")}
-          >
-            Products
-          </Button>
-          <Button
-            sx={{
-              color: "black",
-              textTransform: "none",
-              fontSize: "16px",
-            }}
-            onClick={() => navigate("/aboutus")}
-          >
-            About Us
-          </Button>
+                      <Button
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => navigate("/products")}
+                      >
+                        Products
+                      </Button>
+                      <Button
+                        sx={{
+                          color: "black",
+                          textTransform: "none",
+                          fontSize: "16px",
+                        }}
+                        onClick={() => navigate("/aboutus")}
+                      >
+                        About Us
+                      </Button>
+          
 
           {username ? (
             <>
@@ -168,11 +191,16 @@ export default function Header({ username, role, userId }) {
                   width: 25,
                   height: 25,
                   border: "2px solid black",
-                  marginLeft: "20px",
+                  marginLeft: '20px' 
                 }}
                 onClick={handleDrawerToggle}
               />
-              <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle} disableEnforceFocus>
+              <Drawer
+                anchor="right"
+                open={drawerOpen}
+                onClose={handleDrawerToggle}
+                disableEnforceFocus
+              >
                 <Box
                   sx={{
                     width: 250,
@@ -185,7 +213,10 @@ export default function Header({ username, role, userId }) {
                 >
                   <List>
                     {role === "ADMIN" && (
-                      <ListItem button onClick={() => handleMenuOptionClick("/inventory")}>
+                      <ListItem
+                        button
+                        onClick={() => handleMenuOptionClick("/inventory")}
+                      >
                         <ListItemText primary="Inventory" />
                       </ListItem>
                     )}
@@ -211,13 +242,25 @@ export default function Header({ username, role, userId }) {
                       />
                       {username}
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/profile")} sx={{ marginLeft: "5px" }}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/profile")}
+                      sx={{ marginLeft: "5px" }}
+                    >
                       <ListItemText primary="Profile" />
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/cart")} sx={{ marginLeft: "5px" }}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/cart")}
+                      sx={{ marginLeft: "5px" }}
+                    >
                       <ListItemText primary="Cart" />
                     </ListItem>
-                    <ListItem button onClick={() => handleMenuOptionClick("/MyPurchases")} sx={{ marginLeft: "5px" }}>
+                    <ListItem
+                      button
+                      onClick={() => handleMenuOptionClick("/MyPurchases")}
+                      sx={{ marginLeft: "5px" }}
+                    >
                       <ListItemText primary="My Purchases" />
                     </ListItem>
                     <ListItem
@@ -227,7 +270,11 @@ export default function Header({ username, role, userId }) {
                     >
                       <ListItemText primary="Appointments" />
                     </ListItem>
-                    <ListItem button onClick={handleLogout} sx={{ marginLeft: "5px" }}>
+                    <ListItem
+                      button
+                      onClick={handleLogout}
+                      sx={{ marginLeft: "5px" }}
+                    >
                       <ListItemText primary="Log Out" />
                     </ListItem>
                   </List>
@@ -248,6 +295,9 @@ export default function Header({ username, role, userId }) {
             </>
           ) : (
             <>
+              
+              
+             
               <Button
                 sx={{ color: "black", textTransform: "none", fontSize: "16px" }}
                 onClick={() => navigate("/auth")}

@@ -1,5 +1,5 @@
-import React from "react";
-import { Rating } from "@mui/material";
+import React from 'react';
+import { Rating } from '@mui/material';
 
 function StarRating({ rating, onRatingChange }) {
   return (
@@ -7,7 +7,7 @@ function StarRating({ rating, onRatingChange }) {
       name="product-rating"
       value={rating}
       onChange={(event, newValue) => {
-        if (newValue !== null) {
+        if (newValue !== null) { // Ensure newValue is not null
           onRatingChange(newValue);
         }
       }}

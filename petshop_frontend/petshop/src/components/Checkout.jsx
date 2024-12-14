@@ -261,6 +261,7 @@ const CheckoutPage = () => {
         </Typography>
 
         <Grid container spacing={4}>
+          {/* ORDER SUMMARY */}
           <Grid item xs={12} md={7}>
             <Paper elevation={4} sx={{ padding: 4, position: "relative", overflow: "hidden" }}>
               <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, left: -20 }} />
@@ -318,6 +319,7 @@ const CheckoutPage = () => {
             </Paper>
           </Grid>
 
+          {/* BILLING DETAILS */}
           <Grid item xs={12} md={5}>
             <Paper elevation={4} sx={{ padding: 4, position: "relative", overflow: "hidden" }}>
               <PawPrint src={paw1} alt="Paw Print" sx={{ bottom: -20, right: -20 }} />

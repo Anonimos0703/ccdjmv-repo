@@ -45,12 +45,15 @@ export default function CartItem(props) {
   return (
     <>
       <Grid item xs={12}>
+        {/* Main Paper */}
         <Paper square={false} variant="elevation" elevation={3} sx={{ padding: 2 }}>
+          {/* Checkbox */}
           <Grid container spacing={2} sx={{ display: "flex", alignItems: "center" }}>
             <Grid item>
               <Checkbox checked={props.isSelected} onChange={handleCheckboxChange} />
             </Grid>
 
+            {/* Image */}
             <Grid item>
               <Box
                 component="img"
@@ -65,18 +68,21 @@ export default function CartItem(props) {
               />
             </Grid>
 
+            {/* Title */}
             <Grid item xs={3.36}>
               <Typography variant="body1" sx={{ width: "250px" }}>
                 {props.title}
               </Typography>
             </Grid>
 
+            {/* Price */}
             <Grid item xs={2.55}>
               <Typography variant="h6" color="primary">
                 ₱{props.price}
               </Typography>
             </Grid>
 
+            {/* Quantity */}
             <Grid item xs={2.55}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <IconButton onClick={handleDecreaseQuantity}>
@@ -95,6 +101,7 @@ export default function CartItem(props) {
               </Box>
             </Grid>
 
+            {/* Delete button */}
             <Grid item xs={1}>
               <LightTooltip title="Delete" placement="top">
                 <IconButton color="error" onClick={handleDelete}>

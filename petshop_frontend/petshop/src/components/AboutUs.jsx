@@ -9,21 +9,21 @@ import charles from "../assets/charles.png";
 import hordista from "../assets/hordista.jpg";
 import cabigas from "../assets/cabigas.jpg";
 import getigan from "../assets/getigan.jpg";
-import petIcon from "../assets/peticon.png";
-import paw1 from "../assets/paw1.png";
+import petIcon from '../assets/peticon.png';
+import paw1 from '../assets/paw1.png';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#8B4513",
-      light: "#D2B48C",
+      main: '#8B4513',
+      light: '#D2B48C',
     },
     secondary: {
-      main: "#FFA500",
+      main: '#FFA500',
     },
     background: {
-      default: "#FFF5E6",
-      paper: "#FFFFFF",
+      default: '#FFF5E6',
+      paper: '#FFFFFF',
     },
   },
   typography: {
@@ -34,7 +34,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          textTransform: "none",
+          textTransform: 'none',
           fontWeight: 600,
         },
       },
@@ -43,10 +43,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-          transition: "transform 0.3s ease",
-          "&:hover": {
-            transform: "translateY(-5px)",
+          boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
+          transition: 'transform 0.3s ease',
+          '&:hover': {
+            transform: 'translateY(-5px)',
           },
         },
       },
@@ -56,7 +56,7 @@ const theme = createTheme({
 
 const PageWrapper = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${theme.palette.primary.light}20, ${theme.palette.background.default})`,
-  minHeight: "100vh",
+  minHeight: '100vh',
   padding: theme.spacing(4),
   display: "flex",
   flexDirection: "column",
@@ -65,27 +65,27 @@ const PageWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const HeaderWrapper = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   marginBottom: theme.spacing(4),
 }));
 
-const PetIcon = styled("img")({
-  width: "60px",
-  height: "60px",
-  marginRight: "15px",
-  animation: "float 3s ease-in-out infinite",
-  "@keyframes float": {
-    "0%, 100%": { transform: "translateY(0)" },
-    "50%": { transform: "translateY(-10px)" },
+const PetIcon = styled('img')({
+  width: '60px',
+  height: '60px',
+  marginRight: '15px',
+  animation: 'float 3s ease-in-out infinite',
+  '@keyframes float': {
+    '0%, 100%': { transform: 'translateY(0)' },
+    '50%': { transform: 'translateY(-10px)' },
   },
 });
 
-const PawPrint = styled("img")(({ theme }) => ({
-  position: "absolute",
-  width: "100px",
-  height: "auto",
+const PawPrint = styled('img')(({ theme }) => ({
+  position: 'absolute',
+  width: '100px',
+  height: 'auto',
   opacity: 0.1,
   zIndex: 0,
 }));
@@ -94,6 +94,7 @@ const AboutUs = () => {
   return (
     <ThemeProvider theme={theme}>
       <PageWrapper>
+        {/* Welcome Section - Keeping the original structure */}
         <Box
           sx={{
             display: "flex",
@@ -135,15 +136,7 @@ const AboutUs = () => {
           </Box>
         </Box>
 
-        <Container
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            padding: "40px 20px",
-          }}
-        >
+        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", padding: "40px 20px" }}>
           <Box
             sx={{
               display: "flex",
@@ -153,8 +146,8 @@ const AboutUs = () => {
               borderRadius: 4,
               width: "80%",
               boxShadow: 3,
-              position: "relative",
-              overflow: "hidden",
+              position: 'relative',
+              overflow: 'hidden',
             }}
           >
             <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, right: -20 }} />
@@ -176,9 +169,7 @@ const AboutUs = () => {
                 textAlign: "left",
               }}
             >
-              At Tails & Whiskers, pets are family. Our mission is to provide top-quality products that make caring for
-              your pets simple and joyful. From healthy food to toys and grooming essentials, we've got everything to
-              keep your furry, feathered, or scaly friends happy.
+              At Tails & Whiskers, pets are family. Our mission is to provide top-quality products that make caring for your pets simple and joyful. From healthy food to toys and grooming essentials, we've got everything to keep your furry, feathered, or scaly friends happy.
             </Typography>
           </Box>
         </Container>
@@ -202,25 +193,18 @@ const AboutUs = () => {
               { name: "Kyrie", email: "vincekyrie.seville@cit.edu", id: "2009-40032", image: kyrie },
               { name: "Charles Dominic", email: "charlesdominic.hordista@cit.edu", id: "20-4351-220", image: hordista },
               { name: "Dione Alfred", email: "dionealfred.cabigas@cit.edu", id: "21-5093-745", image: cabigas },
-              {
-                name: "Matt Jude Augustine",
-                email: "mattjudeaugustine.getigan@cit.edu",
-                id: "16-0733-320",
-                image: getigan,
-              },
+              { name: "Matt Jude Augustine", email: "mattjudeaugustine.getigan@cit.edu", id: "16-0733-320", image: getigan },
             ].map((member, index) => (
               <Grid item xs={12} sm={6} md={4} key={index} textAlign="center">
-                <Box
-                  sx={{
-                    boxShadow: 3,
-                    padding: 2,
-                    textAlign: "center",
-                    borderRadius: 4,
-                    backgroundColor: "background.paper",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                >
+                <Box sx={{ 
+                  boxShadow: 3, 
+                  padding: 2, 
+                  textAlign: "center",
+                  borderRadius: 4,
+                  backgroundColor: "background.paper",
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}>
                   <PawPrint src={paw1} alt="Paw Print" sx={{ top: -20, right: -20 }} />
                   <Avatar
                     src={member.image}
@@ -235,12 +219,13 @@ const AboutUs = () => {
                       },
                     }}
                   />
-                  <Typography variant="body1" sx={{ fontWeight: "bold", marginTop: "10px", color: "primary.main" }}>
+                  <Typography
+                    variant="body1"
+                    sx={{ fontWeight: "bold", marginTop: "10px", color: "primary.main" }}
+                  >
                     {member.email}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {member.id}
-                  </Typography>
+                  <Typography variant="body2" sx={{color: "text.secondary"}}>{member.id}</Typography>
                 </Box>
               </Grid>
             ))}
