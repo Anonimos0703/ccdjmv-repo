@@ -41,7 +41,6 @@ function AdminLayout({ children, username, role }) {
     <>
       <AdminHeader username={username} role={role} />
       {children}
-      <AdminFooter />
     </>
   );
 }
